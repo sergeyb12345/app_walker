@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.space", "src\dream.walker.space\dream.walker.space.csproj", "{C6735287-9994-4111-8582-1EA4E2F14ED9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{DFE79E2B-DBC7-4EEF-BF8B-EAD3B48BF71C}"
+	ProjectSection(SolutionItems) = preProject
+		src\dream.walker.space\deploy.cmd = src\dream.walker.space\deploy.cmd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
