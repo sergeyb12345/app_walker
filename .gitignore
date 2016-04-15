@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/packages
+/.vs
+/src/.vs
+/src/dream.walker.space/bin
+/src/dream.walker.space/Aurelia/dist
+/src/dream.walker.space/Aurelia/test/e2e/dist
+/src/dream.walker.space/obj
