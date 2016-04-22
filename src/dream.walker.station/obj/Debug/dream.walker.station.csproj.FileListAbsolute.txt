@@ -67,3 +67,7 @@ C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debu
 C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debug\dream.walker.reader.pdb
 C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debug\Autofac.xml
 C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debug\CsvHelper.xml
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debug\EntityFramework.dll
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debug\EntityFramework.SqlServer.dll
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debug\EntityFramework.xml
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.station\bin\Debug\EntityFramework.SqlServer.xml

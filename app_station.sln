@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{25016970-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.station.tests", "src\dream.station.tests\dream.station.tests.csproj", "{4168BF92-9C32-4790-92F5-F58BC50D0774}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.data", "src\dream.walker.data\dream.walker.data.csproj", "{EB10172D-559A-4E59-BC95-EEE805F1A19B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{4168BF92-9C32-4790-92F5-F58BC50D0774}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4168BF92-9C32-4790-92F5-F58BC50D0774}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4168BF92-9C32-4790-92F5-F58BC50D0774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

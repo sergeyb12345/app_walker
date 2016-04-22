@@ -73,3 +73,7 @@ C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\bin\Debug
 C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\obj\Debug\dream.station.tests.csprojResolveAssemblyReference.cache
 C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\obj\Debug\dream.station.tests.dll
 C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\obj\Debug\dream.station.tests.pdb
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\bin\Debug\EntityFramework.dll
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\bin\Debug\EntityFramework.SqlServer.dll
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\bin\Debug\EntityFramework.xml
+C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.station.tests\bin\Debug\EntityFramework.SqlServer.xml
