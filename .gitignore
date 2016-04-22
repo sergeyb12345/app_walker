@@ -9,3 +9,11 @@
 /src/dream.walker.space/Aurelia/dist
 /src/dream.walker.space/Aurelia/test/e2e/dist
 /src/dream.walker.space/obj
+/src/dream.station.tests/obj
+/src/dream.station.tests/bin
+/src/dream.walker.data/bin/Debug
+/src/dream.walker.data/obj/Debug
+/src/dream.walker.reader/bin/Debug
+/src/dream.walker.reader/obj/Debug
+/src/dream.walker.station/bin
+/src/dream.walker.station/obj
