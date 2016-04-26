@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -58,9 +61,12 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Managers\CompanyManager.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\DreamDbRepository.cs" />
     <Compile Include="Repositories\ICompanyRepository.cs" />
+    <Compile Include="Services\CompanyManagerService.cs" />
+    <Compile Include="Services\ICompanyService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -68,7 +74,12 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
+      <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>
+      <Name>dream.walker.reader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604261335038_AlterCompany.resx">
       <DependentUpon>201604261335038_AlterCompany.cs</DependentUpon>

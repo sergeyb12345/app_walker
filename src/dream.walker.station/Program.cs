@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using Autofac;
+using dream.walker.station.IoC;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Files;
 
@@ -11,9 +11,21 @@ namespace dream.walker.station
     // To learn more about Microsoft Azure WebJobs SDK, please see http://go.microsoft.com/fwlink/?LinkID=320976
     class Program
     {
+        public static void Main(string[] args)
+        {
+            var container = IoCContainer.Instance;
+            var processes = container.Resolve<IEnumerable<IProcess>>();
+            var tokenSource = new CancellationTokenSource();
+
+            foreach (var process in processes)
+            {
+                process.Start(tokenSource.Token);
+            }
+        }
+
         // Please set the following connection strings in app.config for this WebJob to run:
         // AzureWebJobsDashboard and AzureWebJobsStorage
-        static void Main()
+        private void Start()
         {
             JobHostConfiguration config = new JobHostConfiguration();
             FilesConfiguration filesConfig = new FilesConfiguration();

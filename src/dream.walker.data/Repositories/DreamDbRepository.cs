@@ -13,9 +13,9 @@ namespace dream.walker.data.Repositories
             Dbset = dbContext.Set<TEntity>();
         }
 
-        public void Add(TEntity entity)
+        public TEntity Add(TEntity entity)
         {
-            Dbset.Add(entity);
+            return Dbset.Add(entity);
         }
 
         public void Delete(TEntity entity)
@@ -31,7 +31,7 @@ namespace dream.walker.data.Repositories
 
     public interface IDreamDbRepository<TEntity> where TEntity : class
     {
-        void Add(TEntity entity);
+        TEntity Add(TEntity entity);
         void Delete(TEntity entity);
         void Commit();
     }

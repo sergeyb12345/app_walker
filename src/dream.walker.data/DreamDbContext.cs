@@ -6,6 +6,11 @@ namespace dream.walker.data
 {
     public class DreamDbContext: DbContext
     {
+        public DreamDbContext() : base("DefaultConnection")
+        {
+                
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Company>().HasKey(e => e.Ticker);
