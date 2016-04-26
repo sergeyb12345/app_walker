@@ -49,11 +49,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DreamDbContext.cs" />
+    <Compile Include="Entities\Company.cs" />
+    <Compile Include="Entities\Indicator.cs" />
+    <Compile Include="Migrations\201604261335038_AlterCompany.cs" />
+    <Compile Include="Migrations\201604261335038_AlterCompany.Designer.cs">
+      <DependentUpon>201604261335038_AlterCompany.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\CompanyRepository.cs" />
+    <Compile Include="Repositories\DreamDbRepository.cs" />
+    <Compile Include="Repositories\ICompanyRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201604261335038_AlterCompany.resx">
+      <DependentUpon>201604261335038_AlterCompany.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

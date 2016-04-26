@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
+using dream.walker.data;
+using dream.walker.data.Repositories;
 using dream.walker.reader;
 using dream.walker.reader.Validators;
 
@@ -36,7 +33,9 @@ namespace dream.walker.station.IoC
 
             builder.RegisterType<CompanyFileReader>().As<ICompanyFileReader>().InstancePerDependency();
             builder.RegisterType<FileReaderValidator>().As<IFileReaderValidator>().InstancePerDependency();
+            builder.RegisterType<CompanyRepository>().As<ICompanyRepository>().InstancePerDependency();
             builder.RegisterType<FileReaderConfiguration>().SingleInstance();
+            builder.RegisterType<DreamDbContext>().InstancePerDependency();
 
             return builder.Build();
         }
