@@ -55,9 +55,9 @@
     <Compile Include="DreamDbContext.cs" />
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\Indicator.cs" />
-    <Compile Include="Migrations\201604261335038_AlterCompany.cs" />
-    <Compile Include="Migrations\201604261335038_AlterCompany.Designer.cs">
-      <DependentUpon>201604261335038_AlterCompany.cs</DependentUpon>
+    <Compile Include="Migrations\201604291700223_CompanyTable.cs" />
+    <Compile Include="Migrations\201604291700223_CompanyTable.Designer.cs">
+      <DependentUpon>201604291700223_CompanyTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,8 +81,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201604261335038_AlterCompany.resx">
-      <DependentUpon>201604261335038_AlterCompany.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201604291700223_CompanyTable.resx">
+      <DependentUpon>201604291700223_CompanyTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

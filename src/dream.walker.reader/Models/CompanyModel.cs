@@ -10,7 +10,7 @@ namespace dream.walker.reader.Models
     {
         public string Ticker { get; set; }
         public string Name { get; set; }
-        public double MarketCap { get; set; }
+        public decimal MarketCap { get; set; }
         public string Sector { get; set; }
         public string Industry { get; set; }
         public string SummaryUrl { get; set; }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.station", "src\dream.walker.station\dream.walker.station.csproj", "{15785DE8-7F41-4C24-B8F1-21F8C926D100}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.reader", "src\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{25016970-D3E7-44A2-BC7E-845DF54A3264}"
 	ProjectSection(SolutionItems) = preProject
-		src\dream.walker.reader\companylist.csv = src\dream.walker.reader\companylist.csv
+		data\companylist.csv = data\companylist.csv
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.station.tests", "src\dream.station.tests\dream.station.tests.csproj", "{4168BF92-9C32-4790-92F5-F58BC50D0774}"

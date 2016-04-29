@@ -6,23 +6,23 @@ namespace dream.walker.data.Entities
     {
         public Company()
         {
-            LastUpdated = DateTime.MinValue;
-            LastCalculated = DateTime.MinValue;
-            NextReportDate = DateTime.MinValue;
+            LastUpdated = DateTime.Today.AddMonths(-1);
+            LastCalculated = DateTime.Today.AddMonths(-1);
+            NextReportDate = DateTime.Today.AddMonths(-1);
         }
 
         public string Ticker { get; set; }
         public string Name { get; set; }
-        public double MarketCap { get; set; }
+        public decimal MarketCap { get; set; }
         public string Sector { get; set; }
         public string Industry { get; set; }
         public string SummaryUrl { get; set; }
         public DateTime LastUpdated { get; set; }
         public DateTime LastCalculated { get; set; }
-        public double Volume { get; set; }
-        public double Price { get; set; }
-        public double HighestPrice52 { get; set; }
-        public double LowestPrice52 { get; set; }
+        public decimal Volume { get; set; }
+        public decimal Price { get; set; }
+        public decimal HighestPrice52 { get; set; }
+        public decimal LowestPrice52 { get; set; }
         public int ChaosPercentage { get; set; }
         public string LiveQuoteJson { get; set; }
         public string HistoryQuotesJson { get; set; }

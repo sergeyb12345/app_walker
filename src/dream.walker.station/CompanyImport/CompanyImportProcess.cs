@@ -21,7 +21,7 @@ namespace dream.walker.station.CompanyImport
 
         public void Start(CancellationToken token)
         {
-            string folder = @"C:\Work\sergey-balaboskin\asp.net_4\app_walker\src\dream.walker.reader";
+            string folder = @"C:\Development\app_walker\data";
             var path = Path.Combine(folder, "companylist.csv");
 
             var list = _fileReader.Read(path);
@@ -36,7 +36,7 @@ namespace dream.walker.station.CompanyImport
             foreach (var company in companies)
             {
                 var manager = _companyService.CreateManager(company);
-                manager.Import();
+                manager.Import(); 
             }
         }
     }
