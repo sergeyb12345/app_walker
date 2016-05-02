@@ -45,10 +45,27 @@ namespace dream.walker.data.Services
 
         public List<CompanyTradingData> FindCompaniesForUpdate(FindCompaniesForUpdateRequest request)
         {
-            return new List<CompanyTradingData>
+            using (var scope = _container.BeginLifetimeScope())
             {
-                new CompanyTradingData { Ticker = "AAC"}
-            };
+                var repository = scope.Resolve<ICompanyRepository>();
+                var companies = repository.FindCompanyTradingData(request.FromTimeAgo, request.MaxRecordCount);
+                return companies;
+            }
+        }
+
+        public void UpdateQuotes(string ticker, string jsonQuotes)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICompanyRepository>();
+                var company = repository.Get(ticker);
+                if (company != null)
+                {
+                    company.HistoryQuotesJson = jsonQuotes;
+                    company.LastUpdated = DateTime.UtcNow;
+                    repository.Commit();
+                }
+            }
         }
 
 

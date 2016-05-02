@@ -51,8 +51,8 @@
       <HintPath>..\..\packages\FluentAssertions.4.4.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -68,8 +68,13 @@
   <ItemGroup>
     <Compile Include="FileReader\CompanyFileReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stock\GetStockHistoryRequestTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">
+      <Project>{EB10172D-559A-4E59-BC95-EEE805F1A19B}</Project>
+      <Name>dream.walker.data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
       <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>
       <Name>dream.walker.reader</Name>
@@ -77,6 +82,10 @@
     <ProjectReference Include="..\dream.walker.station\dream.walker.station.csproj">
       <Project>{15785de8-7f41-4c24-b8f1-21f8c926d100}</Project>
       <Name>dream.walker.station</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.stock\dream.walker.stock.csproj">
+      <Project>{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}</Project>
+      <Name>dream.walker.stock</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

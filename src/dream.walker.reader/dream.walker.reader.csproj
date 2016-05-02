@@ -58,9 +58,13 @@
     <Compile Include="FileReaderConfiguration.cs" />
     <Compile Include="Exceptions\FileReaderValidatorException.cs" />
     <Compile Include="ICompanyFileReader.cs" />
+    <Compile Include="IQuotesFileReader.cs" />
     <Compile Include="Models\CompanyModel.cs" />
     <Compile Include="Models\CompanyModelMap.cs" />
+    <Compile Include="Models\QuotesModel.cs" />
+    <Compile Include="Models\QuotesModelMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuotesFileReader.cs" />
     <Compile Include="Validators\FileReaderValidator.cs" />
     <Compile Include="Validators\IFileReaderValidator.cs" />
   </ItemGroup>

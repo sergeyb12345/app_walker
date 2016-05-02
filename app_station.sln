@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{25016970-D3E7-44A2-BC7E-845DF54A3264}"
 	ProjectSection(SolutionItems) = preProject
 		data\companylist.csv = data\companylist.csv
+		data\companyQuotes-A.csv = data\companyQuotes-A.csv
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.station.tests", "src\dream.station.tests\dream.station.tests.csproj", "{4168BF92-9C32-4790-92F5-F58BC50D0774}"

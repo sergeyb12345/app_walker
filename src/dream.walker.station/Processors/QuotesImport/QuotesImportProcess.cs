@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using dream.walker.data.Requests;
 using dream.walker.data.Services;
+using dream.walker.reader;
+using dream.walker.reader.Models;
+using dream.walker.station.Publishers;
 using dream.walker.stock;
 using dream.walker.stock.Enums;
 using dream.walker.stock.Requests;
+using Newtonsoft.Json;
 
 namespace dream.walker.station.Processors.QuotesImport
 {
@@ -15,19 +20,30 @@ namespace dream.walker.station.Processors.QuotesImport
     {
         private readonly IMarketStockClient _marketStockClient;
         private readonly ICompanyService _companyService;
+        private readonly IQuotesFileReader _quotesFileReader;
+        private readonly IPublisher _publisher;
 
-        public QuotesImportProcess(IMarketStockClient  marketStockClient, ICompanyService companyService)
+        public QuotesImportProcess(IMarketStockClient  marketStockClient, 
+            ICompanyService companyService,
+            IQuotesFileReader quotesFileReader,
+            IPublisher publisher)
         {
             _marketStockClient = marketStockClient;
             _companyService = companyService;
+            _quotesFileReader = quotesFileReader;
+            _publisher = publisher;
         }
 
         public void Start(CancellationToken token)
         {
-            var findRequest = new FindCompaniesForUpdateRequest();
+            var findRequest = new FindCompaniesForUpdateRequest
+            {
+                FromTimeAgo = new TimeSpan(1,0,0,0),
+                MaxRecordCount = 10
+            };
 
             var companies = _companyService.FindCompaniesForUpdate(findRequest);
-            if (companies != null)
+            while(companies != null && companies.Any()) 
             {
                 foreach (var company in companies)
                 {
@@ -38,21 +54,27 @@ namespace dream.walker.station.Processors.QuotesImport
                         File.Delete(path);
                     }
 
-                    var historyRequest = new GetStockHistoryRequest
-                    {
-                        Symbol    = company.Ticker,
-                        TimeFrame = QuoteTimeFrame.Year,
-                        TimeFrameValue = 1
-                    };
+                    var historyRequest = new GetStockHistoryRequest(company);
 
-                    var csvQuotes = Task.Run(() => _marketStockClient.GetStockHistory(historyRequest), token).Result;
+                    List<QuotesModel> quotes = new List<QuotesModel>();
 
-                    using (var textFile = File.CreateText(path))
+                    try
                     {
-                        textFile.Write(csvQuotes);
+                        var csvQuotes = Task.Run(() => _marketStockClient.GetStockHistory(historyRequest), token).Result;
+                        quotes = _quotesFileReader.Read(csvQuotes);
+
+                        _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
+
+                        _publisher.Publish($"Updated Company {company.Ticker}");
                     }
-                    return;
+                    catch (Exception e)
+                    {
+                        _publisher.Publish($"Failed to update Company: {company.Ticker}. {e.Message}");
+                    }
+
+                    _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
                 }
+                companies = _companyService.FindCompaniesForUpdate(findRequest);
             }
         }
     }

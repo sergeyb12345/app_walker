@@ -9,5 +9,6 @@ namespace dream.walker.data.Models
     public class CompanyTradingData
     {
         public string Ticker { get; set; }
+        public DateTime LastUpdated { get; set; }
     }
 }
