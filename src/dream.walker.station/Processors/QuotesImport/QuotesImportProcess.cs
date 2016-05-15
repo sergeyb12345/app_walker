@@ -10,7 +10,6 @@ using dream.walker.reader;
 using dream.walker.reader.Models;
 using dream.walker.station.Publishers;
 using dream.walker.stock;
-using dream.walker.stock.Enums;
 using dream.walker.stock.Requests;
 using Newtonsoft.Json;
 

@@ -42,6 +42,10 @@
       <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -55,7 +59,54 @@
   <ItemGroup>
     <Compile Include="DreamDbContext.cs" />
     <Compile Include="Entities\Company.cs" />
+    <Compile Include="Entities\CompanyIndicator.cs" />
+    <Compile Include="Entities\CompanyIndicatorRule.cs" />
+    <Compile Include="Entities\CompanyRule.cs" />
+    <Compile Include="Entities\IndicatorRule.cs" />
+    <Compile Include="Entities\Strategy.cs" />
+    <Compile Include="Entities\StrategyRule.cs" />
+    <Compile Include="Enums\RuleFunction.cs" />
+    <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Entities\Indicator.cs" />
+    <Compile Include="Entities\Rule.cs" />
+    <Compile Include="Enums\ValueLocationType.cs" />
+    <Compile Include="Migrations\201605151153585_CreateTableIndicatorRule.cs" />
+    <Compile Include="Migrations\201605151153585_CreateTableIndicatorRule.Designer.cs">
+      <DependentUpon>201605151153585_CreateTableIndicatorRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605151201377_CreateTableCompanyIndicatorRule.cs" />
+    <Compile Include="Migrations\201605151201377_CreateTableCompanyIndicatorRule.Designer.cs">
+      <DependentUpon>201605151201377_CreateTableCompanyIndicatorRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605151205061_CreateTableStrategy.cs" />
+    <Compile Include="Migrations\201605151205061_CreateTableStrategy.Designer.cs">
+      <DependentUpon>201605151205061_CreateTableStrategy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605151221421_CreateTableStrategyRule.cs" />
+    <Compile Include="Migrations\201605151221421_CreateTableStrategyRule.Designer.cs">
+      <DependentUpon>201605151221421_CreateTableStrategyRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605151227334_CreateTableCompanyRule.cs" />
+    <Compile Include="Migrations\201605151227334_CreateTableCompanyRule.Designer.cs">
+      <DependentUpon>201605151227334_CreateTableCompanyRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ValueLocation.cs" />
+    <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
+    <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
+      <DependentUpon>201605151044366_CreateTableCompanyIndicator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605151055349_CreateTableRule.cs" />
+    <Compile Include="Migrations\201605151055349_CreateTableRule.Designer.cs">
+      <DependentUpon>201605151055349_CreateTableRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IndicatorData.cs" />
+    <Compile Include="Migrations\201605151030443_CreateTableIndicators.cs" />
+    <Compile Include="Migrations\201605151030443_CreateTableIndicators.Designer.cs">
+      <DependentUpon>201605151030443_CreateTableIndicators.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IndicatorParam.cs" />
+    <Compile Include="Enums\IndicatorParamName.cs" />
+    <Compile Include="Enums\QuotePeriod.cs" />
     <Compile Include="Models\CompanyTradingData.cs" />
     <Compile Include="Requests\FindCompaniesForUpdateRequest.cs" />
     <Compile Include="Migrations\201604291700223_CompanyTable.cs" />
@@ -86,6 +137,30 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604291700223_CompanyTable.resx">
       <DependentUpon>201604291700223_CompanyTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151030443_CreateTableIndicators.resx">
+      <DependentUpon>201605151030443_CreateTableIndicators.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151044366_CreateTableCompanyIndicator.resx">
+      <DependentUpon>201605151044366_CreateTableCompanyIndicator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151055349_CreateTableRule.resx">
+      <DependentUpon>201605151055349_CreateTableRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151153585_CreateTableIndicatorRule.resx">
+      <DependentUpon>201605151153585_CreateTableIndicatorRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151201377_CreateTableCompanyIndicatorRule.resx">
+      <DependentUpon>201605151201377_CreateTableCompanyIndicatorRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151205061_CreateTableStrategy.resx">
+      <DependentUpon>201605151205061_CreateTableStrategy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151221421_CreateTableStrategyRule.resx">
+      <DependentUpon>201605151221421_CreateTableStrategyRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151227334_CreateTableCompanyRule.resx">
+      <DependentUpon>201605151227334_CreateTableCompanyRule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
