@@ -35,46 +35,66 @@ namespace dream.walker.station.Processors.QuotesImport
 
         public void Start(CancellationToken token)
         {
-            var findRequest = new FindCompaniesForUpdateRequest
+            Task.Run(() =>
             {
-                FromTimeAgo = new TimeSpan(1,0,0,0),
-                MaxRecordCount = 10
-            };
-
-            var companies = _companyService.FindCompaniesForUpdate(findRequest);
-            while(companies != null && companies.Any()) 
-            {
-                foreach (var company in companies)
+                using (var waitHandle = token.WaitHandle)
                 {
-                    var folder = @"C:\Development\app_walker\data";
-                    var path = Path.Combine(folder, $"companyQuotes-{company.Ticker}.csv");
-                    if (File.Exists(path))
+                    var interval = new TimeSpan(0, 5, 0); //5 min
+                    do
                     {
-                        File.Delete(path);
-                    }
+                        
 
-                    var historyRequest = new GetStockHistoryRequest(company);
+                        try
+                        {
+                            var findRequest = new FindCompaniesForUpdateRequest
+                            {
+                                FromTimeAgo = new TimeSpan(1, 0, 0, 0),
+                                MaxRecordCount = 10
+                            };
 
-                    List<QuotesModel> quotes = new List<QuotesModel>();
+                            var companies = _companyService.FindCompaniesForUpdate(findRequest);
+                            while (companies != null && companies.Any())
+                            {
+                                foreach (var company in companies)
+                                {
+                                    var folder = @"C:\Development\app_walker\data";
+                                    var path = Path.Combine(folder, $"companyQuotes-{company.Ticker}.csv");
+                                    if (File.Exists(path))
+                                    {
+                                        File.Delete(path);
+                                    }
 
-                    try
-                    {
-                        var csvQuotes = Task.Run(() => _marketStockClient.GetStockHistory(historyRequest), token).Result;
-                        quotes = _quotesFileReader.Read(csvQuotes);
+                                    var historyRequest = new GetStockHistoryRequest(company);
 
-                        _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
+                                    List<QuotesModel> quotes = new List<QuotesModel>();
 
-                        _publisher.Publish($"Updated Company {company.Ticker}");
-                    }
-                    catch (Exception e)
-                    {
-                        _publisher.Publish($"Failed to update Company: {company.Ticker}. {e.Message}");
-                    }
+                                    try
+                                    {
+                                        var csvQuotes = Task.Run(() => _marketStockClient.GetStockHistory(historyRequest), token).Result;
+                                        quotes = _quotesFileReader.Read(csvQuotes);
 
-                    _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
+                                        _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
+
+                                        _publisher.Publish($"Updated Company {company.Ticker}");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        _publisher.Publish($"Failed to update Company: {company.Ticker}. {e.Message}");
+                                    }
+
+                                    _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
+                                }
+                                companies = _companyService.FindCompaniesForUpdate(findRequest);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    } while (!waitHandle.WaitOne(interval));
                 }
-                companies = _companyService.FindCompaniesForUpdate(findRequest);
-            }
+            });
+
         }
     }
 }

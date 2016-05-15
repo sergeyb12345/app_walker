@@ -73,6 +73,9 @@ namespace dream.walker.stock.Nasdaq.Client
                 case QuoteTimeFrame.Month:
                     timeFrame = "m";
                     break;
+                case QuoteTimeFrame.Day:
+                    timeFrame = "d";
+                    break;
                 case QuoteTimeFrame.Year:
                     break;
                 default:
