@@ -108,6 +108,9 @@
     <Compile Include="Enums\IndicatorParamName.cs" />
     <Compile Include="Enums\QuotePeriod.cs" />
     <Compile Include="Models\CompanyTradingData.cs" />
+    <Compile Include="Repositories\IndicatorRepository.cs" />
+    <Compile Include="Repositories\StrategyRepository.cs" />
+    <Compile Include="Repositories\StrategyRuleRepository.cs" />
     <Compile Include="Requests\FindCompaniesForUpdateRequest.cs" />
     <Compile Include="Migrations\201604291700223_CompanyTable.cs" />
     <Compile Include="Migrations\201604291700223_CompanyTable.Designer.cs">
@@ -118,7 +121,6 @@
     <Compile Include="Managers\CompanyManager.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\DreamDbRepository.cs" />
-    <Compile Include="Repositories\ICompanyRepository.cs" />
     <Compile Include="Services\CompanyManagerService.cs" />
     <Compile Include="Services\ICompanyService.cs" />
   </ItemGroup>

@@ -6,6 +6,13 @@ using dream.walker.data.Models;
 
 namespace dream.walker.data.Repositories
 {
+    public interface ICompanyRepository : IDreamDbRepository<Company>
+    {
+        Company Get(string ticker);
+        List<CompanyTradingData> FindCompanyTradingData(TimeSpan fromTimeAgo, int count);
+    }
+
+
     public class CompanyRepository : DreamDbRepository<Company>, ICompanyRepository
     {
         public CompanyRepository(DreamDbContext dbContext) : base(dbContext)
