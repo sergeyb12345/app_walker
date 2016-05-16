@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>dream.walker.indicators</RootNamespace>
     <AssemblyName>dream.walker.indicators</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,9 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExponentialMovingAverage.cs" />
+    <Compile Include="Ema.cs" />
+    <Compile Include="Macd.cs" />
+    <Compile Include="Models\MacdModel.cs" />
+    <Compile Include="Models\IIndicatorModel.cs" />
+    <Compile Include="Models\EmaModel.cs" />
     <Compile Include="IIndicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
+      <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>
+      <Name>dream.walker.reader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
