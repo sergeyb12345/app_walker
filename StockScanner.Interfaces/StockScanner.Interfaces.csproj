@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{47C39BDE-3E1A-40BB-B0FC-441DB73BDB03}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StockScanner.Interfaces</RootNamespace>
+    <AssemblyName>StockScanner.Interfaces</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandHandlers\IDomainCommandHandler.cs" />
+    <Compile Include="Commands\IDomainCommand.cs" />
+    <Compile Include="Commands\StockFilter\IRegisterCommand.cs" />
+    <Compile Include="Commands\StockCompany\IRegisterCommand.cs" />
+    <Compile Include="Dispatchers\ICommandDispatcher.cs" />
+    <Compile Include="Dispatchers\IDispatcher.cs" />
+    <Compile Include="Dispatchers\IQueryDispatcher.cs" />
+    <Compile Include="DomainModel\Common\ProjectOptions.cs" />
+    <Compile Include="DomainModel\Financials\ICompanyFinancials.cs" />
+    <Compile Include="DomainModel\Financials\ICompanyFinancialsActions.cs" />
+    <Compile Include="DomainModel\Stock\IHistoricalDataUtilities.cs" />
+    <Compile Include="DomainModel\Stock\IStockHistoricalData.cs" />
+    <Compile Include="DomainModel\Scores\IScoreDetails.cs" />
+    <Compile Include="DomainModel\Scores\IScoreResult.cs" />
+    <Compile Include="DomainModel\Scores\IScoreSummary.cs" />
+    <Compile Include="DomainModel\Scores\ScoreDetailsExtensions.cs" />
+    <Compile Include="DomainModel\Stock\StockQuoteExtensions.cs" />
+    <Compile Include="Enumerators\EnumFinancialsType.cs" />
+    <Compile Include="Enumerators\EnumStatementType.cs" />
+    <Compile Include="Enumerators\EnumYahooPeriodType.cs" />
+    <Compile Include="Enumerators\EnumBarOffset.cs" />
+    <Compile Include="Enumerators\EnumDisplayViewMode.cs" />
+    <Compile Include="Enumerators\EnumQuoteType.cs" />
+    <Compile Include="DomainModel\Conditions\IComparableValue.cs" />
+    <Compile Include="DomainModel\Conditions\IFilterCondition.cs" />
+    <Compile Include="DomainModel\Conditions\IFilterConditionParam.cs" />
+    <Compile Include="DomainModel\Filters\IStockFilterIndicator.cs" />
+    <Compile Include="DomainModel\Filters\IStockIndicator.cs" />
+    <Compile Include="DomainModel\Filters\IStockIndicatorParam.cs" />
+    <Compile Include="DomainModel\Filters\IStockIndicatorParamValue.cs" />
+    <Compile Include="DomainModel\IDomainModel.cs" />
+    <Compile Include="DomainModel\Stock\IStockCompany.cs" />
+    <Compile Include="DomainModel\Filters\IStockFilterCompany.cs" />
+    <Compile Include="DomainModel\Stock\IStockQuote.cs" />
+    <Compile Include="DomainRepositories\IDomainCommandRepository.cs" />
+    <Compile Include="DomainRepositories\IDomainQueryRepository.cs" />
+    <Compile Include="Enumerators\EnumCompareSource.cs" />
+    <Compile Include="Enumerators\EnumCompareType.cs" />
+    <Compile Include="Enumerators\EnumFormulaType.cs" />
+    <Compile Include="Enumerators\EnumPeriodType.cs" />
+    <Compile Include="DomainModel\Financials\ICompanyFinancialsStats.cs" />
+    <Compile Include="Financials\Statements\ICompanyFinancialsService.cs" />
+    <Compile Include="Helpers\ThreadHelper.cs" />
+    <Compile Include="Indicators\ICalculated.cs" />
+    <Compile Include="DomainModel\Filters\IStockFilter.cs" />
+    <Compile Include="Indicators\IIndicatorFormula.cs" />
+    <Compile Include="Financials\Quotes\IHistoricalDataService.cs" />
+    <Compile Include="Store\IFilter.cs" />
+    <Compile Include="Store\IIndicator.cs" />
+    <Compile Include="Store\IIndustry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Store\ISector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Store\IStock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Store\IStoreQueryRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\IDomainQuery.cs" />
+    <Compile Include="QueryHandlers\IDomainQueryHandler.cs" />
+    <Compile Include="Store\IHistoricalData.cs" />
+    <Compile Include="Store\INamedEntity.cs" />
+    <Compile Include="Store\IStoreCommandRepository.cs" />
+    <Compile Include="Store\IStoreEntity.cs" />
+    <Compile Include="Store\IvwCompanyFinancial.cs" />
+    <Compile Include="Store\IvwFilterCondition.cs" />
+    <Compile Include="Store\IvwStockCompany.cs" />
+    <Compile Include="Store\IvwStockFilterCompany.cs" />
+    <Compile Include="Store\IvwStockFilterIndicator.cs" />
+    <Compile Include="Store\IvwStockFilterIndicatorParam.cs" />
+    <Compile Include="Store\IvwStockFilterScoreDetail.cs" />
+    <Compile Include="Store\IvwStockFilterScoreSummary.cs" />
+    <Compile Include="Store\IvwStockIndicatorParam.cs" />
+    <Compile Include="Store\IvwStockQuote.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

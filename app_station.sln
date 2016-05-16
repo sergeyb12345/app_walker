@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.station", "src\dream.walker.station\dream.walker.station.csproj", "{15785DE8-7F41-4C24-B8F1-21F8C926D100}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.data", "src\dream.walker.data\dream.walker.data.csproj", "{EB10172D-559A-4E59-BC95-EEE805F1A19B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.stock", "src\dream.walker.stock\dream.walker.stock.csproj", "{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.indicators", "src\dream.walker.indicators\dream.walker.indicators.csproj", "{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
