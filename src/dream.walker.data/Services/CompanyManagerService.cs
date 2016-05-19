@@ -7,6 +7,7 @@ using dream.walker.data.Models;
 using dream.walker.data.Repositories;
 using dream.walker.data.Requests;
 using dream.walker.reader.Models;
+using Newtonsoft.Json;
 
 namespace dream.walker.data.Services
 {
@@ -65,6 +66,20 @@ namespace dream.walker.data.Services
                     company.LastUpdated = DateTime.UtcNow;
                     repository.Commit();
                 }
+            }
+        }
+
+        public List<QuotesModel> GetQuotes(string ticker)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICompanyRepository>();
+                var company = repository.Get(ticker);
+                if (company != null)
+                {
+                    return JsonConvert.DeserializeObject<List<QuotesModel>>(company.HistoryQuotesJson);
+                }
+                return null;
             }
         }
 

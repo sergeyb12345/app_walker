@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using dream.walker.indicators.Enums;
 using dream.walker.indicators.Extensions;
 using dream.walker.indicators.IndicatorParams;
 using dream.walker.indicators.Models;

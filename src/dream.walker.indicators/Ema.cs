@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
 
@@ -30,14 +31,14 @@ namespace dream.walker.indicators
             }
 
             var result = new List<EmaModel>();
-            var queue = new Queue<QuotesModel>(quotes);
+            var queue = new Queue<QuotesModel>(quotes.OrderBy(c => c.Date).ToList());
 
             var yesterdayEma = CalcInitialEma(period, queue);
 
             foreach (var item in queue)
             {
                 var ema = CalculateEma(item.Close, period, yesterdayEma);
-                result.Add(new EmaModel {Date = item.Date, Value = ema});
+                result.Insert(0, new EmaModel {Date = item.Date, Value = ema});
                 yesterdayEma = ema;
             }
 
@@ -57,7 +58,7 @@ namespace dream.walker.indicators
         {
             var k = Convert.ToDecimal(2.0 / (period + 1));
             var ema = closePrice * k + yesterdayEma * (1 - k);
-            return ema;
+            return Math.Round(ema, 2);
         }
 
         /// <summary>

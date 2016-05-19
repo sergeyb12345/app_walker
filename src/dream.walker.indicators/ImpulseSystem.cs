@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using dream.walker.indicators.Enums;
+using dream.walker.indicators.Extensions;
 using dream.walker.indicators.IndicatorParams;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
@@ -31,29 +30,14 @@ namespace dream.walker.indicators
         {
             var macdHist = new Macd().Calculate(quotes, inputParams.MacdParams);
             var ema = new Ema().Calculate(quotes, inputParams.EmaPeriod);
-            var join = from h in macdHist
+            var impulseData = (from h in macdHist
                          join e in ema
                          on h.Date equals e.Date
-                         select new ImpulseData { Date = h.Date, Value = CalcImpulse(h.Histogram, e.Value) };
+                         select new ImpulseData { Date = h.Date, Histogram = h.Histogram, Ema = e.Value})
+                    .ToList();
 
-            return null;
+            return impulseData.AsImpulseSystemModel();
         }
 
-        private ImpulseType CalcImpulse(decimal macdHistogram, decimal ema)
-        {
-            if(ema)
-            return 0;
-        }
-    }
-
-    public class ImpulseData
-    {
-    }
-
-
-    public class ImpulseSystemModel : IIndicatorModel
-    {
-        public DateTime Date { get; set; }
-        public ImpulseType Value { get; set; }
     }
 }

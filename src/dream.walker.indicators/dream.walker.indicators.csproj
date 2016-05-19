@@ -42,7 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ema.cs" />
-    <Compile Include="Extensions\EmaModelExtensions.cs" />
+    <Compile Include="Extensions\IndicatorModelExtensions.cs" />
+    <Compile Include="Enums\QuoteModelField.cs" />
+    <Compile Include="Models\ImpulseData.cs" />
+    <Compile Include="Models\ImpulseSystemModel.cs" />
     <Compile Include="IndicatorParams\ImpulseSystemParams.cs" />
     <Compile Include="Enums\ImpulseType.cs" />
     <Compile Include="Macd.cs" />

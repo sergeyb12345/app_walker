@@ -12,6 +12,7 @@ namespace dream.walker.data.Services
         Company Register(CompanyModel company);
         List<CompanyTradingData> FindCompaniesForUpdate(FindCompaniesForUpdateRequest request);
         void UpdateQuotes(string ticker, string jsonQuotes);
+        List<QuotesModel> GetQuotes(string ticker);
     }
 
     public interface ICompanyManagerService 
