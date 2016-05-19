@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using dream.walker.indicators.Extensions;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
 
@@ -24,8 +26,11 @@ namespace dream.walker.indicators
 
             var slowEma = new Ema().Calculate(quotes, inputParams.SlowEmaPeriod);
             var fastEma = new Ema().Calculate(quotes, inputParams.FastEmaPeriod);
+            var macdLine = fastEma.Substract(slowEma);
+            var signalEma = new Ema().Calculate(macdLine.AsQuotesModel(QuoteModelField.Close), inputParams.SignalEmaPeriod);
+            var macdHist = macdLine.Substract(signalEma);
 
-            var result = new List<MacdModel>();
+            var result = macdHist.Select(c => new MacdModel() {Date = c.Date, Histogram = c.Value}).ToList();
 
             return result;
         }
@@ -44,12 +49,5 @@ namespace dream.walker.indicators
             }
             return true;
         }
-    }
-
-    public class MacdParams
-    {
-        public int FastEmaPeriod { get; set; }
-        public int SlowEmaPeriod { get; set; }
-        public int SignalEmaPeriod { get; set; }
     }
 }

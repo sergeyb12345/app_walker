@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace dream.walker.reader.Models
 {
@@ -21,6 +18,7 @@ namespace dream.walker.reader.Models
                 }
                 return 0;
             }
+            set { VolumeAsText = value.ToString(CultureInfo.InvariantCulture); }
         }
 
         public Decimal Open { get; set; }
@@ -28,4 +26,6 @@ namespace dream.walker.reader.Models
         public Decimal Low { get; set; }
         public string VolumeAsText { get; set; }
     }
+
+
 }
