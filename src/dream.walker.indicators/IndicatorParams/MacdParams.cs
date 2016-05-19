@@ -1,4 +1,4 @@
-﻿namespace dream.walker.indicators
+﻿namespace dream.walker.indicators.IndicatorParams
 {
     public class MacdParams
     {

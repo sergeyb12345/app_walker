@@ -43,14 +43,16 @@
   <ItemGroup>
     <Compile Include="Ema.cs" />
     <Compile Include="Extensions\EmaModelExtensions.cs" />
+    <Compile Include="IndicatorParams\ImpulseSystemParams.cs" />
+    <Compile Include="Enums\ImpulseType.cs" />
     <Compile Include="Macd.cs" />
-    <Compile Include="MacdParams.cs" />
+    <Compile Include="IndicatorParams\MacdParams.cs" />
     <Compile Include="Models\MacdModel.cs" />
     <Compile Include="Models\IIndicatorModel.cs" />
     <Compile Include="Models\EmaModel.cs" />
     <Compile Include="IIndicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rsi.cs" />
+    <Compile Include="ImpulseSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
