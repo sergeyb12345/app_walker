@@ -58,7 +58,7 @@ namespace dream.walker.indicators
         {
             var k = Convert.ToDecimal(2.0 / (period + 1));
             var ema = closePrice * k + yesterdayEma * (1 - k);
-            return Math.Round(ema, 2);
+            return Math.Round(ema, 4);
         }
 
         /// <summary>
