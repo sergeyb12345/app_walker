@@ -122,6 +122,7 @@
     <Compile Include="IProcess.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
     <Compile Include="Processors\QuotesImport\QuotesImportProcess.cs" />
+    <Compile Include="Processors\StrategyMonitor\StrategyMonitorProcess.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -159,6 +160,10 @@
     <ProjectReference Include="..\dream.walker.stock\dream.walker.stock.csproj">
       <Project>{eb65cea0-bc6f-4b02-beb3-2571d1edf06c}</Project>
       <Name>dream.walker.stock</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.strategy\dream.walker.strategy.csproj">
+      <Project>{35a9c2f3-b0fd-4ec3-85e2-b05c35a2c1db}</Project>
+      <Name>dream.walker.strategy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

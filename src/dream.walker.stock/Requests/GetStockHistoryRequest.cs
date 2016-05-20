@@ -10,7 +10,7 @@ namespace dream.walker.stock.Requests
 
         public GetStockHistoryRequest() { }
 
-        public GetStockHistoryRequest(CompanyTradingData company)
+        public GetStockHistoryRequest(CompanyToUpdate company)
         {
             Ticker = company.Ticker;
 

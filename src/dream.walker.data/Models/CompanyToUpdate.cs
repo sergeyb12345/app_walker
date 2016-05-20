@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dream.walker.data.Models
 {
-    public class CompanyTradingData
+    public class CompanyToUpdate
     {
         public string Ticker { get; set; }
         public DateTime LastUpdated { get; set; }

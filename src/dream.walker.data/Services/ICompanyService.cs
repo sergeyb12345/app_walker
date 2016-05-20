@@ -10,9 +10,10 @@ namespace dream.walker.data.Services
     public interface ICompanyService : ICompanyManagerService
     {
         Company Register(CompanyModel company);
-        List<CompanyTradingData> FindCompaniesForUpdate(FindCompaniesForUpdateRequest request);
+        List<CompanyToUpdate> FindCompaniesForUpdate(FindCompaniesForUpdateRequest request);
         void UpdateQuotes(string ticker, string jsonQuotes);
         List<QuotesModel> GetQuotes(string ticker);
+        List<CompanyToProcess> FindCompaniesToProcess(CompaniesToProcessRequest request);
     }
 
     public interface ICompanyManagerService 

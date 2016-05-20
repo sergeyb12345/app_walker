@@ -13,7 +13,7 @@ namespace dream.station.tests.Stock
         [Test]
         public void InitFromCtor_When_365daysAgo()
         {
-            var company = new CompanyTradingData
+            var company = new CompanyToUpdate
             {
                 Ticker = "AAA",
                 LastUpdated = DateTime.Today.AddDays(-34)

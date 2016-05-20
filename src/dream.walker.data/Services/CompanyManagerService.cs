@@ -44,12 +44,12 @@ namespace dream.walker.data.Services
             }
         }
 
-        public List<CompanyTradingData> FindCompaniesForUpdate(FindCompaniesForUpdateRequest request)
+        public List<CompanyToUpdate> FindCompaniesForUpdate(FindCompaniesForUpdateRequest request)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
                 var repository = scope.Resolve<ICompanyRepository>();
-                var companies = repository.FindCompanyTradingData(request.FromTimeAgo, request.MaxRecordCount);
+                var companies = repository.FindCompaniesForUpdate(request.FromTimeAgo, request.MaxRecordCount);
                 return companies;
             }
         }
@@ -80,6 +80,16 @@ namespace dream.walker.data.Services
                     return JsonConvert.DeserializeObject<List<QuotesModel>>(company.HistoryQuotesJson);
                 }
                 return null;
+            }
+        }
+
+        public List<CompanyToProcess> FindCompaniesToProcess(CompaniesToProcessRequest request)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICompanyRepository>();
+                var companies = repository.FindCompaniesToProcess(request.FromTimeAgo, request.MaxRecordCount);
+                return companies;
             }
         }
 

@@ -107,7 +107,7 @@
     <Compile Include="Models\IndicatorParam.cs" />
     <Compile Include="Enums\IndicatorParamName.cs" />
     <Compile Include="Enums\QuotePeriod.cs" />
-    <Compile Include="Models\CompanyTradingData.cs" />
+    <Compile Include="Models\CompanyToUpdate.cs" />
     <Compile Include="Repositories\IndicatorRepository.cs" />
     <Compile Include="Repositories\StrategyRepository.cs" />
     <Compile Include="Repositories\StrategyRuleRepository.cs" />
@@ -122,7 +122,10 @@
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\DreamDbRepository.cs" />
     <Compile Include="Services\CompanyManagerService.cs" />
+    <Compile Include="Requests\CompaniesToProcessRequest.cs" />
+    <Compile Include="Models\CompanyToProcess.cs" />
     <Compile Include="Services\ICompanyService.cs" />
+    <Compile Include="Services\IStrategyService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
