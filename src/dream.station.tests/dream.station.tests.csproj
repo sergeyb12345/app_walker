@@ -70,6 +70,7 @@
     <Compile Include="Indicators\IndicatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stock\GetStockHistoryRequestTests.cs" />
+    <Compile Include="Stock\MarketWatchTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">

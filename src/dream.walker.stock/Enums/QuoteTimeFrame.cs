@@ -4,6 +4,7 @@ namespace dream.walker.stock.Enums
     {
         Day,
         Month,
-        Year
+        Year,
+        Minute
     }
 }

@@ -15,16 +15,24 @@ namespace dream.walker.strategy
         }
 
         public List<TradeRule> MarketTideRules { get; set; }
-        public void Validate(List<CompanyToProcess> companies)
+        public TrdadeGrade Validate(List<CompanyToProcess> companies)
         {
             throw new NotImplementedException();
         }
     }
 
+    public enum TrdadeGrade
+    {
+        Ready,
+        CheckNextHour,
+        CheckNextDay,
+        CheckNextWeek
+    }
+
     public interface ITradeStrategy
     {
         List<TradeRule> MarketTideRules { get; set; }
-        void Validate(List<CompanyToProcess> companies);
+        TrdadeGrade Validate(List<CompanyToProcess> companies);
     }
 
     public class TradeRule

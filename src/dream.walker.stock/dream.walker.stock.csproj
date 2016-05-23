@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="Enums\QuoteTimeFrame.cs" />
     <Compile Include="IMarketStockClient.cs" />
+    <Compile Include="MarketWatch\Client\MarketWatchClient.cs" />
+    <Compile Include="MarketWatch\Client\MarketWatchClientConfig.cs" />
     <Compile Include="Nasdaq\Client\NasdaqStockClientConfig.cs" />
     <Compile Include="Requests\GetStockHistoryRequest.cs" />
     <Compile Include="Nasdaq\Client\NasdaqStockClient.cs" />
@@ -53,6 +55,7 @@
       <Name>dream.walker.data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
