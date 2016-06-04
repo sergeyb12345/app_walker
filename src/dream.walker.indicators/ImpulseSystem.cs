@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using dream.walker.indicators.Enums;
 using dream.walker.indicators.Extensions;
 using dream.walker.indicators.IndicatorParams;
 using dream.walker.indicators.Models;
@@ -24,16 +25,16 @@ namespace dream.walker.indicators
     ///  The Impulse System is based on two indicators, a 13-day exponential moving average and the MACD-Histogram. 
     ///  The moving average identifies the trend, while the MACD-Histogram measures momentum.
     /// </summary>
-    public class ImpulseSystem : IIndicator<ImpulseSystemModel, ImpulseSystemParams>
+    public class ImpulseSystem : IIndicator<IndicatorModel<ImpulseType>, ImpulseSystemParams>
     {
-        public List<ImpulseSystemModel> Calculate(List<QuotesModel> quotes, ImpulseSystemParams inputParams)
+        public List<IndicatorModel<ImpulseType>> Calculate(List<QuotesModel> quotes, ImpulseSystemParams inputParams)
         {
             var macdHist = new Macd().Calculate(quotes, inputParams.MacdParams);
             var ema = new Ema().Calculate(quotes, inputParams.EmaPeriod);
             var impulseData = (from h in macdHist
                          join e in ema
                          on h.Date equals e.Date
-                         select new ImpulseData { Date = h.Date, Histogram = h.Histogram, Ema = e.Value})
+                         select new ImpulseData { Date = h.Date, Histogram = h.Value, Ema = e.Value})
                     .ToList();
 
             return impulseData.AsImpulseSystemModel();

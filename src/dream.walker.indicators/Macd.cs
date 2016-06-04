@@ -17,9 +17,9 @@ namespace dream.walker.indicators
         4. Calculate a 9 day EMA of the MACD line gotten in (3)
     */
 
-    public class Macd : IIndicator<MacdModel, MacdParams>
+    public class Macd : IIndicator<IndicatorModel, MacdParams>
     {
-        public List<MacdModel> Calculate(List<QuotesModel> quotes, MacdParams inputParams)
+        public List<IndicatorModel> Calculate(List<QuotesModel> quotes, MacdParams inputParams)
         {
             if (!Validate(quotes, inputParams))
             {
@@ -32,8 +32,8 @@ namespace dream.walker.indicators
             var signalEma = new Ema().Calculate(macdLine.AsQuotesModel(QuoteModelField.Close), inputParams.SignalEmaPeriod);
             var macdHist = macdLine.Substract(signalEma);
 
-            var result = macdHist.Select(c => new MacdModel() {Date = c.Date, Histogram = c.Value}).ToList();
-
+            var result = macdHist.Select(c => new IndicatorModel() {Date = c.Date, Value = c.Value}).ToList();
+            
             return result;
         }
 
@@ -52,4 +52,5 @@ namespace dream.walker.indicators
             return true;
         }
     }
+
 }

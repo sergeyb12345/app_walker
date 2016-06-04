@@ -44,16 +44,15 @@
     <Compile Include="Ema.cs" />
     <Compile Include="Extensions\IndicatorModelExtensions.cs" />
     <Compile Include="Enums\QuoteModelField.cs" />
+    <Compile Include="Models\IndicatorModel.cs" />
     <Compile Include="Models\ImpulseData.cs" />
-    <Compile Include="Models\ImpulseSystemModel.cs" />
     <Compile Include="IndicatorParams\ImpulseSystemParams.cs" />
     <Compile Include="Enums\ImpulseType.cs" />
     <Compile Include="Macd.cs" />
     <Compile Include="IndicatorParams\MacdParams.cs" />
-    <Compile Include="Models\MacdModel.cs" />
     <Compile Include="Models\IIndicatorModel.cs" />
-    <Compile Include="Models\EmaModel.cs" />
     <Compile Include="IIndicator.cs" />
+    <Compile Include="Nhnl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImpulseSystem.cs" />
   </ItemGroup>

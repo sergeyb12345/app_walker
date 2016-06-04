@@ -8,12 +8,12 @@ namespace dream.walker.indicators.Extensions
 {
     public static class IndicatorModelExtensions
     {
-        public static List<EmaModel> Substract(this List<EmaModel> substractFrom, List<EmaModel> substractThis)
+        public static List<IndicatorModel> Substract(this List<IndicatorModel> substractFrom, List<IndicatorModel> substractThis)
         {
             var result = from fromItem in substractFrom
                          join thisItem in substractThis
                          on fromItem.Date equals thisItem.Date
-                         select new EmaModel {Date = fromItem.Date, Value = fromItem.Value - thisItem.Value };
+                         select new IndicatorModel { Date = fromItem.Date, Value = fromItem.Value - thisItem.Value };
 
             return result.ToList();
         }
@@ -25,9 +25,9 @@ namespace dream.walker.indicators.Extensions
         /// </summary>
         /// <param name="impulseData"></param>
         /// <returns></returns>
-        public static List<ImpulseSystemModel> AsImpulseSystemModel(this List<ImpulseData> impulseData)
+        public static List<IndicatorModel<ImpulseType>> AsImpulseSystemModel(this List<ImpulseData> impulseData)
         {
-            var result = new List<ImpulseSystemModel>();
+            var result = new List<IndicatorModel<ImpulseType>>();
             for (int i = 1; i < impulseData.Count; i++)
             {
                 var today = impulseData[i - 1];
@@ -42,12 +42,12 @@ namespace dream.walker.indicators.Extensions
                 {
                     color = ImpulseType.Red;
                 }
-                result.Add(new ImpulseSystemModel {Date = today.Date, Value = color});
+                result.Add(new IndicatorModel<ImpulseType> { Date = today.Date, Value = color});
             }
             return result;
         }
 
-        public static List<QuotesModel> AsQuotesModel(this List<EmaModel> list, QuoteModelField mapValueTo)
+        public static List<QuotesModel> AsQuotesModel(this List<IndicatorModel> list, QuoteModelField mapValueTo)
         {
             var result = new List<QuotesModel>();
             foreach (var model in list)

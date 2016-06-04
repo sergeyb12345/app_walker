@@ -21,16 +21,16 @@ namespace dream.walker.indicators
     /// EMA = Price(t) * k + EMA(y) * (1 – k)
     /// where: t = today, y = yesterday, N = number of days in EMA, k = 2/(N+1)
     /// </summary>
-    public class Ema : IIndicator<EmaModel, int>
+    public class Ema : IIndicator<IndicatorModel, int>
     {
-        public List<EmaModel> Calculate(List<QuotesModel> quotes, int period)
+        public List<IndicatorModel> Calculate(List<QuotesModel> quotes, int period)
         {
             if (!Validate(quotes, period))
             {
                 return null;
             }
 
-            var result = new List<EmaModel>();
+            var result = new List<IndicatorModel>();
             var queue = new Queue<QuotesModel>(quotes.OrderBy(c => c.Date).ToList());
 
             var yesterdayEma = CalcInitialEma(period, queue);
@@ -38,7 +38,7 @@ namespace dream.walker.indicators
             foreach (var item in queue)
             {
                 var ema = CalculateEma(item.Close, period, yesterdayEma);
-                result.Insert(0, new EmaModel {Date = item.Date, Value = ema});
+                result.Insert(0, new IndicatorModel { Date = item.Date, Value = ema});
                 yesterdayEma = ema;
             }
 
