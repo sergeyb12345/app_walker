@@ -51,6 +51,7 @@ namespace dream.walker.station.IoC
             builder.RegisterType<ConsolePublisher>().As<IPublisher>();
 
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
+            builder.RegisterType<IndicatorProcessorFactory>().SingleInstance();
             builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();
 
             return builder.Build();

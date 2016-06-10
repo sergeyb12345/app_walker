@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using dream.walker.data.Entities;
 using dream.walker.data.Models;
 using dream.walker.data.Services;
@@ -13,11 +14,14 @@ namespace dream.walker.station.Processors.IndicatorProcessor
     {
         private readonly ICompanyService _companyService;
         private readonly ICompanyIndicatorService _companyIndicatorService;
+        private readonly IndicatorProcessorFactory _processorFactory;
 
-        public IndicatorProcess(ICompanyService companyService, ICompanyIndicatorService companyIndicatorService)
+        public IndicatorProcess(ICompanyService companyService, ICompanyIndicatorService companyIndicatorService,
+            IndicatorProcessorFactory processorFactory)
         {
             _companyService = companyService;
             _companyIndicatorService = companyIndicatorService;
+            _processorFactory = processorFactory;
         }
 
 
@@ -53,7 +57,7 @@ namespace dream.walker.station.Processors.IndicatorProcessor
 
                 foreach (var indicator in indicators)
                 {
-                    IIndicatorProcessor processor = IndicatorProcessFactory.Create(indicator);
+                    var processor = _processorFactory.Create(indicator);
                     string jsonData = processor.Process(company.Quotes);
                     if (!string.IsNullOrEmpty(jsonData))
                     {
@@ -65,9 +69,16 @@ namespace dream.walker.station.Processors.IndicatorProcessor
 
     }
 
-    public class IndicatorProcessFactory
+    public class IndicatorProcessorFactory
     {
-        public static IIndicatorProcessor Create(Indicator indicator)
+        private readonly ILifetimeScope _container;
+
+        public IndicatorProcessorFactory(ILifetimeScope container)
+        {
+            _container = container;
+        }
+
+        public IIndicatorProcessor Create(Indicator indicator)
         {
             throw new NotImplementedException();
         }
