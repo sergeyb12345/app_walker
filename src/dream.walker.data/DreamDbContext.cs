@@ -69,6 +69,13 @@ namespace dream.walker.data
             modelBuilder.Entity<IndicatorRule>().Property(t => t.IndicatorId).IsRequired().HasColumnAnnotation(
                 IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IX_RuleIdIndicatorId", 2) { IsUnique = true }));
 
+            //MarketNHNL
+            modelBuilder.Entity<MarketNHNL>().HasKey(e => new { e.Market, e.Period });
+            modelBuilder.Entity<MarketNHNL>().Property(e => e.Market).IsRequired().HasColumnType("varchar").HasMaxLength(50);
+
+            //CompanyNHNL
+            modelBuilder.Entity<CompanyNHNL>().HasKey(e => new { e.Ticker, e.Period });
+            modelBuilder.Entity<CompanyNHNL>().Property(e => e.Ticker).IsRequired().HasColumnType("varchar").HasMaxLength(50);
 
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
@@ -83,5 +90,7 @@ namespace dream.walker.data
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Strategy> Strategies { get; set; }
         public DbSet<StrategyRule> StrategyRules { get; set; }
+        public DbSet<MarketNHNL> MarketNHNLs { get; set; }
+        public DbSet<CompanyNHNL> CompanyNHNLs { get; set; }
     }
 }

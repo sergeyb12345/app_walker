@@ -5,6 +5,7 @@ using dream.walker.data.Services;
 using dream.walker.reader;
 using dream.walker.reader.Validators;
 using dream.walker.station.Processors.CompanyImport;
+using dream.walker.station.Processors.IndicatorProcessor;
 using dream.walker.station.Processors.QuotesImport;
 using dream.walker.station.Publishers;
 using dream.walker.stock;
@@ -46,6 +47,7 @@ namespace dream.walker.station.IoC
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
             builder.RegisterType<CompanyImportProcess>().As<IProcess>();
             builder.RegisterType<QuotesImportProcess>().As<IProcess>();
+            builder.RegisterType<IndicatorProcess>().As<IProcess>();
             builder.RegisterType<ConsolePublisher>().As<IPublisher>();
 
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();

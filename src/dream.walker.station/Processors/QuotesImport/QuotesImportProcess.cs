@@ -93,7 +93,7 @@ namespace dream.walker.station.Processors.QuotesImport
                         }
                     } while (!waitHandle.WaitOne(interval));
                 }
-            });
+            }, token);
 
         }
     }

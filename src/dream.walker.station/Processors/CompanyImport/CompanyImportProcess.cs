@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
+using dream.walker.data.Requests;
 using dream.walker.data.Services;
 using dream.walker.reader;
 using dream.walker.reader.Models;
+using dream.walker.stock.Requests;
+using Newtonsoft.Json;
 
 namespace dream.walker.station.Processors.CompanyImport
 {

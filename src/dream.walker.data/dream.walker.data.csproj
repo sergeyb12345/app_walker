@@ -61,8 +61,11 @@
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\CompanyIndicator.cs" />
     <Compile Include="Entities\CompanyIndicatorRule.cs" />
+    <Compile Include="Entities\CompanyNHNL.cs" />
     <Compile Include="Entities\CompanyRule.cs" />
     <Compile Include="Entities\IndicatorRule.cs" />
+    <Compile Include="Entities\MarketNHNL.cs" />
+    <Compile Include="Enums\NHNLPeriod.cs" />
     <Compile Include="Entities\Strategy.cs" />
     <Compile Include="Entities\StrategyRule.cs" />
     <Compile Include="Enums\RuleFunction.cs" />
@@ -89,6 +92,10 @@
     <Compile Include="Migrations\201605151227334_CreateTableCompanyRule.cs" />
     <Compile Include="Migrations\201605151227334_CreateTableCompanyRule.Designer.cs">
       <DependentUpon>201605151227334_CreateTableCompanyRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606101219161_NHNLTables.cs" />
+    <Compile Include="Migrations\201606101219161_NHNLTables.Designer.cs">
+      <DependentUpon>201606101219161_NHNLTables.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
@@ -166,6 +173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605151227334_CreateTableCompanyRule.resx">
       <DependentUpon>201605151227334_CreateTableCompanyRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606101219161_NHNLTables.resx">
+      <DependentUpon>201606101219161_NHNLTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
