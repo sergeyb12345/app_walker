@@ -25,9 +25,9 @@ namespace dream.walker.indicators.Extensions
         /// </summary>
         /// <param name="impulseData"></param>
         /// <returns></returns>
-        public static List<IndicatorModel<ImpulseType>> AsImpulseSystemModel(this List<ImpulseData> impulseData)
+        public static List<IndicatorModel> AsImpulseSystemModel(this List<ImpulseData> impulseData)
         {
-            var result = new List<IndicatorModel<ImpulseType>>();
+            var result = new List<IndicatorModel>();
             for (int i = 1; i < impulseData.Count; i++)
             {
                 var today = impulseData[i - 1];
@@ -42,7 +42,7 @@ namespace dream.walker.indicators.Extensions
                 {
                     color = ImpulseType.Red;
                 }
-                result.Add(new IndicatorModel<ImpulseType> { Date = today.Date, Value = color});
+                result.Add(new IndicatorModel { Date = today.Date, Value = (int)color});
             }
             return result;
         }

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using dream.walker.data.Entities;
-using dream.walker.data.Models;
 using dream.walker.data.Services;
-using dream.walker.reader.Models;
+using Newtonsoft.Json;
 
 namespace dream.walker.station.Processors.IndicatorProcessor
 {
@@ -47,6 +46,7 @@ namespace dream.walker.station.Processors.IndicatorProcessor
             }, token);
         }
 
+
         public void Process()
         {
             var companies = _companyIndicatorService.FindCompaniesToProcess(100);
@@ -58,54 +58,14 @@ namespace dream.walker.station.Processors.IndicatorProcessor
                 foreach (var indicator in indicators)
                 {
                     var processor = _processorFactory.Create(indicator);
-                    string jsonData = processor.Process(company.Quotes);
-                    if (!string.IsNullOrEmpty(jsonData))
+                    var data = processor.Calculate(indicator, company.Quotes);
+                    if (data != null && data.Any())
                     {
-                        _companyIndicatorService.Update(company.Ticker, jsonData, indicator);
+                        _companyIndicatorService.Update(company.Ticker, JsonConvert.SerializeObject(data), indicator);
                     }
                 }
             }
         }
 
-    }
-
-    public class IndicatorProcessorFactory
-    {
-        private readonly ILifetimeScope _container;
-
-        public IndicatorProcessorFactory(ILifetimeScope container)
-        {
-            _container = container;
-        }
-
-        public IIndicatorProcessor Create(Indicator indicator)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public interface IIndicatorProcessor
-    {
-        string Process(List<QuotesModel> quotes);
-    }
-
-    public class IndicatorProcessManager
-    {
-        public IndicatorProcessManager(CompanyToProcess company, Indicator indicator)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string Process()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public interface ICompanyIndicatorService
-    {
-        List<CompanyToProcess> FindCompaniesToProcess(int maxCompanyCount);
-        List<Indicator> GetRegisteredIndicators();
-        void Update(string ticker, string jsonData, Indicator indicator);
     }
 }

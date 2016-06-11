@@ -7,5 +7,6 @@ namespace dream.walker.indicators
     public interface IIndicator<TModel, TParams> where TModel : IIndicatorModel
     {
         List<TModel> Calculate(List<QuotesModel> quotes, TParams inputParams);
+        string Name { get; }
     }
 }

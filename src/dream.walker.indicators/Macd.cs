@@ -19,6 +19,8 @@ namespace dream.walker.indicators
 
     public class Macd : IIndicator<IndicatorModel, MacdParams>
     {
+        public string Name => "MACD";
+
         public List<IndicatorModel> Calculate(List<QuotesModel> quotes, MacdParams inputParams)
         {
             if (!Validate(quotes, inputParams))

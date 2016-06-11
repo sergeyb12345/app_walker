@@ -25,9 +25,11 @@ namespace dream.walker.indicators
     ///  The Impulse System is based on two indicators, a 13-day exponential moving average and the MACD-Histogram. 
     ///  The moving average identifies the trend, while the MACD-Histogram measures momentum.
     /// </summary>
-    public class ImpulseSystem : IIndicator<IndicatorModel<ImpulseType>, ImpulseSystemParams>
+    public class ImpulseSystem : IIndicator<IndicatorModel, ImpulseSystemParams>
     {
-        public List<IndicatorModel<ImpulseType>> Calculate(List<QuotesModel> quotes, ImpulseSystemParams inputParams)
+        public string Name => "ImpulseSystem";
+
+        public List<IndicatorModel> Calculate(List<QuotesModel> quotes, ImpulseSystemParams inputParams)
         {
             var macdHist = new Macd().Calculate(quotes, inputParams.MacdParams);
             var ema = new Ema().Calculate(quotes, inputParams.EmaPeriod);

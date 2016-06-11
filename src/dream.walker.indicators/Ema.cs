@@ -23,6 +23,8 @@ namespace dream.walker.indicators
     /// </summary>
     public class Ema : IIndicator<IndicatorModel, int>
     {
+        public string Name => "EMA";
+
         public List<IndicatorModel> Calculate(List<QuotesModel> quotes, int period)
         {
             if (!Validate(quotes, period))

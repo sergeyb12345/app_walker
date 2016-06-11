@@ -2,8 +2,8 @@
 {
     public enum ImpulseType
     {
-        Red,
-        Green,
-        Neutral
+        Red = -1,
+        Green = 1,
+        Neutral = 0
     }
 }

@@ -12,6 +12,8 @@ namespace dream.walker.indicators
     /// </summary>
     public class Nhnl : IIndicator<IndicatorModel, NHNLPeriod>
     {
+        public string Name => "NHNL";
+
         public List<IndicatorModel> Calculate(List<QuotesModel> quotes, NHNLPeriod period)
         {
             if (!Validate(quotes, period))
@@ -43,9 +45,5 @@ namespace dream.walker.indicators
             return true;
         }
 
-        public override string ToString()
-        {
-            return $"NH-NL";
-        }
     }
 }

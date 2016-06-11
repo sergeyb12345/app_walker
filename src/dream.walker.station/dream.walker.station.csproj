@@ -121,7 +121,12 @@
     <Compile Include="Processors\CompanyImport\CompanyImportProcess.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
+    <Compile Include="Processors\Calculators\EmaIndicatorCalculator.cs" />
+    <Compile Include="Processors\IndicatorProcessor\ICompanyIndicatorService.cs" />
+    <Compile Include="Processors\Calculators\IIndicatorCalculator.cs" />
+    <Compile Include="Processors\IndicatorProcessor\IIndicatorProcessor.cs" />
     <Compile Include="Processors\IndicatorProcessor\IndicatorProcess.cs" />
+    <Compile Include="Processors\IndicatorProcessor\IndicatorProcessorFactory.cs" />
     <Compile Include="Processors\QuotesImport\QuotesImportProcess.cs" />
     <Compile Include="Processors\StrategyMonitor\StrategyMonitorProcess.cs" />
     <Compile Include="Program.cs" />
@@ -153,6 +158,10 @@
     <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">
       <Project>{eb10172d-559a-4e59-bc95-eee805f1a19b}</Project>
       <Name>dream.walker.data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.indicators\dream.walker.indicators.csproj">
+      <Project>{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}</Project>
+      <Name>dream.walker.indicators</Name>
     </ProjectReference>
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
       <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>
