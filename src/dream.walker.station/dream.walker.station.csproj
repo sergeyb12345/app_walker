@@ -121,9 +121,6 @@
     <Compile Include="Processors\CompanyImport\CompanyImportProcess.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
-    <Compile Include="Processors\Calculators\EmaIndicatorCalculator.cs" />
-    <Compile Include="Processors\IndicatorProcessor\ICompanyIndicatorService.cs" />
-    <Compile Include="Processors\Calculators\IIndicatorCalculator.cs" />
     <Compile Include="Processors\IndicatorProcessor\IIndicatorProcessor.cs" />
     <Compile Include="Processors\IndicatorProcessor\IndicatorProcess.cs" />
     <Compile Include="Processors\IndicatorProcessor\IndicatorProcessorFactory.cs" />
@@ -155,6 +152,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dream.walker.calculators\dream.walker.calculators.csproj">
+      <Project>{3e257fc8-37ef-4bb5-bdfd-977bd3754a2c}</Project>
+      <Name>dream.walker.calculators</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">
       <Project>{eb10172d-559a-4e59-bc95-eee805f1a19b}</Project>
       <Name>dream.walker.data</Name>

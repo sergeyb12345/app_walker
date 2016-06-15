@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using dream.walker.data.Entities;
+using dream.walker.data.Models;
 using dream.walker.data.Services;
 using Newtonsoft.Json;
 
@@ -11,14 +12,12 @@ namespace dream.walker.station.Processors.IndicatorProcessor
 {
     public class IndicatorProcess : IProcess
     {
-        private readonly ICompanyService _companyService;
         private readonly ICompanyIndicatorService _companyIndicatorService;
         private readonly IndicatorProcessorFactory _processorFactory;
 
-        public IndicatorProcess(ICompanyService companyService, ICompanyIndicatorService companyIndicatorService,
+        public IndicatorProcess(ICompanyIndicatorService companyIndicatorService,
             IndicatorProcessorFactory processorFactory)
         {
-            _companyService = companyService;
             _companyIndicatorService = companyIndicatorService;
             _processorFactory = processorFactory;
         }
@@ -52,20 +51,41 @@ namespace dream.walker.station.Processors.IndicatorProcessor
             var companies = _companyIndicatorService.FindCompaniesToProcess(100);
             foreach (var company in companies)
             {
-                var processors = new List<IIndicatorProcessor>();
-                List<Indicator> indicators = _companyIndicatorService.GetRegisteredIndicators();
+                var indicators = _companyIndicatorService.GetRegisteredIndicators();
+                var companyIndicators = _companyIndicatorService.GetIndicators(company.Ticker);
 
                 foreach (var indicator in indicators)
                 {
-                    var processor = _processorFactory.Create(indicator);
-                    var data = processor.Calculate(indicator, company.Quotes);
-                    if (data != null && data.Any())
+                    if (NeedToCalculate(indicator, companyIndicators, company))
                     {
-                        _companyIndicatorService.Update(company.Ticker, JsonConvert.SerializeObject(data), indicator);
+                        var processor = _processorFactory.Create(indicator);
+                        var data = processor?.Calculate(indicator, company.Quotes);
+
+                        if (data != null && data.Any())
+                        {
+                            _companyIndicatorService.Update(company.Ticker, JsonConvert.SerializeObject(data),
+                                indicator);
+                        }
                     }
                 }
             }
         }
 
+        private bool NeedToCalculate(Indicator indicator, List<CompanyIndicator> companyIndicators, CompanyToProcess company)
+        {
+            var companyIndicator = companyIndicators.Where(c => c.IndicatorId == indicator.IndicatorId).ToList();
+
+            if (!companyIndicator.Any())
+            {
+                return true;
+            }
+
+            if (companyIndicator.All(c => c.LastUpdated < company.LastCalculated))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

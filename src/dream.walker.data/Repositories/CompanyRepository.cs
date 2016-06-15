@@ -13,6 +13,7 @@ namespace dream.walker.data.Repositories
         Company Get(string ticker);
         List<CompanyToUpdate> FindCompaniesForUpdate(TimeSpan fromTimeAgo, int count);
         List<CompanyToProcess> FindCompaniesToProcess(TimeSpan fromTimeAgo, int count);
+        List<CompanyToProcess> FindCompaniesToCalculate(int maxCompanyCount);
     }
 
 
@@ -62,6 +63,26 @@ namespace dream.walker.data.Repositories
                 .ToList();
 
             return records;
+        }
+
+        public List<CompanyToProcess> FindCompaniesToCalculate(int maxCompanyCount)
+        {
+            var sql = $@"
+                SELECT TOP {maxCompanyCount} DISTINCT C.*
+                FROM dbo.CompanyIndicator CI 
+	                INNER JOIN dbo.Company C ON CI.Ticker = C.Ticker
+                WHERE CI.LastUpdated < C.LastUpdated";
+
+            var companies = Dbset.SqlQuery(sql)
+                .Select(c =>
+                new CompanyToProcess
+                {
+                    Ticker = c.Ticker,
+                    LastCalculated = c.LastCalculated,
+                    Quotes = JsonConvert.DeserializeObject<List<QuotesModel>>(c.HistoryQuotesJson)
+                }).ToList();
+
+            return companies;
         }
     }
 }

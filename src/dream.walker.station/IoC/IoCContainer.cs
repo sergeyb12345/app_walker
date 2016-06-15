@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using dream.walker.calculators;
 using dream.walker.data;
 using dream.walker.data.Repositories;
 using dream.walker.data.Services;
@@ -42,13 +43,17 @@ namespace dream.walker.station.IoC
             builder.RegisterType<QuotesFileReader>().As<IQuotesFileReader>().InstancePerDependency();
             builder.RegisterType<FileReaderValidator>().As<IFileReaderValidator>().InstancePerDependency();
             builder.RegisterType<CompanyRepository>().As<ICompanyRepository>().InstancePerDependency();
+            builder.RegisterType<CompanyIndicatorRepository>().As<ICompanyIndicatorRepository>().InstancePerDependency();
+
             builder.RegisterType<CompanyManagerService>().As<ICompanyManagerService>().As<ICompanyService>().InstancePerDependency();
+            builder.RegisterType<CompanyIndicatorService>().As<ICompanyIndicatorService>().InstancePerDependency();
             builder.RegisterType<FileReaderConfiguration>().SingleInstance();
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
             builder.RegisterType<CompanyImportProcess>().As<IProcess>();
             builder.RegisterType<QuotesImportProcess>().As<IProcess>();
             builder.RegisterType<IndicatorProcess>().As<IProcess>();
             builder.RegisterType<ConsolePublisher>().As<IPublisher>();
+            builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
 
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
             builder.RegisterType<IndicatorProcessorFactory>().SingleInstance();

@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using dream.walker.calculators;
 using dream.walker.data.Entities;
-using dream.walker.station.Processors.Calculators;
 
 namespace dream.walker.station.Processors.IndicatorProcessor
 {
