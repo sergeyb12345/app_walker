@@ -13,18 +13,25 @@ namespace dream.walker.station.Processors.IndicatorProcessor
     public class IndicatorProcess : IProcess
     {
         private readonly ICompanyIndicatorService _companyIndicatorService;
+        private readonly ICompanyService _companyService;
         private readonly IndicatorProcessorFactory _processorFactory;
 
         public IndicatorProcess(ICompanyIndicatorService companyIndicatorService,
+            ICompanyService companyService,
             IndicatorProcessorFactory processorFactory)
         {
             _companyIndicatorService = companyIndicatorService;
+            _companyService = companyService;
             _processorFactory = processorFactory;
         }
 
 
         public void Start(CancellationToken token)
         {
+
+            Process();
+            return;
+            
             Task.Run(() =>
             {
                 using (var waitHandle = token.WaitHandle)
@@ -48,10 +55,15 @@ namespace dream.walker.station.Processors.IndicatorProcessor
 
         public void Process()
         {
-            var companies = _companyIndicatorService.FindCompaniesToProcess(100);
+            var indicators = _companyIndicatorService.GetRegisteredIndicators();
+            if (!indicators.Any())
+            {
+                indicators = _companyIndicatorService.RegisterCommonIndicators();
+            }
+
+            var companies = _companyIndicatorService.FindCompaniesToProcess(10);
             foreach (var company in companies)
             {
-                var indicators = _companyIndicatorService.GetRegisteredIndicators();
                 var companyIndicators = _companyIndicatorService.GetIndicators(company.Ticker);
 
                 foreach (var indicator in indicators)
@@ -63,11 +75,11 @@ namespace dream.walker.station.Processors.IndicatorProcessor
 
                         if (data != null && data.Any())
                         {
-                            _companyIndicatorService.Update(company.Ticker, JsonConvert.SerializeObject(data),
-                                indicator);
+                            _companyIndicatorService.Update(company.Ticker, JsonConvert.SerializeObject(data), indicator);
                         }
                     }
                 }
+                _companyService.SetLastCalculated(company.Ticker);
             }
         }
 
@@ -80,7 +92,7 @@ namespace dream.walker.station.Processors.IndicatorProcessor
                 return true;
             }
 
-            if (companyIndicator.All(c => c.LastUpdated < company.LastCalculated))
+            if (companyIndicator.All(c => c.LastUpdated < company.LastUpdated))
             {
                 return true;
             }

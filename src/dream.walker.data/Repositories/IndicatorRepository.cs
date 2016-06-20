@@ -8,6 +8,8 @@ namespace dream.walker.data.Repositories
     {
         Indicator Get(int id);
         List<Indicator> GetAll();
+        Indicator Add(Indicator indicator);
+        void Commit();
     }
 
 

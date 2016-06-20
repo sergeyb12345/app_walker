@@ -58,6 +58,7 @@ namespace dream.walker.data.Repositories
                     {
                         Ticker = c.Ticker,
                         LastCalculated = c.LastCalculated,
+                        LastUpdated = c.LastUpdated,
                         Quotes = JsonConvert.DeserializeObject<List<QuotesModel>>(c.HistoryQuotesJson)
                     })
                 .ToList();
@@ -68,10 +69,9 @@ namespace dream.walker.data.Repositories
         public List<CompanyToProcess> FindCompaniesToCalculate(int maxCompanyCount)
         {
             var sql = $@"
-                SELECT TOP {maxCompanyCount} DISTINCT C.*
-                FROM dbo.CompanyIndicator CI 
-	                INNER JOIN dbo.Company C ON CI.Ticker = C.Ticker
-                WHERE CI.LastUpdated < C.LastUpdated";
+                SELECT TOP {maxCompanyCount}  C.*
+                FROM dbo.Company C
+                WHERE C.LastCalculated < C.LastUpdated";
 
             var companies = Dbset.SqlQuery(sql)
                 .Select(c =>
@@ -79,6 +79,7 @@ namespace dream.walker.data.Repositories
                 {
                     Ticker = c.Ticker,
                     LastCalculated = c.LastCalculated,
+                    LastUpdated = c.LastUpdated,
                     Quotes = JsonConvert.DeserializeObject<List<QuotesModel>>(c.HistoryQuotesJson)
                 }).ToList();
 

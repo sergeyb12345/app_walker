@@ -32,5 +32,12 @@ namespace dream.walker.data.Repositories
 
             return records;
         }
+
+        public CompanyIndicator Get(string ticker, int indicatorId)
+        {
+            var record = Dbset.FirstOrDefault(c => c.Ticker == ticker && c.IndicatorId == indicatorId);
+
+            return record;
+        }
     }
 }

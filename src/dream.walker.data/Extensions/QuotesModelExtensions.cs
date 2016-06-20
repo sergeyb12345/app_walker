@@ -65,7 +65,7 @@ namespace dream.walker.data.Extensions
 
                     foreach (var item in queue)
                     {
-                        if (startDate.AddDays(-7) <= item.Date)
+                        if (quotes.Any() && startDate.AddDays(-7) <= item.Date)
                         {
                             var weeklyQuote = new QuotesModel
                             {

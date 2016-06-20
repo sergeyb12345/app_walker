@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using dream.walker.data.Entities;
 using dream.walker.data.Managers;
 using dream.walker.data.Models;
@@ -14,6 +15,7 @@ namespace dream.walker.data.Services
         void UpdateQuotes(string ticker, string jsonQuotes);
         List<QuotesModel> GetQuotes(string ticker);
         List<CompanyToProcess> FindCompaniesToProcess(CompaniesToProcessRequest request);
+        void SetLastCalculated(string ticker);
     }
 
     public interface ICompanyManagerService 

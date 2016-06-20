@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Autofac;
 using dream.walker.data.Entities;
+using dream.walker.data.Enums;
 using dream.walker.data.Models;
 using dream.walker.data.Repositories;
 
@@ -37,7 +39,18 @@ namespace dream.walker.data.Services
 
         public void Update(string ticker, string jsonData, Indicator indicator)
         {
-            throw new System.NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICompanyIndicatorRepository>();
+                var ci = repository.Get(ticker, indicator.IndicatorId) ?? repository.Add(new CompanyIndicator());
+
+                ci.IndicatorId = indicator.IndicatorId;
+                ci.Ticker = ticker;
+                ci.LastUpdated = DateTime.Now;
+                ci.JsonData = jsonData;
+
+                repository.Commit();
+            }
         }
 
         public List<CompanyIndicator> GetIndicators(string ticker)
@@ -48,6 +61,26 @@ namespace dream.walker.data.Services
                 var indicators = repository.Get(ticker);
                 return indicators;
             }
+        }
+
+        public List<Indicator> RegisterCommonIndicators()
+        {
+            var indicators = new List<Indicator>
+            {
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, QuotePeriod = QuotePeriod.Daily, LastUpdated = DateTime.Now},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, QuotePeriod = QuotePeriod.Daily, LastUpdated = DateTime.Now},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, QuotePeriod = QuotePeriod.Weekly, LastUpdated = DateTime.Now},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, QuotePeriod = QuotePeriod.Weekly, LastUpdated = DateTime.Now},
+            };
+
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IIndicatorRepository>();
+                indicators.ForEach(i => repository.Add(i));
+                repository.Commit();
+            }
+
+            return indicators;
         }
     }
 }

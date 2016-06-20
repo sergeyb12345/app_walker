@@ -8,6 +8,7 @@ namespace dream.walker.data.Models
     {
         public string Ticker { get; set; }
         public DateTime LastCalculated { get; set; }
+        public DateTime LastUpdated { get; set; }
         public List<QuotesModel> Quotes { get; set; }
     }
 }

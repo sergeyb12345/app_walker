@@ -93,6 +93,21 @@ namespace dream.walker.data.Services
             }
         }
 
+        public void SetLastCalculated(string ticker)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICompanyRepository>();
+                var company = repository.Get(ticker);
+                if (company != null)
+                {
+                    company.LastCalculated = company.LastUpdated;
+
+                    repository.Commit();
+                }
+            }
+        }
+
 
         public CompanyManager CreateManager(CompanyModel company)
         {

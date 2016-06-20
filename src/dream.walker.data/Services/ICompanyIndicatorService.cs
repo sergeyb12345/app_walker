@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using dream.walker.data.Entities;
 using dream.walker.data.Models;
 
@@ -10,5 +11,6 @@ namespace dream.walker.data.Services
         List<Indicator> GetRegisteredIndicators();
         void Update(string ticker, string jsonData, Indicator indicator);
         List<CompanyIndicator> GetIndicators(string ticker);
+        List<Indicator> RegisterCommonIndicators();
     }
 }
