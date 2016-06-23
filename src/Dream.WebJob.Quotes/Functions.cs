@@ -17,17 +17,23 @@ namespace Dream.WebJob.Quotes
         {
             log.WriteLine(message);
         }
-        //public static void TimerJob([TimerTrigger("00:00:10")] TimerInfo timerInfo, TextWriter log)
-        //{
-        //    log.WriteLine("TimerJob fired!");
-        //}
 
-        //public static void WriteLog([BlobTrigger("input/{name}")] string logMessage, string name, TextWriter logger)
-        //{
-        //    logger.WriteLine("Blob name: {0}", name);
-        //    logger.WriteLine("Content:");
-        //    logger.WriteLine(logMessage);
-        //}
+        public static void TimerJob([TimerTrigger("00:00:10")] TimerInfo timerInfo, TextWriter log)
+        {
+            log.WriteLine("TimerJob fired!");
+        }
+
+        public static void WriteLog([BlobTrigger("input/{name}")] string logMessage, string name, TextWriter logger)
+        {
+            logger.WriteLine("Blob name: {0}", name);
+            logger.WriteLine("Content:");
+            logger.WriteLine(logMessage);
+        }
+
+        public static void IndicatorCalculateTimerJob([TimerTrigger(typeof(IndicatorCalculateSchedule))] TimerInfo timerInfo, TextWriter log)
+        {
+            log.WriteLine("IndicatorCalculateTimerJob fired!");
+        }
         */
         #endregion
 
@@ -37,10 +43,6 @@ namespace Dream.WebJob.Quotes
             var tokenSource = new CancellationTokenSource();
 
             job.Start(tokenSource.Token, log);
-        }
-        public static void IndicatorCalculateTimerJob([TimerTrigger(typeof(IndicatorCalculateSchedule))] TimerInfo timerInfo, TextWriter log)
-        {
-            log.WriteLine("IndicatorCalculateTimerJob fired!");
         }
 
     }
