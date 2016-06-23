@@ -36,7 +36,8 @@ namespace dream.walker.data.Repositories
                 new CompanyToUpdate
                 {
                     Ticker = c.Ticker,
-                    LastUpdated = c.LastUpdated
+                    LastUpdated = c.LastUpdated,
+                    HistoryQuotesJson = c.HistoryQuotesJson
                 })
                 .Where(c => c.LastUpdated < fromDate)
                 .OrderBy(c => c.Ticker)

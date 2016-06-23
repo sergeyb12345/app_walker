@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using dream.walker.data.Models;
+using dream.walker.reader.Models;
+using Newtonsoft.Json;
 
 namespace dream.walker.data.Entities
 {
@@ -28,5 +33,11 @@ namespace dream.walker.data.Entities
         public string HistoryQuotesJson { get; set; }
         public DateTime NextReportDate { get; set; }
 
+        [NotMapped]
+        public List<QuotesModel> HistoryQuotes
+        {
+            get { return JsonConvert.DeserializeObject<List<QuotesModel>>(HistoryQuotesJson); }
+            set { HistoryQuotesJson = JsonConvert.SerializeObject(value); }
+        }
     }
 }

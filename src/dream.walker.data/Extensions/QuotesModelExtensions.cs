@@ -46,6 +46,34 @@ namespace dream.walker.data.Extensions
             return result;
         }
 
+        public static List<QuotesModel> Merge(this List<QuotesModel> quotes, List<QuotesModel> mergeWith)
+        {
+            var result = new List<QuotesModel>();
+
+            if (!quotes.Any())
+            {
+                if (mergeWith != null && mergeWith.Any())
+                {
+                    result.AddRange(mergeWith);
+                }
+            }
+            else
+            {
+                result.AddRange(quotes);
+                if (mergeWith != null && mergeWith.Any())
+                {
+                    var oldest = quotes.Last().Date;
+                    var missingQuotes = mergeWith.Where(q => q.Date < oldest).ToList();
+                    if (missingQuotes.Any())
+                    {
+                        result.AddRange(missingQuotes);
+                        result = result.OrderByDescending(q => q.Date).ToList();
+                    }
+                }
+            }
+            return result;
+        }
+
         public static List<QuotesModel> ConvertToPeriod(this List<QuotesModel> dailyQuotes, QuotePeriod quotePeriod)
         {
             if (quotePeriod == QuotePeriod.Weekly)

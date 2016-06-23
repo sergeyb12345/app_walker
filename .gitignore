@@ -27,3 +27,14 @@
 /src/dream.walker.indicators/bin
 /src/dream.walker.strategy/bin/Debug
 /src/dream.walker.strategy/obj/Debug
+/src/dream.walker.calculators/bin
+/src/dream.walker.calculators/obj
+/src/dream.walker.data/bin/Release
+/src/dream.walker.data/obj/Release
+/src/dream.walker.indicators/obj/Release
+/src/dream.walker.reader/bin/Release
+/src/dream.walker.reader/obj/Release
+/src/dream.walker.stock/bin/Release
+/src/dream.walker.stock/obj/Release
+/src/dream.walker.strategy/bin/Release
+/src/dream.walker.strategy/obj/Release
