@@ -127,7 +127,6 @@
     <Compile Include="Processors\QuotesImport\QuotesImportProcess.cs" />
     <Compile Include="Processors\StrategyMonitor\StrategyMonitorProcess.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Functions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishers\ConsolePublisher.cs" />
   </ItemGroup>
@@ -175,6 +174,10 @@
     <ProjectReference Include="..\dream.walker.strategy\dream.walker.strategy.csproj">
       <Project>{35a9c2f3-b0fd-4ec3-85e2-b05c35a2c1db}</Project>
       <Name>dream.walker.strategy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dream.WebJob.Quotes\Dream.WebJob.Quotes.csproj">
+      <Project>{DCA50742-DF76-4149-9F3B-A5B07B0A4240}</Project>
+      <Name>Dream.WebJob.Quotes</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

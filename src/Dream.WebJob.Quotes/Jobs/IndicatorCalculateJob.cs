@@ -17,13 +17,13 @@ using Newtonsoft.Json;
 
 namespace Dream.WebJob.Quotes.Jobs
 {
-    public class QuotesImportJob : IQuotesImportJob
+    public class IndicatorCalculateJob : IIndicatorCalculateJob
     {
         private readonly IMarketStockClient _marketStockClient;
         private readonly ICompanyService _companyService;
         private readonly IQuotesFileReader _quotesFileReader;
 
-        public QuotesImportJob(IMarketStockClient  marketStockClient, 
+        public IndicatorCalculateJob(IMarketStockClient  marketStockClient, 
             ICompanyService companyService,
             IQuotesFileReader quotesFileReader)
         {

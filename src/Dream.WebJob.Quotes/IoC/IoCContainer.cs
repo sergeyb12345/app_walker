@@ -48,6 +48,7 @@ namespace Dream.WebJob.Quotes.IoC
             builder.RegisterType<FileReaderConfiguration>().SingleInstance();
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
             builder.RegisterType<QuotesImportJob>().As<IJob>().As<IQuotesImportJob>();
+            builder.RegisterType<IndicatorCalculateJob>().As<IJob>().As<IIndicatorCalculateJob>();
             builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
             builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();

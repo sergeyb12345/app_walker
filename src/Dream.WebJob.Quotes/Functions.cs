@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using System.Threading;
 using Autofac;
 using Dream.WebJob.Quotes.Jobs;
+using Dream.WebJob.Quotes.Loggers;
 using Dream.WebJob.Quotes.Schedules;
 using Microsoft.Azure.WebJobs;
 
@@ -40,9 +40,13 @@ namespace Dream.WebJob.Quotes
         public static void QuotesUpdateTimerJob([TimerTrigger(typeof(QuotesUpdateSchedule))] TimerInfo timerInfo, TextWriter log)
         {
             var job = IoC.IoCContainer.Instance.Resolve<IQuotesImportJob>();
-            var tokenSource = new CancellationTokenSource();
+            job.Start(new TextWriterLogger(log));
+        }
 
-            job.Start(tokenSource.Token, log);
+        public static void IndicatorCalculateTimerJob([TimerTrigger(typeof(IndicatorCalculateSchedule))] TimerInfo timerInfo, TextWriter log)
+        {
+            var job = IoC.IoCContainer.Instance.Resolve<IIndicatorCalculateJob>();
+            job.Start(new TextWriterLogger(log));
         }
 
     }
