@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using dream.walker.data;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Files;
 
 namespace Dream.WebJob.Quotes
 {
@@ -15,6 +10,8 @@ namespace Dream.WebJob.Quotes
         // AzureWebJobsDashboard and AzureWebJobsStorage
         static void Main()
         {
+            MsSqlDbMigrator.UpgradeDatabase();
+
             var config = new JobHostConfiguration();
 
             if (config.IsDevelopment)

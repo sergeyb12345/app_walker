@@ -52,6 +52,7 @@ namespace Dream.WebJob.Quotes.Jobs
                         var historyRequest = new GetStockHistoryRequest(company);
 
                         List<QuotesModel> quotes = new List<QuotesModel>();
+                        var errorMessage = string.Empty;
 
                         try
                         {
@@ -64,15 +65,26 @@ namespace Dream.WebJob.Quotes.Jobs
                         }
                         catch (Exception e)
                         {
-                            log.Error($"Failed to update Company: {company.Ticker}", e);
+                            log.Error($"Failed to read Company quotes: {company.Ticker}", e);
+                            errorMessage = e.Message;
                         }
 
-                        _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
-                        if (quotes.Any())
+                        try
                         {
-                            log.Info($"Company quotes updated successfully: {company.Ticker}");
-                        }
+                            _companyService.UpdateQuotes(new UpdateQuotesRequest()
+                            {
+                                Ticker = company.Ticker,
+                                JsonQuotes = JsonConvert.SerializeObject(quotes),
+                                ErrorMessage = errorMessage
+                            });
 
+                            log.Info($"Company quotes updated successfully: {company.Ticker}");
+
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error($"Failed to update Company: {company.Ticker}", ex);
+                        }
                     }
                     companies = _companyService.FindCompaniesForUpdate(findRequest);
                 }

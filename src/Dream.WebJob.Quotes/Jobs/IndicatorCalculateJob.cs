@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using dream.walker.data.Extensions;
 using dream.walker.data.Requests;
@@ -51,7 +48,8 @@ namespace Dream.WebJob.Quotes.Jobs
                     {
                         var historyRequest = new GetStockHistoryRequest(company);
 
-                        List<QuotesModel> quotes = new List<QuotesModel>();
+                        var quotes = new List<QuotesModel>();
+                        var errorMessage = string.Empty;
 
                         try
                         {
@@ -59,18 +57,27 @@ namespace Dream.WebJob.Quotes.Jobs
                                 Task.Run(() => _marketStockClient.GetStockHistory(historyRequest)).Result;
                             quotes = _quotesFileReader.Read(csvQuotes);
                             quotes = quotes.Merge(company.HistoryQuotes);
-
-
                         }
                         catch (Exception e)
                         {
-                            log.Error($"Failed to update Company: {company.Ticker}", e);
+                            log.Error($"Failed to read Company quotes: {company.Ticker}", e);
+                            errorMessage = e.Message;
                         }
 
-                        _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
-                        if (quotes.Any())
+                        try
                         {
+                            _companyService.UpdateQuotes(new UpdateQuotesRequest()
+                            {
+                                Ticker = company.Ticker,
+                                JsonQuotes = JsonConvert.SerializeObject(quotes),
+                                ErrorMessage = errorMessage
+                            });
+
                             log.Info($"Company quotes updated successfully: {company.Ticker}");
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error($"Failed to update Company quotes: {company.Ticker}", ex);
                         }
 
                     }

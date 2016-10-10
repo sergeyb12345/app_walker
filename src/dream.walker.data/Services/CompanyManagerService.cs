@@ -54,20 +54,24 @@ namespace dream.walker.data.Services
             }
         }
 
-        public void UpdateQuotes(string ticker, string jsonQuotes)
+        public void UpdateQuotes(UpdateQuotesRequest request)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
                 var repository = scope.Resolve<ICompanyRepository>();
-                var company = repository.Get(ticker);
+                var company = repository.Get(request.Ticker);
                 if (company != null)
                 {
-                    company.HistoryQuotesJson = jsonQuotes;
+                    company.HistoryQuotesJson = request.JsonQuotes;
                     company.LastUpdated = DateTime.UtcNow;
+                    company.UpdateSuccessful = string.IsNullOrWhiteSpace(request.ErrorMessage);
+                    company.UpdateError = request.ErrorMessage;
+
                     repository.Commit();
                 }
             }
         }
+
 
         public List<QuotesModel> GetQuotes(string ticker)
         {

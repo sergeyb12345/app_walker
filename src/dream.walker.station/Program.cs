@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using Autofac;
+using dream.walker.data;
 using Dream.WebJob.Quotes.Jobs;
 using Dream.WebJob.Quotes.Loggers;
 
@@ -10,10 +11,10 @@ namespace dream.walker.station
     {
         public static void Main(string[] args)
         {
-            var job = Dream.WebJob.Quotes.IoC.IoCContainer.Instance.Resolve<IQuotesImportJob>();
-            var tokenSource = new CancellationTokenSource();
+            MsSqlDbMigrator.UpgradeDatabase();
 
-            job.Start(tokenSource.Token, new ConsoleLogger());
+            var job = Dream.WebJob.Quotes.IoC.IoCContainer.Instance.Resolve<IQuotesImportJob>();
+            job.Start(new ConsoleLogger());
         }
 
     }

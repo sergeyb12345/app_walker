@@ -39,5 +39,8 @@ namespace dream.walker.data.Entities
             get { return JsonConvert.DeserializeObject<List<QuotesModel>>(HistoryQuotesJson); }
             set { HistoryQuotesJson = JsonConvert.SerializeObject(value); }
         }
+
+        public bool UpdateSuccessful { get; set; }
+        public string UpdateError { get; set; }
     }
 }

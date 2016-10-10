@@ -99,6 +99,10 @@
     <Compile Include="Migrations\201606101219161_NHNLTables.Designer.cs">
       <DependentUpon>201606101219161_NHNLTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609231123550_AlterCompanyTable.cs" />
+    <Compile Include="Migrations\201609231123550_AlterCompanyTable.Designer.cs">
+      <DependentUpon>201609231123550_AlterCompanyTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
@@ -117,6 +121,7 @@
     <Compile Include="Enums\IndicatorParamName.cs" />
     <Compile Include="Enums\QuotePeriod.cs" />
     <Compile Include="Models\CompanyToUpdate.cs" />
+    <Compile Include="MsSqlDbMigrator.cs" />
     <Compile Include="Repositories\CompanyIndicatorRepository.cs" />
     <Compile Include="Repositories\ICompanyIndicatorRepository.cs" />
     <Compile Include="Repositories\IndicatorRepository.cs" />
@@ -182,6 +187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606101219161_NHNLTables.resx">
       <DependentUpon>201606101219161_NHNLTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609231123550_AlterCompanyTable.resx">
+      <DependentUpon>201609231123550_AlterCompanyTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -66,23 +66,37 @@ namespace dream.walker.station.Processors.QuotesImport
 
                                     var historyRequest = new GetStockHistoryRequest(company);
 
-                                    List<QuotesModel> quotes = new List<QuotesModel>();
+                                    var quotes = new List<QuotesModel>();
+                                    var errorMessage = string.Empty;
 
                                     try
                                     {
                                         var csvQuotes = Task.Run(() => _marketStockClient.GetStockHistory(historyRequest), token).Result;
                                         quotes = _quotesFileReader.Read(csvQuotes);
 
-                                        _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
-
-                                        _publisher.Publish($"Updated Company {company.Ticker}");
                                     }
                                     catch (Exception e)
                                     {
-                                        _publisher.Publish($"Failed to update Company: {company.Ticker}. {e.Message}");
+                                        _publisher.Publish($"Failed to read Company quotes: {company.Ticker}. {e.Message}");
+                                        errorMessage = e.Message;
                                     }
 
-                                    _companyService.UpdateQuotes(company.Ticker, JsonConvert.SerializeObject(quotes));
+                                    try
+                                    {
+                                        _companyService.UpdateQuotes(new UpdateQuotesRequest()
+                                        {
+                                            Ticker = company.Ticker,
+                                            ErrorMessage = errorMessage,
+                                            JsonQuotes = JsonConvert.SerializeObject(quotes)
+                                        });
+                                        _publisher.Publish($"Updated Company {company.Ticker}");
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _publisher.Publish($"Failed to update Company: {company.Ticker}. {ex.Message}");
+                                    }
+
                                 }
                                 companies = _companyService.FindCompaniesForUpdate(findRequest);
                             }

@@ -12,10 +12,17 @@ namespace dream.walker.data.Services
     {
         Company Register(CompanyModel company);
         List<CompanyToUpdate> FindCompaniesForUpdate(FindCompaniesForUpdateRequest request);
-        void UpdateQuotes(string ticker, string jsonQuotes);
+        void UpdateQuotes(UpdateQuotesRequest request);
         List<QuotesModel> GetQuotes(string ticker);
         List<CompanyToProcess> FindCompaniesToProcess(CompaniesToProcessRequest request);
         void SetLastCalculated(string ticker);
+    }
+
+    public class UpdateQuotesRequest
+    {
+        public string Ticker { get; set; }
+        public string JsonQuotes { get; set; }
+        public string ErrorMessage { get; set; }
     }
 
     public interface ICompanyManagerService 
