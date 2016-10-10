@@ -26,5 +26,12 @@ namespace dream.walker.space.Controllers
 
             return View();
         }
+
+        public ActionResult Chart()
+        {
+            ViewBag.Message = "Charts.";
+
+            return View();
+        }
     }
 }
