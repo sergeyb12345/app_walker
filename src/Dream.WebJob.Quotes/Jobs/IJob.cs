@@ -16,4 +16,9 @@ namespace Dream.WebJob.Quotes.Jobs
     public interface IIndicatorCalculateJob : IJob
     {
     }
+
+    public interface IHealthCheckJob : IJob
+    {
+    }
+
 }

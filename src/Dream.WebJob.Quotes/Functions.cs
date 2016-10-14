@@ -49,5 +49,12 @@ namespace Dream.WebJob.Quotes
             job.Start(new TextWriterLogger(log));
         }
 
+        public static void HealthCheckJob([TimerTrigger("00:00:10")] TimerInfo timerInfo, TextWriter log)
+        {
+
+            var job = IoC.IoCContainer.Instance.Resolve<IHealthCheckJob>();
+            job.Start(new TextWriterLogger(log));
+        }
+
     }
 }
