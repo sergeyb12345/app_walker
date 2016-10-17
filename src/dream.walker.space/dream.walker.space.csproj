@@ -219,42 +219,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="aurelia.protractor.js" />
-    <Content Include="Aurelia\build\args.js" />
-    <Content Include="Aurelia\build\babel-options.js" />
-    <Content Include="Aurelia\build\bundles.js" />
-    <Content Include="Aurelia\build\export.js" />
-    <Content Include="Aurelia\build\paths.js" />
-    <Content Include="Aurelia\build\tasks\build.js" />
-    <Content Include="Aurelia\build\tasks\bundle.js" />
-    <Content Include="Aurelia\build\tasks\clean.js" />
-    <Content Include="Aurelia\build\tasks\dev.js" />
-    <Content Include="Aurelia\build\tasks\e2e.js" />
-    <Content Include="Aurelia\build\tasks\export-release.js" />
-    <Content Include="Aurelia\build\tasks\lint.js" />
-    <Content Include="Aurelia\build\tasks\prepare-release.js" />
-    <Content Include="Aurelia\build\tasks\serve.js" />
-    <Content Include="Aurelia\build\tasks\test.js" />
-    <Content Include="Aurelia\build\tasks\watch.js" />
-    <Content Include="Aurelia\src\app.html" />
-    <Content Include="Aurelia\src\app.js" />
-    <Content Include="Aurelia\src\blur-image.js" />
-    <Content Include="Aurelia\src\child-router.html" />
-    <Content Include="Aurelia\src\child-router.js" />
-    <Content Include="Aurelia\src\main.js" />
-    <Content Include="Aurelia\src\nav-bar.html" />
-    <Content Include="Aurelia\src\users.html" />
-    <Content Include="Aurelia\src\users.js" />
-    <Content Include="Aurelia\src\welcome.html" />
-    <Content Include="Aurelia\src\welcome.js" />
-    <Content Include="Aurelia\test\e2e\src\demo.spec.js" />
-    <Content Include="Aurelia\test\e2e\src\skeleton.po.js" />
-    <Content Include="Aurelia\test\e2e\src\welcome.po.js" />
-    <Content Include="Aurelia\test\unit\app.spec.js" />
-    <Content Include="Aurelia\test\unit\child-router.spec.js" />
-    <Content Include="Aurelia\test\unit\setup.js" />
-    <Content Include="Aurelia\test\unit\users.spec.js" />
-    <Content Include="config.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\indicator.gif" />
@@ -263,52 +227,104 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="gulpfile.js" />
     <Content Include="index.html" />
-    <Content Include="index.js" />
-    <Content Include="karma.conf.js" />
-    <Content Include="protractor.conf.js" />
-    <Content Include="Scripts\ai.0.15.0-build58334.js" />
-    <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
+    <Content Include="Scripts\AnyChart\css\anychart-ui.css" />
+    <Content Include="Scripts\AnyChart\css\anychart-ui.min.css" />
+    <Content Include="Scripts\AnyChart\js\anychart-ui.dev.min.js" />
+    <Content Include="Scripts\AnyChart\js\anychart-ui.min.js" />
+    <Content Include="Scripts\AnyChart\js\anystock.dev.min.js" />
+    <Content Include="Scripts\AnyChart\js\anystock.min.js" />
+    <Content Include="Scripts\AnyChart\js\data-adapter.dev.min.js" />
+    <Content Include="Scripts\AnyChart\js\data-adapter.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\coffee.js" />
+    <Content Include="Scripts\AnyChart\js\themes\coffee.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_blue.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_blue.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_earth.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_earth.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_glamour.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_glamour.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_provence.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_provence.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_turquoise.js" />
+    <Content Include="Scripts\AnyChart\js\themes\dark_turquoise.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\defaultTheme.js" />
+    <Content Include="Scripts\AnyChart\js\themes\defaultTheme.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_blue.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_blue.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_earth.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_earth.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_glamour.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_glamour.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_provence.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_provence.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_turquoise.js" />
+    <Content Include="Scripts\AnyChart\js\themes\light_turquoise.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\monochrome.js" />
+    <Content Include="Scripts\AnyChart\js\themes\monochrome.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\morning.js" />
+    <Content Include="Scripts\AnyChart\js\themes\morning.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\pastel.js" />
+    <Content Include="Scripts\AnyChart\js\themes\pastel.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\sea.js" />
+    <Content Include="Scripts\AnyChart\js\themes\sea.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\v6.js" />
+    <Content Include="Scripts\AnyChart\js\themes\v6.min.js" />
+    <Content Include="Scripts\AnyChart\js\themes\wines.js" />
+    <Content Include="Scripts\AnyChart\js\themes\wines.min.js" />
+    <Content Include="Scripts\app-bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Aurelia\build\.eslintrc" />
-    <Content Include="Aurelia\src\.eslintrc" />
-    <Content Include="Aurelia\test\unit\.eslintrc" />
-    <Content Include="jsconfig.json" />
-    <Content Include="package.json" />
     <Content Include="deploy.cmd" />
     <Content Include=".deployment" />
+    <Content Include="packages.config" />
+    <Content Include="package.json" />
+    <Content Include="aurelia_project\aurelia.json" />
+    <Content Include="aurelia_project\generators\attribute.json" />
+    <Content Include="aurelia_project\generators\binding-behavior.json" />
+    <Content Include="aurelia_project\generators\element.json" />
+    <Content Include="aurelia_project\generators\generator.json" />
+    <Content Include="aurelia_project\generators\task.json" />
+    <Content Include="aurelia_project\generators\value-converter.json" />
+    <Content Include="aurelia_project\tasks\build.json" />
+    <Content Include="aurelia_project\tasks\run.json" />
+    <Content Include=".babelrc" />
+    <Content Include="jsconfig.json" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
-    <Content Include="Scripts\format.jquery.json" />
+    <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />
+    <Content Include="Scripts\AnyChart\css\anychart-ui.min.css.gz" />
+    <Content Include="Scripts\AnyChart\js\anychart-ui.dev.min.js.gz" />
+    <Content Include="Scripts\AnyChart\js\anychart-ui.min.js.gz" />
+    <Content Include="Scripts\AnyChart\js\anystock.dev.min.js.gz" />
+    <Content Include="Scripts\AnyChart\js\anystock.min.js.gz" />
+    <Content Include="Scripts\AnyChart\js\data-adapter.dev.min.js.gz" />
+    <Content Include="Scripts\AnyChart\js\data-adapter.min.js.gz" />
+    <Content Include="Scripts\app-bundle.js.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.autocomplete.js" />
-    <Content Include="Scripts\jquery.format.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\require.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\VobcoCharts\dark.js" />
-    <Content Include="Scripts\VobcoCharts\inc\jquery-1.11.2.js" />
-    <Content Include="Scripts\VobcoCharts\inc\jquery-1.8.3.js" />
-    <Content Include="Scripts\VobcoCharts\inc\jquery.autocomplete.js" />
-    <Content Include="Scripts\VobcoCharts\inc\jquery.format-1.2-min.js" />
-    <Content Include="Scripts\VobcoCharts\inc\jquery.selectbox-0.2-min.js" />
-    <Content Include="Scripts\VobcoCharts\lang\en.js" />
-    <Content Include="Scripts\VobcoCharts\lang\hr.js" />
-    <Content Include="Scripts\VobcoCharts\vobcoCharts-1.1.3-min.js" />
+    <Content Include="Scripts\text.js" />
+    <Content Include="Scripts\vendor-bundle.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="wallaby.js" />
+    <Content Include="src\app.html" />
+    <Content Include="src\app.js" />
+    <Content Include="src\environment.js" />
+    <Content Include="src\main.js" />
+    <Content Include="src\resources\elements\loading-indicator.js" />
+    <Content Include="src\resources\index.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -347,18 +363,19 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <None Include="Views\Home\Chart.cshtml" />
+    <Content Include="Views\Shared\_AureliaLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Aurelia\doc\" />
+    <Folder Include="src\resources\attributes\" />
+    <Folder Include="src\resources\binding-behaviors\" />
+    <Folder Include="src\resources\value-converters\" />
     <Folder Include="Views\Health\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
@@ -371,6 +388,9 @@
     <EmbeddedResource Include="Migrations\201604150951379_Initial.resx">
       <DependentUpon>201604150951379_Initial.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

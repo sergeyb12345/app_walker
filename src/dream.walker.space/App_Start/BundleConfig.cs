@@ -26,6 +26,14 @@ namespace dream.walker.space
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/anyChart-css").Include(
+                      "~/Scripts/AnyChart/css/anychart-ui.min.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/anyChart-js").Include(
+                      "~/Scripts/AnyChart/js/anystock.min.js",
+                      "~/Scripts/AnyChart/js/themes/light_glamour.min.js"));
+
         }
     }
 }
