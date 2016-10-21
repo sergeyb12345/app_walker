@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.space", "src\dream.walker.space\dream.walker.space.csproj", "{C6735287-9994-4111-8582-1EA4E2F14ED9}"
 EndProject
@@ -9,6 +9,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{DFE79E
 	ProjectSection(SolutionItems) = preProject
 		src\dream.walker.space\deploy.cmd = src\dream.walker.space\deploy.cmd
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.stock", "src\dream.walker.stock\dream.walker.stock.csproj", "{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.data", "src\dream.walker.data\dream.walker.data.csproj", "{EB10172D-559A-4E59-BC95-EEE805F1A19B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.reader", "src\dream.walker.reader\dream.walker.reader.csproj", "{3D49DDE8-E00E-429C-9F3B-CFE2DB6E2DE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +26,18 @@ Global
 		{C6735287-9994-4111-8582-1EA4E2F14ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6735287-9994-4111-8582-1EA4E2F14ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6735287-9994-4111-8582-1EA4E2F14ED9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB10172D-559A-4E59-BC95-EEE805F1A19B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D49DDE8-E00E-429C-9F3B-CFE2DB6E2DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D49DDE8-E00E-429C-9F3B-CFE2DB6E2DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D49DDE8-E00E-429C-9F3B-CFE2DB6E2DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D49DDE8-E00E-429C-9F3B-CFE2DB6E2DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
