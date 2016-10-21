@@ -219,6 +219,29 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="aurelia_project\aurelia.json" />
+    <Content Include="aurelia_project\environments\dev.js" />
+    <Content Include="aurelia_project\environments\prod.js" />
+    <Content Include="aurelia_project\environments\stage.js" />
+    <Content Include="aurelia_project\generators\attribute.js" />
+    <Content Include="aurelia_project\generators\attribute.json" />
+    <Content Include="aurelia_project\generators\binding-behavior.js" />
+    <Content Include="aurelia_project\generators\binding-behavior.json" />
+    <Content Include="aurelia_project\generators\element.js" />
+    <Content Include="aurelia_project\generators\element.json" />
+    <Content Include="aurelia_project\generators\generator.js" />
+    <Content Include="aurelia_project\generators\generator.json" />
+    <Content Include="aurelia_project\generators\task.js" />
+    <Content Include="aurelia_project\generators\task.json" />
+    <Content Include="aurelia_project\generators\value-converter.js" />
+    <Content Include="aurelia_project\generators\value-converter.json" />
+    <Content Include="aurelia_project\tasks\build.js" />
+    <Content Include="aurelia_project\tasks\build.json" />
+    <Content Include="aurelia_project\tasks\process-css.js" />
+    <Content Include="aurelia_project\tasks\process-markup.js" />
+    <Content Include="aurelia_project\tasks\run.js" />
+    <Content Include="aurelia_project\tasks\run.json" />
+    <Content Include="aurelia_project\tasks\transpile.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\indicator.gif" />
@@ -282,15 +305,6 @@
     <Content Include=".deployment" />
     <Content Include="packages.config" />
     <Content Include="package.json" />
-    <Content Include="aurelia_project\aurelia.json" />
-    <Content Include="aurelia_project\generators\attribute.json" />
-    <Content Include="aurelia_project\generators\binding-behavior.json" />
-    <Content Include="aurelia_project\generators\element.json" />
-    <Content Include="aurelia_project\generators\generator.json" />
-    <Content Include="aurelia_project\generators\task.json" />
-    <Content Include="aurelia_project\generators\value-converter.json" />
-    <Content Include="aurelia_project\tasks\build.json" />
-    <Content Include="aurelia_project\tasks\run.json" />
     <Content Include=".babelrc" />
     <Content Include="jsconfig.json" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
@@ -369,7 +383,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="aurelia_project\environments\" />
     <Folder Include="src\resources\attributes\" />
     <Folder Include="src\resources\binding-behaviors\" />
     <Folder Include="src\resources\value-converters\" />
