@@ -107,6 +107,11 @@
             "resources": [
               "nprogress.css"
             ]
+          },
+          {
+            "name": "npm-anystock",
+            "path": "../node_modules/npm-anystock",
+            "main": "anystock.min"
           },          
           "aurelia-binding",
           "aurelia-bootstrapper",
