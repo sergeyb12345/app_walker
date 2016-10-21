@@ -16,6 +16,7 @@ namespace dream.walker.data.Entities
         public string JsonParams { get; set; }
         public DateTime LastUpdated { get; set; }
         public bool Deleted { get; set; }
+        public int ChartPlotNumber { get; set; }
 
         [NotMapped]
         public List<IndicatorParam> Params {

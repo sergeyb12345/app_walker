@@ -103,6 +103,10 @@
     <Compile Include="Migrations\201609231123550_AlterCompanyTable.Designer.cs">
       <DependentUpon>201609231123550_AlterCompanyTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610211413296_AlterIndicator_AddChartPlotNumber.cs" />
+    <Compile Include="Migrations\201610211413296_AlterIndicator_AddChartPlotNumber.Designer.cs">
+      <DependentUpon>201610211413296_AlterIndicator_AddChartPlotNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
@@ -190,6 +194,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609231123550_AlterCompanyTable.resx">
       <DependentUpon>201609231123550_AlterCompanyTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610211413296_AlterIndicator_AddChartPlotNumber.resx">
+      <DependentUpon>201610211413296_AlterIndicator_AddChartPlotNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

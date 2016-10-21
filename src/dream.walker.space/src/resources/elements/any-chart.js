@@ -12,6 +12,7 @@ export class AnyChart {
     }
 
     generateSome(data) {
+
     }
 
     draw(container) {
