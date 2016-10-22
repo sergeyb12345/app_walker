@@ -1,0 +1,77 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "https://github.com/sergeyb12345/dream-sc.git",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "https://github.com/sergeyb12345/dream-sc.git",
+        "spec": "git+https://github.com/sergeyb12345/dream-sc.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:sergeyb12345/dream-sc.git",
+          "sshUrl": "git+ssh://git@github.com/sergeyb12345/dream-sc.git",
+          "httpsUrl": "git+https://github.com/sergeyb12345/dream-sc.git",
+          "gitUrl": "git://github.com/sergeyb12345/dream-sc.git",
+          "shortcut": "github:sergeyb12345/dream-sc",
+          "directUrl": "https://raw.githubusercontent.com/sergeyb12345/dream-sc/master/package.json"
+        }
+      },
+      "C:\\justeat\\sergey-balaboskin\\app_walker\\src\\dream.walker.space"
+    ]
+  ],
+  "_from": "git+https://github.com/sergeyb12345/dream-sc.git",
+  "_id": "npm-anystock@1.0.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/npm-anystock",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "https://github.com/sergeyb12345/dream-sc.git",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "https://github.com/sergeyb12345/dream-sc.git",
+    "spec": "git+https://github.com/sergeyb12345/dream-sc.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:sergeyb12345/dream-sc.git",
+      "sshUrl": "git+ssh://git@github.com/sergeyb12345/dream-sc.git",
+      "httpsUrl": "git+https://github.com/sergeyb12345/dream-sc.git",
+      "gitUrl": "git://github.com/sergeyb12345/dream-sc.git",
+      "shortcut": "github:sergeyb12345/dream-sc",
+      "directUrl": "https://raw.githubusercontent.com/sergeyb12345/dream-sc/master/package.json"
+    }
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "git+https://github.com/sergeyb12345/dream-sc.git#9c66a61d63241258d5bdd699c0be225a148ac4b3",
+  "_shasum": "0d4113f4f5b9a8372eef48e004fe3c3bdf24973c",
+  "_shrinkwrap": null,
+  "_spec": "https://github.com/sergeyb12345/dream-sc.git",
+  "_where": "C:\\justeat\\sergey-balaboskin\\app_walker\\src\\dream.walker.space",
+  "author": {
+    "name": "AnyChart"
+  },
+  "dependencies": {},
+  "description": "anystock",
+  "devDependencies": {},
+  "gitHead": "9c66a61d63241258d5bdd699c0be225a148ac4b3",
+  "keywords": [
+    "chart"
+  ],
+  "license": "ISC",
+  "main": "anystock.min.js",
+  "name": "npm-anystock",
+  "optionalDependencies": {},
+  "readme": "# dream-sc",
+  "readmeFilename": "README.md",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
