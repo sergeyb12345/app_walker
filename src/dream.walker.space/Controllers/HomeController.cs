@@ -1,4 +1,5 @@
-﻿using System;
+﻿using dream.walker.data.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,13 @@ namespace dream.walker.space.Controllers
 {
     public class HomeController : Controller
     {
+        private ICompanyRepository _companyRepository;
+
+        public HomeController(ICompanyRepository companyRepository)
+        {
+            _companyRepository = companyRepository;
+        }
+
         public ActionResult Index()
         {
             return View();
