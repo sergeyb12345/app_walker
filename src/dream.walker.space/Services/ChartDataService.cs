@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Services.Description;
 using dream.walker.data.Entities;
 using dream.walker.data.Enums;
 using dream.walker.data.Repositories;
@@ -63,6 +61,14 @@ namespace dream.walker.space.Services
                             var companyIndicator = _companyIndicatorRepository.Get(request.Ticker, indicator.IndicatorId);
                             if (companyIndicator != null && companyIndicator.IndicatorId == indicator.IndicatorId)
                             {
+                                var chartPlot = chartData.GetChartPlot(indicator.ChartPlotNumber);
+
+                                var chartIndicator = chartPlot.AttachIndicator();
+                                chartIndicator.ChartType = indicator.ChartType;
+                                chartIndicator.ChartName = $"{indicator.Name} - {indicator.JsonParams} {request.QuotePeriod}";
+                                chartIndicator.ChartHeader = new[] { "value" };
+                                chartIndicator.ChartData = companyIndicator.Data
+                                    .Select(q => $"'{q.Date:s}','{q.Value}'").ToArray();
 
                             }
 

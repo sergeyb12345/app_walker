@@ -29,5 +29,7 @@ namespace dream.walker.data.Entities
             get { return JsonConvert.DeserializeObject<List<IndicatorParam>>(JsonParams); }
             set { JsonParams = JsonConvert.SerializeObject(value); }
         }
+
+        public ChartType ChartType { get; set; }
     }
 }

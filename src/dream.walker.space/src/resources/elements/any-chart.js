@@ -17,8 +17,6 @@ export class AnyChart {
 
     draw(container) {
 
-        this.generateSome(123);
-
         anychart.onDocumentReady(function() {
 
 
