@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,6 +67,7 @@
     <Compile Include="Entities\CompanyRule.cs" />
     <Compile Include="Entities\IndicatorRule.cs" />
     <Compile Include="Entities\MarketNHNL.cs" />
+    <Compile Include="Enums\ChartType.cs" />
     <Compile Include="Enums\NHNLPeriod.cs" />
     <Compile Include="Entities\Strategy.cs" />
     <Compile Include="Entities\StrategyRule.cs" />
@@ -106,6 +108,10 @@
     <Compile Include="Migrations\201610211413296_AlterIndicator_AddChartPlotNumber.cs" />
     <Compile Include="Migrations\201610211413296_AlterIndicator_AddChartPlotNumber.Designer.cs">
       <DependentUpon>201610211413296_AlterIndicator_AddChartPlotNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610231035141_AlterIndicator_AddChartColor.cs" />
+    <Compile Include="Migrations\201610231035141_AlterIndicator_AddChartColor.Designer.cs">
+      <DependentUpon>201610231035141_AlterIndicator_AddChartColor.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
@@ -197,6 +203,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610211413296_AlterIndicator_AddChartPlotNumber.resx">
       <DependentUpon>201610211413296_AlterIndicator_AddChartPlotNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610231035141_AlterIndicator_AddChartColor.resx">
+      <DependentUpon>201610231035141_AlterIndicator_AddChartColor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

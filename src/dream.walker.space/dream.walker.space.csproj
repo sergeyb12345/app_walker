@@ -241,6 +241,15 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Models\ChartIndicator.cs" />
+    <Compile Include="Services\Models\ChartPlotData.cs" />
+    <Compile Include="Services\Requests\GetChartDataRequest.cs" />
+    <Compile Include="Services\Models\ChartDataModel.cs" />
+    <Compile Include="Services\Models\DataResult.cs" />
+    <Compile Include="Services\Models\ChartDataResult.cs" />
+    <Compile Include="Services\ChartDataService.cs" />
+    <Compile Include="Services\IChartDataService.cs" />
+    <Compile Include="Services\Models\ResultStatus.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -417,7 +426,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Services\" />
     <Folder Include="src\resources\attributes\" />
     <Folder Include="src\resources\binding-behaviors\" />
     <Folder Include="src\resources\value-converters\" />
