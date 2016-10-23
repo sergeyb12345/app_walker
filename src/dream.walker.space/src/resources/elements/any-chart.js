@@ -57,6 +57,26 @@ export class AnyChart {
             // set the series type
             chart.plot(0).ohlc(mapping).name('ACME Corp.');
 
+            /*
+            table = anychart.data.table();
+table.addData([
+['2016-01-01T12:00:00', 1.0860],
+['2016-01-04T12:00:00', 1.0832],
+['2016-01-05T12:00:00', 1.0780],
+['2016-01-06T12:00:00', 1.0781],
+['2016-01-07T12:00:00', 1.0936],
+['2016-01-08T12:00:00', 1.0932]
+]);
+
+// map the data
+mapping = table.mapAs();
+mapping.addField('value', 1);
+
+var series = chart.plot(1).line(mapping);
+series.name("Euro to Dollar Rate");
+            */
+
+
             // setting the chart title
             chart.title('AnyStock Basic Sample');
 
