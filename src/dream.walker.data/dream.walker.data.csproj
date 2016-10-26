@@ -114,6 +114,10 @@
     <Compile Include="Migrations\201610231035141_AlterIndicator_AddChartColor.Designer.cs">
       <DependentUpon>201610231035141_AlterIndicator_AddChartColor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610261453148_AlterTable.cs" />
+    <Compile Include="Migrations\201610261453148_AlterTable.Designer.cs">
+      <DependentUpon>201610261453148_AlterTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
@@ -207,6 +211,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610231035141_AlterIndicator_AddChartColor.resx">
       <DependentUpon>201610231035141_AlterIndicator_AddChartColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610261453148_AlterTable.resx">
+      <DependentUpon>201610261453148_AlterTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
