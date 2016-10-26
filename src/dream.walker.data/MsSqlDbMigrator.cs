@@ -8,18 +8,11 @@ namespace dream.walker.data
     {
         public static void UpgradeDatabase()
         {
-            try
-            {
-                var dbMigrator = new DbMigrator(new Migrations.Configuration());
+            var dbMigrator = new DbMigrator(new Migrations.Configuration());
 
-                if (dbMigrator.GetPendingMigrations().Any())
-                {
-                    dbMigrator.Update();
-                }
-            }
-            catch (Exception ex)
+            if (dbMigrator.GetPendingMigrations().Any())
             {
-                throw;
+                dbMigrator.Update();
             }
         }
     }
