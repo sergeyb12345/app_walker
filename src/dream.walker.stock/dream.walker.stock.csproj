@@ -48,6 +48,8 @@
     <Compile Include="Requests\GetStockHistoryRequest.cs" />
     <Compile Include="Nasdaq\Client\NasdaqStockClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Yahoo\Client\YahooFinanceClient.cs" />
+    <Compile Include="Yahoo\Client\YahooFinanceClientConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">

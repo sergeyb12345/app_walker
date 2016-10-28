@@ -11,6 +11,7 @@ using dream.walker.station.Processors.QuotesImport;
 using dream.walker.station.Publishers;
 using dream.walker.stock;
 using dream.walker.stock.Nasdaq.Client;
+using dream.walker.stock.Yahoo.Client;
 
 namespace dream.walker.station.IoC
 {
@@ -57,8 +58,10 @@ namespace dream.walker.station.IoC
             builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
 
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
+            builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
             builder.RegisterType<IndicatorProcessorFactory>().SingleInstance();
-            builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();
+            //builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();
+            builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
 
             return builder.Build();
         }

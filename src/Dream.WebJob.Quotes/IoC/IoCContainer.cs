@@ -7,6 +7,7 @@ using dream.walker.reader;
 using dream.walker.reader.Validators;
 using dream.walker.stock;
 using dream.walker.stock.Nasdaq.Client;
+using dream.walker.stock.Yahoo.Client;
 using Dream.WebJob.Quotes.Jobs;
 
 namespace Dream.WebJob.Quotes.IoC
@@ -52,7 +53,9 @@ namespace Dream.WebJob.Quotes.IoC
             builder.RegisterType<IndicatorCalculateJob>().As<IJob>().As<IIndicatorCalculateJob>();
             builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
-            builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();
+            builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
+            //builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();
+            builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
 
             return builder.Build();
         }

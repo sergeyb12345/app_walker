@@ -49,6 +49,11 @@ namespace Dream.WebJob.Quotes.Jobs
                 {
                     foreach (var company in companies)
                     {
+                        if (!company.HistoryQuotes.Any())
+                        {
+                            company.LastUpdated = DateTime.Today.AddYears(-2);
+                        }
+
                         var historyRequest = new GetStockHistoryRequest(company);
 
                         List<QuotesModel> quotes = new List<QuotesModel>();

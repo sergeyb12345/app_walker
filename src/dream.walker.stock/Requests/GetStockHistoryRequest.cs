@@ -15,6 +15,13 @@ namespace dream.walker.stock.Requests
             Ticker = company.Ticker;
 
             var lastUpdated = company.LastUpdated.Date;
+            if (lastUpdated.AddYears(2) < DateTime.Today)
+            {
+                lastUpdated = DateTime.Today.AddYears(-2);
+            }
+
+            FromDate = lastUpdated;
+
             var months = 0;
             var years = 1;
 
@@ -48,5 +55,6 @@ namespace dream.walker.stock.Requests
         public QuoteTimeFrame TimeFrame { get; set; }
         public int TimeFrameValue { get; set; }
         public string Ticker { get; set; }
+        public DateTime FromDate { get; set; }
     }
 }

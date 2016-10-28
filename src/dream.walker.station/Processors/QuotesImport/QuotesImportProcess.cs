@@ -57,7 +57,7 @@ namespace dream.walker.station.Processors.QuotesImport
                             {
                                 foreach (var company in companies)
                                 {
-                                    var folder = @"C:\Development\app_walker\data";
+                                    var folder = @"C:\justeat\sergey-balaboskin\app_walker\data";
                                     var path = Path.Combine(folder, $"companyQuotes-{company.Ticker}.csv");
                                     if (File.Exists(path))
                                     {
