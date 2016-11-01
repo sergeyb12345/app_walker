@@ -32,7 +32,6 @@ namespace dream.walker.data.Services
 
                     record.Ticker = company.Ticker;
                     record.Name = company.Name;
-                    record.MarketCap = company.MarketCap;
                     record.Sector = company.Sector;
                     record.Industry = company.Industry;
                     record.SummaryUrl = company.SummaryUrl;

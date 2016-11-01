@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
-using dream.walker.data.Requests;
 using dream.walker.data.Services;
 using dream.walker.reader;
 using dream.walker.reader.Models;
-using dream.walker.stock.Requests;
-using Newtonsoft.Json;
 
 namespace dream.walker.station.Processors.CompanyImport
 {
+    //http://www.csidata.com/factsheets.php?type=stock&format=html&exchangeid=88
+
     public class CompanyImportProcess : IProcess
     {
         private readonly ICompanyManagerService _companyService;
@@ -25,8 +23,8 @@ namespace dream.walker.station.Processors.CompanyImport
 
         public void Start(CancellationToken token)
         {
-            string folder = @"C:\Development\app_walker\data";
-            var path = Path.Combine(folder, "companylist_.csv");
+            string folder = @"C:\justeat\sergey-balaboskin\app_walker\data";
+            var path = Path.Combine(folder, "NASDAQ.csv");
             if (File.Exists(path))
             {
                 var list = _fileReader.Read(path);
@@ -41,8 +39,11 @@ namespace dream.walker.station.Processors.CompanyImport
         {
             foreach (var company in companies)
             {
-                var manager = _companyService.CreateManager(company);
-                manager.Import(); 
+                if (company.IsActive == 1)
+                {
+                    var manager = _companyService.CreateManager(company);
+                    manager.Import();
+                }
             }
         }
     }

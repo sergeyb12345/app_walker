@@ -16,7 +16,19 @@ namespace dream.walker.data.Models
 
         public List<QuotesModel> HistoryQuotes
         {
-            get { return JsonConvert.DeserializeObject<List<QuotesModel>>(HistoryQuotesJson); }
+            get
+            {
+
+                try
+                {
+                    return JsonConvert.DeserializeObject<List<QuotesModel>>(HistoryQuotesJson);
+
+                }
+                catch (Exception)
+                {
+                    return new List<QuotesModel>();
+                }
+            }
             set { HistoryQuotesJson = JsonConvert.SerializeObject(value); }
         }
 
