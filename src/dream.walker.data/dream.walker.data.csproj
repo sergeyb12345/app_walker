@@ -152,6 +152,7 @@
     <Compile Include="Managers\CompanyManager.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\DreamDbRepository.cs" />
+    <Compile Include="Requests\UpdateMetricsRequest.cs" />
     <Compile Include="Services\CompanyIndicatorService.cs" />
     <Compile Include="Services\CompanyManagerService.cs" />
     <Compile Include="Requests\CompaniesToProcessRequest.cs" />
