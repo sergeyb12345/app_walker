@@ -42,5 +42,8 @@ namespace dream.walker.data.Entities
 
         public bool UpdateSuccessful { get; set; }
         public string UpdateError { get; set; }
+        public bool CalculatedSuccessful { get; set; }
+        public string CalculatedError { get; set; }
+        public bool Filtered { get; set; }
     }
 }

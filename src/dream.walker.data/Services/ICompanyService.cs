@@ -17,6 +17,7 @@ namespace dream.walker.data.Services
         List<CompanyToProcess> FindCompaniesToProcess(CompaniesToProcessRequest request);
         void SetLastCalculated(string ticker);
         void UpdateMetrics(UpdateMetricsRequest updateMetricsRequest);
+        void UpdateMetricsFailed(UpdateMetricsFailedRequest updateMetricsFailedRequest);
     }
 
     public class UpdateQuotesRequest

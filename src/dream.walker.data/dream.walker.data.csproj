@@ -118,6 +118,14 @@
     <Compile Include="Migrations\201610261453148_AlterTable.Designer.cs">
       <DependentUpon>201610261453148_AlterTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611021549019_Alter_Company_Calculate.cs" />
+    <Compile Include="Migrations\201611021549019_Alter_Company_Calculate.Designer.cs">
+      <DependentUpon>201611021549019_Alter_Company_Calculate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611021710470_Alter_Company_Filtered.cs" />
+    <Compile Include="Migrations\201611021710470_Alter_Company_Filtered.Designer.cs">
+      <DependentUpon>201611021710470_Alter_Company_Filtered.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
@@ -152,6 +160,7 @@
     <Compile Include="Managers\CompanyManager.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\DreamDbRepository.cs" />
+    <Compile Include="Requests\UpdateMetricsFailedRequest.cs" />
     <Compile Include="Requests\UpdateMetricsRequest.cs" />
     <Compile Include="Services\CompanyIndicatorService.cs" />
     <Compile Include="Services\CompanyManagerService.cs" />
@@ -215,6 +224,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610261453148_AlterTable.resx">
       <DependentUpon>201610261453148_AlterTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021549019_Alter_Company_Calculate.resx">
+      <DependentUpon>201611021549019_Alter_Company_Calculate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021710470_Alter_Company_Filtered.resx">
+      <DependentUpon>201611021710470_Alter_Company_Filtered.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

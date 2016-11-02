@@ -32,14 +32,13 @@ namespace dream.walker.data.Repositories
         public List<CompanyToUpdate> FindCompaniesForUpdate(TimeSpan fromTimeAgo, int count)
         {
             var fromDate = DateTime.Now.Subtract(fromTimeAgo).Date;
-            var records = Dbset.Select(c => 
-                new CompanyToUpdate
+            var records = Dbset.Where(c => c.Filtered && c.LastUpdated < fromDate)
+                .Select(c => new CompanyToUpdate
                 {
                     Ticker = c.Ticker,
                     LastUpdated = c.LastUpdated,
                     HistoryQuotesJson = c.HistoryQuotesJson
                 })
-                .Where(c => c.LastUpdated < fromDate)
                 .OrderBy(c => c.Ticker)
                 .Take(count)
                 .ToList();
@@ -51,7 +50,7 @@ namespace dream.walker.data.Repositories
         {
             var fromDate = DateTime.Now.Subtract(fromTimeAgo).Date;
             var records = Dbset
-                .Where(c => c.LastCalculated < fromDate)
+                .Where(c => c.Filtered && c.LastCalculated < fromDate)
                 .OrderBy(c => c.Ticker)
                 .Take(count)
                 .Select(c =>
@@ -60,7 +59,7 @@ namespace dream.walker.data.Repositories
                         Ticker = c.Ticker,
                         LastCalculated = c.LastCalculated,
                         LastUpdated = c.LastUpdated,
-                        Quotes = JsonConvert.DeserializeObject<List<QuotesModel>>(c.HistoryQuotesJson)
+                        QuotesJson = c.HistoryQuotesJson
                     })
                 .ToList();
 
@@ -72,7 +71,7 @@ namespace dream.walker.data.Repositories
             var sql = $@"
                 SELECT TOP {maxCompanyCount}  C.*
                 FROM dbo.Company C
-                WHERE C.LastCalculated < C.LastUpdated";
+                WHERE C.LastCalculated < C.LastUpdated AND C.Filtered = 1";
 
             var companies = Dbset.SqlQuery(sql)
                 .Select(c =>
@@ -81,7 +80,7 @@ namespace dream.walker.data.Repositories
                     Ticker = c.Ticker,
                     LastCalculated = c.LastCalculated,
                     LastUpdated = c.LastUpdated,
-                    Quotes = JsonConvert.DeserializeObject<List<QuotesModel>>(c.HistoryQuotesJson)
+                    QuotesJson = c.HistoryQuotesJson
                 }).ToList();
 
             return companies;
