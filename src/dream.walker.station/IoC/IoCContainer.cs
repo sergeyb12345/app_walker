@@ -7,7 +7,6 @@ using dream.walker.reader;
 using dream.walker.reader.Validators;
 using dream.walker.station.Processors.CompanyImport;
 using dream.walker.station.Processors.IndicatorProcessor;
-using dream.walker.station.Processors.QuotesImport;
 using dream.walker.station.Publishers;
 using dream.walker.stock;
 using dream.walker.stock.Nasdaq.Client;

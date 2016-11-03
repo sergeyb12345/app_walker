@@ -50,7 +50,6 @@ namespace Dream.WebJob.Quotes.IoC
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
             builder.RegisterType<QuotesImportJob>().As<IJob>().As<IQuotesImportJob>();
             builder.RegisterType<CompanyImportJob>().As<IJob>().As<ICompanyImportJob>();
-            builder.RegisterType<CompanyCalculateJob>().As<IJob>().As<ICompanyCalculateJob>();
             builder.RegisterType<HealthCheckJob>().As<IJob>().As<IHealthCheckJob>();
             builder.RegisterType<IndicatorCalculateJob>().As<IJob>().As<IIndicatorCalculateJob>();
             builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();

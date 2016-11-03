@@ -73,10 +73,8 @@ namespace Dream.WebJob.Quotes.Jobs
 
                         try
                         {
-                            _companyService.UpdateQuotes(new UpdateQuotesRequest()
+                            _companyService.UpdateQuotes(new UpdateQuotesRequest(company.Ticker, quotes)
                             {
-                                Ticker = company.Ticker,
-                                JsonQuotes = JsonConvert.SerializeObject(quotes),
                                 ErrorMessage = errorMessage
                             });
 

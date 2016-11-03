@@ -124,7 +124,6 @@
     <Compile Include="Processors\IndicatorProcessor\IIndicatorProcessor.cs" />
     <Compile Include="Processors\IndicatorProcessor\IndicatorProcess.cs" />
     <Compile Include="Processors\IndicatorProcessor\IndicatorProcessorFactory.cs" />
-    <Compile Include="Processors\QuotesImport\QuotesImportProcess.cs" />
     <Compile Include="Processors\StrategyMonitor\StrategyMonitorProcess.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

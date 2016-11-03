@@ -20,13 +20,6 @@ namespace dream.walker.data.Services
         void UpdateMetricsFailed(UpdateMetricsFailedRequest updateMetricsFailedRequest);
     }
 
-    public class UpdateQuotesRequest
-    {
-        public string Ticker { get; set; }
-        public string JsonQuotes { get; set; }
-        public string ErrorMessage { get; set; }
-    }
-
     public interface ICompanyManagerService 
     {
         CompanyManager CreateManager(CompanyModel company);

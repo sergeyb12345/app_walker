@@ -169,6 +169,7 @@
     <Compile Include="Services\ICompanyIndicatorService.cs" />
     <Compile Include="Services\ICompanyService.cs" />
     <Compile Include="Services\IStrategyService.cs" />
+    <Compile Include="Services\UpdateQuotesRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
