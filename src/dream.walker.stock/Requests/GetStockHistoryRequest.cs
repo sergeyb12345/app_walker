@@ -21,6 +21,10 @@ namespace dream.walker.stock.Requests
             }
 
             FromDate = lastUpdated;
+            if (FromDate.AddMonths(1) > DateTime.Today)
+            {
+                FromDate = DateTime.Today.AddMonths(-1);
+            }
 
             var months = 0;
             var years = 1;

@@ -96,6 +96,7 @@ namespace dream.walker.stock.Yahoo.Client
         {
             var message = BuildRequestMessage(request);
             var response = await _client.SendAsync(message);
+            response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
             return content;

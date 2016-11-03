@@ -120,7 +120,6 @@
   <ItemGroup>
     <Compile Include="Jobs\CompanyImportJob.cs" />
     <Compile Include="Jobs\HealthCheckJob.cs" />
-    <Compile Include="Jobs\IndicatorCalculateJob.cs" />
     <Compile Include="Loggers\ConsoleLogger.cs" />
     <Compile Include="Loggers\ILogger.cs" />
     <Compile Include="Loggers\TextWriterLogger.cs" />

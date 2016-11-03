@@ -8,9 +8,9 @@ using dream.walker.data.Models;
 using dream.walker.data.Services;
 using Newtonsoft.Json;
 
-namespace dream.walker.station.Processors.IndicatorProcessor
+namespace dream.walker.calculators.IndicatorProcessor
 {
-    public class IndicatorProcess : IProcess
+    public class IndicatorProcess 
     {
         private readonly ICompanyIndicatorService _companyIndicatorService;
         private readonly ICompanyService _companyService;

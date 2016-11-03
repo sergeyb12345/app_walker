@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using dream.walker.calculators;
 using dream.walker.data.Entities;
 
-namespace dream.walker.station.Processors.IndicatorProcessor
+namespace dream.walker.calculators.IndicatorProcessor
 {
     public class IndicatorProcessorFactory
     {

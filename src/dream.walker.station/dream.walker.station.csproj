@@ -121,9 +121,6 @@
     <Compile Include="Processors\CompanyImport\CompanyImportProcess.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="IoC\IoCContainer.cs" />
-    <Compile Include="Processors\IndicatorProcessor\IIndicatorProcessor.cs" />
-    <Compile Include="Processors\IndicatorProcessor\IndicatorProcess.cs" />
-    <Compile Include="Processors\IndicatorProcessor\IndicatorProcessorFactory.cs" />
     <Compile Include="Processors\StrategyMonitor\StrategyMonitorProcess.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

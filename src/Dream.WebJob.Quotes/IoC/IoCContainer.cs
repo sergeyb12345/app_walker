@@ -51,11 +51,9 @@ namespace Dream.WebJob.Quotes.IoC
             builder.RegisterType<QuotesImportJob>().As<IJob>().As<IQuotesImportJob>();
             builder.RegisterType<CompanyImportJob>().As<IJob>().As<ICompanyImportJob>();
             builder.RegisterType<HealthCheckJob>().As<IJob>().As<IHealthCheckJob>();
-            builder.RegisterType<IndicatorCalculateJob>().As<IJob>().As<IIndicatorCalculateJob>();
             builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
             builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
-            //builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();
             builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
 
             return builder.Build();

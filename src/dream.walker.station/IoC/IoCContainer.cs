@@ -1,12 +1,12 @@
 ﻿using Autofac;
 using dream.walker.calculators;
+using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data;
 using dream.walker.data.Repositories;
 using dream.walker.data.Services;
 using dream.walker.reader;
 using dream.walker.reader.Validators;
 using dream.walker.station.Processors.CompanyImport;
-using dream.walker.station.Processors.IndicatorProcessor;
 using dream.walker.station.Publishers;
 using dream.walker.stock;
 using dream.walker.stock.Nasdaq.Client;

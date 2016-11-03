@@ -13,7 +13,7 @@ namespace dream.walker.station
         {
             MsSqlDbMigrator.UpgradeDatabase();
 
-            var job = Dream.WebJob.Quotes.IoC.IoCContainer.Instance.Resolve<ICompanyImportJob>();
+            var job = Dream.WebJob.Quotes.IoC.IoCContainer.Instance.Resolve<IQuotesImportJob>();
             job.Start(new ConsoleLogger());
         }
 
