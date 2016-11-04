@@ -50,16 +50,12 @@ namespace dream.walker.station.IoC
             builder.RegisterType<CompanyIndicatorService>().As<ICompanyIndicatorService>().InstancePerDependency();
             builder.RegisterType<FileReaderConfiguration>().SingleInstance();
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
-            //builder.RegisterType<CompanyImportProcess>().As<IProcess>();
-            //builder.RegisterType<QuotesImportProcess>().As<IProcess>();
-            builder.RegisterType<IndicatorProcess>().As<IProcess>();
             builder.RegisterType<ConsolePublisher>().As<IPublisher>();
             builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
 
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
             builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
             builder.RegisterType<IndicatorProcessorFactory>().SingleInstance();
-            //builder.RegisterType<NasdaqStockClient>().As<IMarketStockClient>();
             builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
 
             return builder.Build();

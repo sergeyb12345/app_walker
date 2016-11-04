@@ -54,7 +54,14 @@ namespace Dream.WebJob.Quotes.Jobs
                         var quotes = UpdateQuotes(log, company);
                         if (quotes != null)
                         {
-                            _indicatorProcessor.Process(company.Ticker, quotes);
+                            try
+                            {
+                                _indicatorProcessor.Process(company.Ticker, quotes);
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Error($"Failed to calculate indicators for company {company.Ticker}. {ex.Message}", ex);
+                            }
                         }
                     }
                     companies = _companyService.FindCompaniesForUpdate(findRequest);

@@ -16,11 +16,14 @@ namespace dream.walker.data.Services
         private void Initialize(string ticker, List<QuotesModel> quotes)
         {
             Ticker = ticker;
-            Volume = quotes.Take(10).Average(q => q.Volume);
-            Price = quotes.First().Close;
-            HighestHigh52 = quotes.Where(q => q.Date > DateTime.Today.AddYears(-1)).Max(p => p.High);
-            LowestLow52 = quotes.Where(q => q.Date > DateTime.Today.AddYears(-1)).Min(p => p.Low);
-            ChaosPercentage = CalculateChaos(quotes);
+            if (quotes.Any())
+            {
+                Volume = quotes.Take(10).Average(q => q.Volume);
+                Price = quotes.First().Close;
+                HighestHigh52 = quotes.Where(q => q.Date > DateTime.Today.AddYears(-1)).Max(p => p.High);
+                LowestLow52 = quotes.Where(q => q.Date > DateTime.Today.AddYears(-1)).Min(p => p.Low);
+                ChaosPercentage = CalculateChaos(quotes);
+            }
             CalculatedTime = DateTime.Now;
             JsonQuotes = JsonConvert.SerializeObject(quotes);
         }

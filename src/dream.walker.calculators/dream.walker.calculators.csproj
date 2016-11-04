@@ -52,7 +52,6 @@
     <Compile Include="EmaIndicatorCalculator.cs" />
     <Compile Include="IIndicatorCalculator.cs" />
     <Compile Include="IndicatorProcessor\IIndicatorProcessor.cs" />
-    <Compile Include="IndicatorProcessor\IndicatorProcess.cs" />
     <Compile Include="IndicatorProcessor\IndicatorProcessorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

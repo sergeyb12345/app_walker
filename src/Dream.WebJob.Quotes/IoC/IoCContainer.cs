@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using dream.walker.calculators;
+using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data;
 using dream.walker.data.Repositories;
 using dream.walker.data.Services;
@@ -52,6 +53,9 @@ namespace Dream.WebJob.Quotes.IoC
             builder.RegisterType<CompanyImportJob>().As<IJob>().As<ICompanyImportJob>();
             builder.RegisterType<HealthCheckJob>().As<IJob>().As<IHealthCheckJob>();
             builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<IndicatorProcessor>().As<IIndicatorProcessor>();
+            builder.RegisterType<IndicatorProcessorFactory>().SingleInstance();
+
             builder.Register(c => new NasdaqStockClientConfig { Proxy = "" }).SingleInstance();
             builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
             builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
