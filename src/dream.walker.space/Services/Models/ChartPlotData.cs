@@ -4,12 +4,12 @@ namespace dream.walker.space.Services.Models
 {
     public class ChartPlotData
     {
-        private readonly List<ChartIndicator> _chartIndicators = null;
+        public readonly List<ChartIndicator> ChartIndicators = null;
 
         public ChartPlotData(int chartPlotNumber)
         {
             ChartPlotNumber = chartPlotNumber;
-            _chartIndicators = new List<ChartIndicator>();
+            ChartIndicators = new List<ChartIndicator>();
         }
 
         public int ChartPlotNumber { get; private set; }
@@ -17,7 +17,7 @@ namespace dream.walker.space.Services.Models
         public ChartIndicator AttachIndicator()
         {
             var ci = new ChartIndicator();
-            _chartIndicators.Add(ci);
+            ChartIndicators.Add(ci);
 
             return ci;
         }

@@ -9,5 +9,6 @@ namespace dream.walker.space.Services.Models
         public string ChartName { get; set; }
         public string[] ChartHeader { get; set; }
         public string[] ChartData { get; set; }
+        public string ChartColor { get; set; }
     }
 }

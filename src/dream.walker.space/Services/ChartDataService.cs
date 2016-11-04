@@ -65,6 +65,7 @@ namespace dream.walker.space.Services
 
                                 var chartIndicator = chartPlot.AttachIndicator();
                                 chartIndicator.ChartType = indicator.ChartType;
+                                chartIndicator.ChartColor = indicator.ChartColor;
                                 chartIndicator.ChartName = $"{indicator.Name} - {indicator.JsonParams} {request.QuotePeriod}";
                                 chartIndicator.ChartHeader = new[] { "value" };
                                 chartIndicator.ChartData = companyIndicator.Data
