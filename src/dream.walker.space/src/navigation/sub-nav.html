@@ -1,0 +1,36 @@
+﻿<template>
+    <div class="sub-menu">
+        <nav class="navbar navbar-fixed-top">
+            <div class="container">
+                <nav class="navbar">
+                    <ul class="nav navbar-nav">
+                        <li repeat.for="item of menu.items" class="${item.IsActive ? 'active' : ''}">
+                            <a href.bind="$parent.getUrl(item)">${item.Title}</a>
+                        </li>
+                    </ul>
+                    <div class="actions">
+                        <div class="btn-group" role="group" aria-label="...">
+
+                            <div if.bind="menu.editMode !== true" class="btn-group" role="group">
+                                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Configure
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a click.delegate="startEdit()">Edit Page</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/categories">Manage Categories</a></li>
+                                </ul>
+                            </div>
+
+                            <button type="button" if.bind="menu.editMode === true" click.delegate="applyChanges()" class="btn btn-success">Apply Changes</button>
+                            <button type="button" if.bind="menu.editMode === true" click.delegate="cancelEdit()" class="btn btn-default">Cancel</button>
+
+                        </div>
+
+                    </div>
+                </nav>
+            </div>
+        </nav>
+    </div>
+</template>

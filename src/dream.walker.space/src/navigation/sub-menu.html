@@ -1,0 +1,25 @@
+﻿<template>
+
+    <div class="sub-menu">
+        <nav class="navbar navbar-fixed-top">
+            <div class="container">
+                <nav class="navbar">
+                    <ul class="nav navbar-nav">
+                        <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
+                            <a href.bind="row.href">${row.title}</a>
+                        </li>
+                    </ul>
+
+                    <div class="actions">
+                        <div class="btn-group" role="group" aria-label="Actions">
+                            <button type="button" if.bind="editMode !== true" click.delegate="startEdit()" class="btn btn-success">Switch to Edit Mode</button>
+                            <button type="button" if.bind="editMode === true" click.delegate="applyChanges()" class="btn btn-success">Apply Changes</button>
+                            <button type="button" if.bind="editMode === true" click.delegate="cancelEdit()" class="btn btn-default">Cancel</button>
+                        </div>
+                    </div>
+
+                </nav>
+            </div>
+        </nav>
+    </div>
+</template>

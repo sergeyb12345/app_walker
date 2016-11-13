@@ -223,6 +223,7 @@
     <Compile Include="Controllers\ChartController.cs" />
     <Compile Include="Controllers\HealthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IndicatorController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -278,12 +279,18 @@
     <Content Include="aurelia_project\tasks\transpile.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\ec04f001.jpg" />
     <Content Include="Content\Images\indicator.gif" />
-    <Content Include="Content\jquery.autocomplete.css" />
+    <Content Include="Content\Images\logo.png" />
+    <Content Include="Content\market-hunter.css">
+      <DependentUpon>market-hunter.less</DependentUpon>
+    </Content>
+    <Content Include="Content\market-hunter.min.css">
+      <DependentUpon>market-hunter.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="index.html" />
     <Content Include="node_modules\npm-anystock\anystock.min.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
@@ -347,6 +354,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="node_modules\npm-anystock\package.json" />
     <Content Include="node_modules\npm-anystock\README.md" />
+    <Content Include="Content\market-hunter.less" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />
@@ -379,10 +391,23 @@
     <Content Include="src\app.js" />
     <Content Include="src\environment.js" />
     <Content Include="src\main.js" />
+    <Content Include="src\navigation\index.js" />
+    <Content Include="src\navigation\main-menu.html" />
+    <Content Include="src\navigation\main-menu.js" />
+    <Content Include="src\navigation\sub-menu.html" />
+    <Content Include="src\navigation\sub-menu.js" />
+    <Content Include="src\navigation\sub-nav.html" />
+    <Content Include="src\navigation\sub-nav.js" />
     <Content Include="src\resources\elements\any-chart.html" />
     <Content Include="src\resources\elements\any-chart.js" />
     <Content Include="src\resources\elements\loading-indicator.js" />
     <Content Include="src\resources\index.js" />
+    <Content Include="src\strategies\create.html" />
+    <Content Include="src\strategies\create.js" />
+    <Content Include="src\strategies\list.html" />
+    <Content Include="src\strategies\list.js" />
+    <Content Include="src\strategies\navigation.html" />
+    <Content Include="src\strategies\navigation.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -421,6 +446,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Home\AureliaStartPage.cshtml" />
     <None Include="Views\Home\Chart.cshtml" />
     <Content Include="Views\Shared\_AureliaLayout.cshtml" />
   </ItemGroup>

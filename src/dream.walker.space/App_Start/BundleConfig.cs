@@ -25,7 +25,7 @@ namespace dream.walker.space
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/market-hunter.css"));
 
             bundles.Add(new StyleBundle("~/Content/anyChart-css").Include(
                       "~/Scripts/AnyChart/css/anychart-ui.min.css"));

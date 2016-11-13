@@ -1,19 +1,7 @@
 <template>
-    <!--<any-chart container.bind="container_1"></any-chart>-->
-    
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                <i class="fa fa-user"></i>
-                <span>Contacts</span>
-            </a>
-        </div>
-    </nav>
+    <require from="navigation/main-menu.html"></require>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">Contact List Placeholder</div>
-            <router-view class="col-md-8"></router-view>
-        </div>
-    </div>
+    <main-menu router.bind="router"></main-menu>
+    <router-view></router-view>
+
 </template>

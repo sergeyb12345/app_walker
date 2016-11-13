@@ -18,7 +18,7 @@ namespace dream.walker.space.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return View("AureliaStartPage");
         }
 
         public ActionResult About()
