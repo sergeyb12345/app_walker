@@ -1,9 +1,10 @@
-define('app',["exports"], function (exports) {
-    "use strict";
+define('app',['exports', 'aurelia-router'], function (exports, _aureliaRouter) {
+    'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
+    exports.App = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -21,11 +22,32 @@ define('app',["exports"], function (exports) {
             config.options.pushState = true;
 
             this.router = router;
-
-            config.map([{ route: ["strategies"], moduleId: "strategies/navigation", name: "strategies", title: "Strategies", nav: true }, { route: '', redirect: 'strategies' }]);
+            config.addPipelineStep('authorize', AuthorizeStep);
+            config.map([{ route: ["login"], moduleId: "login/navigation", name: "login", title: "Login", nav: false }, { route: ["strategies"], moduleId: "strategies/navigation", name: "strategies", title: "Strategies", auth: true, nav: true }, { route: '', redirect: 'strategies' }]);
         };
 
         return App;
+    }();
+
+    var AuthorizeStep = function () {
+        function AuthorizeStep() {
+            _classCallCheck(this, AuthorizeStep);
+        }
+
+        AuthorizeStep.prototype.run = function run(navigationInstruction, next) {
+            if (navigationInstruction.getAllInstructions().some(function (i) {
+                return i.config.auth;
+            })) {
+                var isLoggedIn = false;
+                if (!isLoggedIn) {
+                    return next.cancel(new _aureliaRouter.RedirectToRoute('login'));
+                }
+            }
+
+            return next();
+        };
+
+        return AuthorizeStep;
     }();
 });
 define('environment',["exports"], function (exports) {
@@ -76,6 +98,53 @@ define('main',['exports', './environment'], function (exports, _environment) {
       return aurelia.setRoot();
     });
   }
+});
+define('login/login',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Login = exports.Login = function Login() {
+    _classCallCheck(this, Login);
+  };
+});
+define('login/navigation',['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var Navigation = exports.Navigation = function () {
+        function Navigation() {
+            _classCallCheck(this, Navigation);
+        }
+
+        Navigation.prototype.configureRouter = function configureRouter(config, router) {
+            config.title = 'Login';
+
+            config.map([{ route: ['', 'login'], moduleId: "./login", name: "list", title: "Login", nav: false }]);
+
+            this.router = router;
+            this.section = config.title;
+        };
+
+        return Navigation;
+    }();
 });
 define('navigation/index',['exports'], function (exports) {
     'use strict';
@@ -548,7 +617,9 @@ define('resources/elements/loading-indicator',['exports', 'nprogress', 'aurelia-
     return _class;
   }());
 });
-define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n    <require from=\"navigation/main-menu.html\"></require>\r\n\r\n    <main-menu router.bind=\"router\"></main-menu>\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
+define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <main-menu router.bind=\"router\"></main-menu>\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
+define('text!login/login.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Login</h3>\r\n    </header>\r\n    \r\n   \r\n</template>"; });
+define('text!login/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!navigation/main-menu.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-menu\">\r\n        <div class=\"container\">\r\n            <div class=\"navbar-brand\">\r\n\r\n                <img class=\"logo\" src=\"/content/images/logo.png\" />\r\n                <a href=\"/\">D<span>ream</span> S<span>pace</span></a>\r\n            </div>\r\n            <nav class=\"navbar\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </nav>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!navigation/sub-menu.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" if.bind=\"editMode !== true\" click.delegate=\"startEdit()\" class=\"btn btn-success\">Switch to Edit Mode</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 define('text!navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"item of menu.items\" class=\"${item.IsActive ? 'active' : ''}\">\r\n                            <a href.bind=\"$parent.getUrl(item)\">${item.Title}</a>\r\n                        </li>\r\n                    </ul>\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n\r\n                            <div if.bind=\"menu.editMode !== true\" class=\"btn-group\" role=\"group\">\r\n                                <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                    Configure\r\n                                    <span class=\"caret\"></span>\r\n                                </button>\r\n                                <ul class=\"dropdown-menu\">\r\n                                    <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                                    <li role=\"separator\" class=\"divider\"></li>\r\n                                    <li><a href=\"/categories\">Manage Categories</a></li>\r\n                                </ul>\r\n                            </div>\r\n\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
