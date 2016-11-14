@@ -1,8 +1,10 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using Autofac.Integration.Mvc;
 using dream.walker.data;
 using dream.walker.data.Repositories;
 using System.Web.Mvc;
+using Autofac.Integration.WebApi;
 
 namespace dream.walker.space.IoC
 {
@@ -18,6 +20,7 @@ namespace dream.walker.space.IoC
             // Register your MVC controllers. (MvcApplication is the name of
             // the class in Global.asax.)
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterApiControllers(typeof(MvcApplication).Assembly);
 
             // OPTIONAL: Register model binders that require DI.
             builder.RegisterModelBinders(typeof(MvcApplication).Assembly);
