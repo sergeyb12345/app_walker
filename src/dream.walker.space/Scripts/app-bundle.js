@@ -1,4 +1,4 @@
-define('app',['exports', 'aurelia-router'], function (exports, _aureliaRouter) {
+define('app',['exports', 'aurelia-framework', 'aurelia-router', './common/user-context'], function (exports, _aureliaFramework, _aureliaRouter, _userContext) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -12,12 +12,19 @@ define('app',['exports', 'aurelia-router'], function (exports, _aureliaRouter) {
         }
     }
 
-    var App = exports.App = function () {
-        function App() {
+    var _dec, _class, _dec2, _class2;
+
+    var App = exports.App = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext), _dec(_class = function () {
+        function App(userContext) {
             _classCallCheck(this, App);
+
+            userContext.initialize().then(function (result) {
+                return;
+            });
         }
 
         App.prototype.configureRouter = function configureRouter(config, router) {
+
             config.title = 'Dream Space';
             config.options.pushState = true;
 
@@ -27,28 +34,31 @@ define('app',['exports', 'aurelia-router'], function (exports, _aureliaRouter) {
         };
 
         return App;
-    }();
-
-    var AuthorizeStep = function () {
-        function AuthorizeStep() {
+    }()) || _class);
+    var AuthorizeStep = (_dec2 = (0, _aureliaFramework.inject)(_userContext.UserContext), _dec2(_class2 = function () {
+        function AuthorizeStep(userContext) {
             _classCallCheck(this, AuthorizeStep);
+
+            this.isAuthenticated = userContext.user.isAuthenticated;
         }
 
         AuthorizeStep.prototype.run = function run(navigationInstruction, next) {
             if (navigationInstruction.getAllInstructions().some(function (i) {
                 return i.config.auth;
             })) {
-                var isLoggedIn = false;
-                if (!isLoggedIn) {
+
+                if (this.isAuthenticated) {
+                    return next();
+                } else {
                     return next.cancel(new _aureliaRouter.RedirectToRoute('login'));
                 }
+            } else {
+                return next();
             }
-
-            return next();
         };
 
         return AuthorizeStep;
-    }();
+    }()) || _class2);
 });
 define('environment',["exports"], function (exports) {
   "use strict";
@@ -95,26 +105,86 @@ define('main',['exports', './environment'], function (exports, _environment) {
     }
 
     aurelia.start().then(function () {
-      return aurelia.setRoot();
+      aurelia.setRoot();
     });
   }
 });
-define('login/login',["exports"], function (exports) {
-  "use strict";
+define('common/user-context',["exports", "aurelia-framework", "../services/user-service"], function (exports, _aureliaFramework, _userService) {
+    "use strict";
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.UserContext = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
     }
-  }
 
-  var Login = exports.Login = function Login() {
-    _classCallCheck(this, Login);
-  };
+    var _dec, _class;
+
+    var UserContext = exports.UserContext = (_dec = (0, _aureliaFramework.inject)(_userService.UserService), _dec(_class = function () {
+        function UserContext(userService) {
+            _classCallCheck(this, UserContext);
+
+            this.user = { isAuthenticated: false };
+            this.userService = userService;
+        }
+
+        UserContext.prototype.initialize = function initialize() {
+            var _this = this;
+
+            return this.userService.isAuthenticated().then(function (result) {
+                _this.user.isAuthenticated = result === true;
+            });
+        };
+
+        return UserContext;
+    }()) || _class);
+});
+define('login/login',['exports', '../services/user-service', 'aurelia-framework', 'aurelia-router', '../common/user-context'], function (exports, _userService, _aureliaFramework, _aureliaRouter, _userContext) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Login = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)(_userService.UserService, _aureliaRouter.Router, _userContext.UserContext), _dec(_class = function () {
+        function Login(userService, router, userContext) {
+            _classCallCheck(this, Login);
+
+            this.userService = userService;
+            this.router = router;
+            this.userContext = userContext;
+
+            this.username = '';
+            this.password = '';
+        }
+
+        Login.prototype.login = function login() {
+            var _this = this;
+
+            this.userService.login(this.username, this.password).then(function (result) {
+                if (result === 0) {
+                    _this.userContext.user.isAuthenticated = true;
+                    _this.router.navigate("strategies");
+                }
+            });
+        };
+
+        return Login;
+    }()) || _class);
 });
 define('login/navigation',['exports'], function (exports) {
     'use strict';
@@ -400,6 +470,73 @@ define('resources/index',['exports'], function (exports) {
     config.globalResources(['./elements/any-chart']);
   }
 });
+define('services/user-service',["exports", "aurelia-framework", "aurelia-fetch-client"], function (exports, _aureliaFramework, _aureliaFetchClient) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.UserService = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var UserService = exports.UserService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient), _dec(_class = function () {
+        function UserService(httpClient) {
+            _classCallCheck(this, UserService);
+
+            this.http = httpClient;
+
+            this.http.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/').withDefaults({
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'Fetch'
+                    }
+                });
+            });
+        }
+
+        UserService.prototype.handleError = function handleError(error) {};
+
+        UserService.prototype.login = function login(username, password) {
+            var _this = this;
+
+            var model = {
+                Email: username,
+                Password: password
+            };
+
+            return this.http.fetch("account/login", {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(model)
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error);
+            });
+        };
+
+        UserService.prototype.isAuthenticated = function isAuthenticated() {
+            var _this2 = this;
+
+            return this.http.fetch("account/isAuthenticated", {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this2.handleError(error);
+            });
+        };
+
+        return UserService;
+    }()) || _class);
+});
 define('strategies/create',["exports"], function (exports) {
   "use strict";
 
@@ -618,7 +755,7 @@ define('resources/elements/loading-indicator',['exports', 'nprogress', 'aurelia-
   }());
 });
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <main-menu router.bind=\"router\"></main-menu>\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
-define('text!login/login.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Login</h3>\r\n    </header>\r\n    \r\n   \r\n</template>"; });
+define('text!login/login.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Login</h3>\r\n    </header>\r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Username</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"username\" />\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Password</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"password\" />\r\n        </div>\r\n    </div>    \r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"login()\" class=\"btn btn-primary\">Login</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!login/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!navigation/main-menu.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-menu\">\r\n        <div class=\"container\">\r\n            <div class=\"navbar-brand\">\r\n\r\n                <img class=\"logo\" src=\"/content/images/logo.png\" />\r\n                <a href=\"/\">D<span>ream</span> S<span>pace</span></a>\r\n            </div>\r\n            <nav class=\"navbar\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </nav>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!navigation/sub-menu.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" if.bind=\"editMode !== true\" click.delegate=\"startEdit()\" class=\"btn btn-success\">Switch to Edit Mode</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });

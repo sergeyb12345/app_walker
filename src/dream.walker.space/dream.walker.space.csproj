@@ -171,6 +171,7 @@
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -408,6 +409,7 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="src\app.html" />
     <Content Include="src\app.js" />
+    <Content Include="src\common\user-context.js" />
     <Content Include="src\environment.js" />
     <Content Include="src\login\login.html" />
     <Content Include="src\login\login.js" />
@@ -425,6 +427,7 @@
     <Content Include="src\resources\elements\any-chart.js" />
     <Content Include="src\resources\elements\loading-indicator.js" />
     <Content Include="src\resources\index.js" />
+    <Content Include="src\services\user-service.js" />
     <Content Include="src\strategies\create.html" />
     <Content Include="src\strategies\create.js" />
     <Content Include="src\strategies\list.html" />

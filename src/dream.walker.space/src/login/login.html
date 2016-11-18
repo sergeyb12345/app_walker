@@ -4,5 +4,25 @@
         <h3>Login</h3>
     </header>
     
-   
+    <div class="row">
+        <div class="col-xs-2">Username</div>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" value.bind="username" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-2">Password</div>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" value.bind="password" />
+        </div>
+    </div>    
+    
+    <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-10">
+            <button type="button" click.delegate="login()" class="btn btn-primary">Login</button>
+        </div>
+    </div>
+
 </template>

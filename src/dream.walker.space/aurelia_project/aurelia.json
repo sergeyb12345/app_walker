@@ -94,7 +94,7 @@
             "name": "bootstrap",
             "path": "../node_modules/bootstrap/dist",
             "main": "js/bootstrap.min",
-            "deps": ["jquery"],
+            "deps": [ "jquery" ],
             "exports": "$",
             "resources": [
               "css/bootstrap.css"
@@ -112,7 +112,7 @@
             "name": "npm-anystock",
             "path": "../node_modules/npm-anystock",
             "main": "anystock.min"
-          },          
+          },
           "aurelia-binding",
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",
@@ -124,6 +124,7 @@
           "aurelia-loader-default",
           "aurelia-logging",
           "aurelia-logging-console",
+          "aurelia-fetch-client",
           "aurelia-metadata",
           "aurelia-pal",
           "aurelia-pal-browser",

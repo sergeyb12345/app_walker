@@ -1,8 +1,19 @@
-import { RedirectToRoute } from 'aurelia-router';
+import {inject} from "aurelia-framework";
+import {RedirectToRoute } from 'aurelia-router';
+import {UserContext} from './common/user-context';
 
+@inject(UserContext)
 export class App {
 
+    constructor(userContext) {
+        userContext.initialize()
+            .then(result => {
+                return;
+            });
+    }
+
     configureRouter(config, router) {
+
         config.title = 'Dream Space';
         config.options.pushState = true;
 
@@ -14,19 +25,29 @@ export class App {
             { route: '', redirect: 'strategies' }
 
         ]);
+
     }
 }
 
 
+@inject(UserContext)
 class AuthorizeStep {
+
+    constructor(userContext) {
+        this.isAuthenticated = userContext.user.isAuthenticated;
+    }
+
     run(navigationInstruction, next) {
         if (navigationInstruction.getAllInstructions().some(i => i.config.auth)) {
-            var isLoggedIn = /* insert magic here */false;
-            if (!isLoggedIn) {
+
+            if (this.isAuthenticated) {
+                return next();
+            } else {
                 return next.cancel(new RedirectToRoute('login'));
             }
+        } else {
+            return next();
         }
-
-        return next();
     }
+
 }

@@ -11,11 +11,13 @@ namespace dream.walker.space
         protected void Application_Start()
         {
             IoCContainer.Instance.Register();
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            GlobalConfiguration.Configure(WebApiConfig.Register);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            GlobalConfiguration.Configuration.EnsureInitialized();
+
         }
     }
 }

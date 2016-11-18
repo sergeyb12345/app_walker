@@ -12,7 +12,10 @@ export function configure(aurelia) {
     aurelia.use
         .standardConfiguration()
         .feature('resources')
-        .feature('navigation');
+        .feature('navigation')
+        .plugin('common/user-context', (userContext) => {
+            userContext.initialize();
+        });
 
   if (environment.debug) {
     aurelia.use.developmentLogging();
@@ -22,5 +25,7 @@ export function configure(aurelia) {
     aurelia.use.plugin('aurelia-testing');
   }
 
-  aurelia.start().then(() => aurelia.setRoot());
+  aurelia.start().then(() => {
+        aurelia.setRoot();
+  });
 }
