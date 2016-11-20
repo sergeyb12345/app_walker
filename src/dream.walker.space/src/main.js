@@ -1,4 +1,5 @@
 import environment from './environment';
+import {UserContext} from './common/user-context';
 
 //Configure Bluebird Promises.
 //Note: You may want to use environment-specific configuration.
@@ -9,13 +10,14 @@ Promise.config({
 });
 
 export function configure(aurelia) {
+
+    let userContext = aurelia.container.get(UserContext);
+    userContext.initialize();
+
     aurelia.use
         .standardConfiguration()
         .feature('resources')
-        .feature('navigation')
-        .plugin('common/user-context', (userContext) => {
-            userContext.initialize();
-        });
+        .feature('navigation');
 
   if (environment.debug) {
     aurelia.use.developmentLogging();

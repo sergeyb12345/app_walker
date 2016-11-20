@@ -427,7 +427,6 @@
     <Content Include="src\resources\elements\any-chart.js" />
     <Content Include="src\resources\elements\loading-indicator.js" />
     <Content Include="src\resources\index.js" />
-    <Content Include="src\services\user-service.js" />
     <Content Include="src\strategies\create.html" />
     <Content Include="src\strategies\create.js" />
     <Content Include="src\strategies\list.html" />
@@ -481,6 +480,7 @@
     <Folder Include="src\resources\attributes\" />
     <Folder Include="src\resources\binding-behaviors\" />
     <Folder Include="src\resources\value-converters\" />
+    <Folder Include="src\services\" />
     <Folder Include="Views\Chart\" />
     <Folder Include="Views\Health\" />
   </ItemGroup>

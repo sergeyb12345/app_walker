@@ -2,15 +2,7 @@ import {inject} from "aurelia-framework";
 import {RedirectToRoute } from 'aurelia-router';
 import {UserContext} from './common/user-context';
 
-@inject(UserContext)
 export class App {
-
-    constructor(userContext) {
-        userContext.initialize()
-            .then(result => {
-                return;
-            });
-    }
 
     configureRouter(config, router) {
 
@@ -46,6 +38,11 @@ class AuthorizeStep {
                 return next.cancel(new RedirectToRoute('login'));
             }
         } else {
+            if (navigationInstruction
+                .getAllInstructions()
+                .some(i => i.config.name === 'login' && this.isAuthenticated)) {
+                return next.cancel(new RedirectToRoute('strategies'));
+            }
             return next();
         }
     }

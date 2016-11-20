@@ -6,21 +6,17 @@ define('app',['exports', 'aurelia-framework', 'aurelia-router', './common/user-c
     });
     exports.App = undefined;
 
+    var _dec, _class;
+
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
             throw new TypeError("Cannot call a class as a function");
         }
     }
 
-    var _dec, _class, _dec2, _class2;
-
-    var App = exports.App = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext), _dec(_class = function () {
-        function App(userContext) {
+    var App = exports.App = function () {
+        function App() {
             _classCallCheck(this, App);
-
-            userContext.initialize().then(function (result) {
-                return;
-            });
         }
 
         App.prototype.configureRouter = function configureRouter(config, router) {
@@ -34,8 +30,9 @@ define('app',['exports', 'aurelia-framework', 'aurelia-router', './common/user-c
         };
 
         return App;
-    }()) || _class);
-    var AuthorizeStep = (_dec2 = (0, _aureliaFramework.inject)(_userContext.UserContext), _dec2(_class2 = function () {
+    }();
+
+    var AuthorizeStep = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext), _dec(_class = function () {
         function AuthorizeStep(userContext) {
             _classCallCheck(this, AuthorizeStep);
 
@@ -43,6 +40,8 @@ define('app',['exports', 'aurelia-framework', 'aurelia-router', './common/user-c
         }
 
         AuthorizeStep.prototype.run = function run(navigationInstruction, next) {
+            var _this = this;
+
             if (navigationInstruction.getAllInstructions().some(function (i) {
                 return i.config.auth;
             })) {
@@ -53,12 +52,17 @@ define('app',['exports', 'aurelia-framework', 'aurelia-router', './common/user-c
                     return next.cancel(new _aureliaRouter.RedirectToRoute('login'));
                 }
             } else {
+                if (navigationInstruction.getAllInstructions().some(function (i) {
+                    return i.config.name === 'login' && _this.isAuthenticated;
+                })) {
+                    return next.cancel(new _aureliaRouter.RedirectToRoute('strategies'));
+                }
                 return next();
             }
         };
 
         return AuthorizeStep;
-    }()) || _class2);
+    }()) || _class);
 });
 define('environment',["exports"], function (exports) {
   "use strict";
@@ -71,7 +75,7 @@ define('environment',["exports"], function (exports) {
     testing: true
   };
 });
-define('main',['exports', './environment'], function (exports, _environment) {
+define('main',['exports', './environment', './common/user-context'], function (exports, _environment, _userContext) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -94,6 +98,10 @@ define('main',['exports', './environment'], function (exports, _environment) {
   });
 
   function configure(aurelia) {
+
+    var userContext = aurelia.container.get(_userContext.UserContext);
+    userContext.initialize();
+
     aurelia.use.standardConfiguration().feature('resources').feature('navigation');
 
     if (_environment2.default.debug) {
@@ -109,8 +117,8 @@ define('main',['exports', './environment'], function (exports, _environment) {
     });
   }
 });
-define('common/user-context',["exports", "aurelia-framework", "../services/user-service"], function (exports, _aureliaFramework, _userService) {
-    "use strict";
+define('common/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -125,26 +133,63 @@ define('common/user-context',["exports", "aurelia-framework", "../services/user-
 
     var _dec, _class;
 
-    var UserContext = exports.UserContext = (_dec = (0, _aureliaFramework.inject)(_userService.UserService), _dec(_class = function () {
-        function UserContext(userService) {
+    var UserContext = exports.UserContext = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function UserContext(httpClient, eventAggregator) {
             _classCallCheck(this, UserContext);
 
-            this.user = { isAuthenticated: false };
-            this.userService = userService;
+            httpClient.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.http = httpClient;
+            this.eventAggregator = eventAggregator;
+            this.user = {};
         }
 
         UserContext.prototype.initialize = function initialize() {
             var _this = this;
 
-            return this.userService.isAuthenticated().then(function (result) {
-                _this.user.isAuthenticated = result === true;
+            return this.http.fetch("account/user").then(function (response) {
+                response.json().then(function (user) {
+                    _this.user = user;
+                });
+            }).catch(function (error) {
+                _this.handleError(error);
             });
+        };
+
+        UserContext.prototype.login = function login(username, password) {
+            var _this2 = this;
+
+            var loginRequest = {
+                Email: username,
+                Password: password,
+                RememberMe: true
+            };
+
+            return this.http.fetch("account/login", {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(loginRequest)
+            }).then(function (response) {
+                return response.json().then(function (result) {
+                    if (result.status === 0) {
+                        _this2.user = result.user;
+                    }
+                    return result.status;
+                });
+            }).catch(function (error) {
+                return _this2.handleError(error);
+            });
+        };
+
+        UserContext.prototype.handleError = function handleError(error) {
+            this.eventAggregator.publish('GeneralExceptions', error);
         };
 
         return UserContext;
     }()) || _class);
 });
-define('login/login',['exports', '../services/user-service', 'aurelia-framework', 'aurelia-router', '../common/user-context'], function (exports, _userService, _aureliaFramework, _aureliaRouter, _userContext) {
+define('login/login',['exports', 'aurelia-framework', 'aurelia-router', '../common/user-context'], function (exports, _aureliaFramework, _aureliaRouter, _userContext) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -160,11 +205,10 @@ define('login/login',['exports', '../services/user-service', 'aurelia-framework'
 
     var _dec, _class;
 
-    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)(_userService.UserService, _aureliaRouter.Router, _userContext.UserContext), _dec(_class = function () {
-        function Login(userService, router, userContext) {
+    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)(_aureliaRouter.Router, _userContext.UserContext), _dec(_class = function () {
+        function Login(router, userContext) {
             _classCallCheck(this, Login);
 
-            this.userService = userService;
             this.router = router;
             this.userContext = userContext;
 
@@ -175,12 +219,18 @@ define('login/login',['exports', '../services/user-service', 'aurelia-framework'
         Login.prototype.login = function login() {
             var _this = this;
 
-            this.userService.login(this.username, this.password).then(function (result) {
+            this.userContext.login(this.username, this.password).then(function (result) {
                 if (result === 0) {
-                    _this.userContext.user.isAuthenticated = true;
-                    _this.router.navigate("strategies");
+                    var url = _this.router.generate("strategies");
+                    window.location.href = url;
                 }
+            }).catch(function (error) {
+                return _this.handleError(error);
             });
+        };
+
+        Login.prototype.handleError = function handleError(error) {
+            this.eventAggregator.publish('GeneralExceptions', error);
         };
 
         return Login;
@@ -469,73 +519,6 @@ define('resources/index',['exports'], function (exports) {
     config.globalResources(['./elements/loading-indicator']);
     config.globalResources(['./elements/any-chart']);
   }
-});
-define('services/user-service',["exports", "aurelia-framework", "aurelia-fetch-client"], function (exports, _aureliaFramework, _aureliaFetchClient) {
-    "use strict";
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.UserService = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var UserService = exports.UserService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient), _dec(_class = function () {
-        function UserService(httpClient) {
-            _classCallCheck(this, UserService);
-
-            this.http = httpClient;
-
-            this.http.configure(function (config) {
-                config.useStandardConfiguration().withBaseUrl('api/').withDefaults({
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-Requested-With': 'Fetch'
-                    }
-                });
-            });
-        }
-
-        UserService.prototype.handleError = function handleError(error) {};
-
-        UserService.prototype.login = function login(username, password) {
-            var _this = this;
-
-            var model = {
-                Email: username,
-                Password: password
-            };
-
-            return this.http.fetch("account/login", {
-                method: 'post',
-                body: (0, _aureliaFetchClient.json)(model)
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this.handleError(error);
-            });
-        };
-
-        UserService.prototype.isAuthenticated = function isAuthenticated() {
-            var _this2 = this;
-
-            return this.http.fetch("account/isAuthenticated", {
-                method: 'get'
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this2.handleError(error);
-            });
-        };
-
-        return UserService;
-    }()) || _class);
 });
 define('strategies/create',["exports"], function (exports) {
   "use strict";

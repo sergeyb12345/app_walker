@@ -1,13 +1,12 @@
-﻿import {UserService} from '../services/user-service';
-import {inject,bindable} from "aurelia-framework";
+﻿import {inject,bindable} from "aurelia-framework";
 import {Router} from 'aurelia-router';
 import {UserContext} from '../common/user-context';
+//import {DOM} from 'aurelia-pal'
 
-@inject(UserService, Router, UserContext)
+@inject(Router, UserContext)
 export class Login {
 
-    constructor(userService, router, userContext) {
-        this.userService = userService;
+    constructor(router, userContext ) {
         this.router = router;
         this.userContext = userContext;
 
@@ -16,12 +15,19 @@ export class Login {
     }
 
     login() {
-        this.userService.login(this.username, this.password)
+        this.userContext.login(this.username, this.password)
             .then(result => {
                 if (result === 0) {
-                    this.userContext.user.isAuthenticated = true;
-                    this.router.navigate("strategies");
+                    let url = this.router.generate("strategies");
+                    window.location.href = url;
                 }
-            });
+            })
+        .catch(error => {
+            return this.handleError(error);
+        });
+    }
+
+    handleError(error) {
+        this.eventAggregator.publish('GeneralExceptions', error);
     }
 }
