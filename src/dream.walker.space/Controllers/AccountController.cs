@@ -142,6 +142,39 @@ namespace dream.walker.space.Controllers
             return View();
         }
 
+        public ActionResult Edit()
+        {
+            var user = UserManager.FindByEmail(User.Identity.Name);
+            var model = new UpdateProfileViewModel
+            {
+                FirstName = user.FirstName,
+                Email = user.Email
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(UpdateProfileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = UserManager.FindByEmail(model.Email);
+                user.FirstName = model.FirstName;
+
+                var result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            return View(model);
+        }
+
         //
         // POST: /Account/Register
         [HttpPost]
@@ -151,7 +184,7 @@ namespace dream.walker.space.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -482,4 +515,5 @@ namespace dream.walker.space.Controllers
         }
         #endregion
     }
+
 }

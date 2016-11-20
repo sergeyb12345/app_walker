@@ -62,8 +62,21 @@ namespace dream.walker.space.Models
         public bool RememberMe { get; set; }
     }
 
+    public class UpdateProfileViewModel
+    {
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        public string Email { get; set; }
+    }
+
     public class RegisterViewModel
     {
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
