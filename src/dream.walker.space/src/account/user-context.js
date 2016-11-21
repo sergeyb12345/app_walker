@@ -37,7 +37,7 @@ export class UserContext {
             Email: username,
             Password: password,
             RememberMe: true
-        }
+        };
 
         return this.http.fetch("account/login",
             {
@@ -58,6 +58,30 @@ export class UserContext {
             });
     }
 
+    update(user) {
+        let updateRequest = {
+            Username : user.username,
+            FirstName: user.firstName
+        };
+
+        return this.http.fetch("account/update",
+            {
+                method: 'put',
+                body: json(updateRequest)
+            })
+            .then(response => {
+                return response.json()
+                    .then(result => {
+                        if (result.status === 0) {
+                            this.user = result.user;
+                        }
+                        return result.status;
+                    });
+            })
+            .catch(error => {
+                return this.handleError(error);
+            });
+    }
 
     handleError(error) {
         this.eventAggregator.publish('GeneralExceptions', error);

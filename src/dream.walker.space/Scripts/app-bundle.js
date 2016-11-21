@@ -118,7 +118,55 @@ define('main',['exports', './environment', './account/user-context'], function (
     });
   }
 });
-define('account/login',['exports', 'aurelia-framework', 'aurelia-router', './user-context'], function (exports, _aureliaFramework, _aureliaRouter, _userContext) {
+define('account/edit',['exports', 'aurelia-framework', './user-context', 'aurelia-event-aggregator', 'aurelia-router'], function (exports, _aureliaFramework, _userContext, _aureliaEventAggregator, _aureliaRouter) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Edit = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var Edit = exports.Edit = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext, _aureliaEventAggregator.EventAggregator, _aureliaRouter.Router), _dec(_class = function () {
+        function Edit(userContext, eventAggregator, router) {
+            _classCallCheck(this, Edit);
+
+            this.userContext = userContext;
+            this.eventAggregator = eventAggregator;
+            this.router = router;
+        }
+
+        Edit.prototype.activate = function activate() {
+            this.user = this.userContext.user;
+        };
+
+        Edit.prototype.update = function update() {
+            var _this = this;
+
+            this.userContext.update(this.user).then(function (result) {
+                if (result === 0) {
+                    _this.router.navigate("view");
+                }
+            }).catch(function (error) {
+                return _this.handleError(error);
+            });
+        };
+
+        Edit.prototype.handleError = function handleError(error) {
+            this.eventAggregator.publish('GeneralExceptions', error);
+        };
+
+        return Edit;
+    }()) || _class);
+});
+define('account/login',['exports', 'aurelia-framework', 'aurelia-router', './user-context', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaRouter, _userContext, _aureliaEventAggregator) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -134,12 +182,13 @@ define('account/login',['exports', 'aurelia-framework', 'aurelia-router', './use
 
     var _dec, _class;
 
-    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)(_aureliaRouter.Router, _userContext.UserContext), _dec(_class = function () {
-        function Login(router, userContext) {
+    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)(_aureliaRouter.Router, _userContext.UserContext, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function Login(router, userContext, eventAggregator) {
             _classCallCheck(this, Login);
 
             this.router = router;
             this.userContext = userContext;
+            this.eventAggregator = eventAggregator;
 
             this.username = '';
             this.password = '';
@@ -260,6 +309,29 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
             });
         };
 
+        UserContext.prototype.update = function update(user) {
+            var _this3 = this;
+
+            var updateRequest = {
+                Username: user.username,
+                FirstName: user.firstName
+            };
+
+            return this.http.fetch("account/update", {
+                method: 'put',
+                body: (0, _aureliaFetchClient.json)(updateRequest)
+            }).then(function (response) {
+                return response.json().then(function (result) {
+                    if (result.status === 0) {
+                        _this3.user = result.user;
+                    }
+                    return result.status;
+                });
+            }).catch(function (error) {
+                return _this3.handleError(error);
+            });
+        };
+
         UserContext.prototype.handleError = function handleError(error) {
             this.eventAggregator.publish('GeneralExceptions', error);
         };
@@ -267,8 +339,8 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
         return UserContext;
     }()) || _class);
 });
-define('account/view',["exports", "aurelia-framework", "./user-context"], function (exports, _aureliaFramework, _userContext) {
-    "use strict";
+define('account/view',['exports', 'aurelia-framework', './user-context', 'aurelia-router'], function (exports, _aureliaFramework, _userContext, _aureliaRouter) {
+    'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -283,14 +355,19 @@ define('account/view',["exports", "aurelia-framework", "./user-context"], functi
 
     var _dec, _class;
 
-    var View = exports.View = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext), _dec(_class = function () {
-        function View(userContext) {
+    var View = exports.View = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext, _aureliaRouter.Router), _dec(_class = function () {
+        function View(userContext, router) {
             _classCallCheck(this, View);
 
             this.user = userContext.user;
+            this.router = router;
         }
 
         View.prototype.acttivate = function acttivate() {};
+
+        View.prototype.edit = function edit() {
+            this.router.navigate("edit");
+        };
 
         return View;
     }()) || _class);
@@ -767,9 +844,10 @@ define('resources/elements/loading-indicator',['exports', 'nprogress', 'aurelia-
   }());
 });
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <main-menu router.bind=\"router\"></main-menu>\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
+define('text!account/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>User Profile</h3>\r\n    </header>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">First name</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"user.firstName\" />\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"update()\" class=\"btn btn-primary\">Update</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!account/login.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Login</h3>\r\n    </header>\r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Username</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"username\" />\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Password</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"password\" />\r\n        </div>\r\n    </div>    \r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"login()\" class=\"btn btn-primary\">Login</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!account/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
-define('text!account/view.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>User Profile</h3>\r\n    </header>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">First name</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.firstName}</span>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Email</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.username}</span>\r\n        </div>\r\n    </div>\r\n\r\n\r\n</template>"; });
+define('text!account/view.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>User Profile</h3>\r\n    </header>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">First name</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.firstName}</span>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Email</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.username}</span>\r\n        </div>\r\n    </div>\r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"edit()\" class=\"btn btn-primary\">Edit</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!navigation/main-menu.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-menu\">\r\n        <div class=\"container\">\r\n            <div class=\"navbar-brand\">\r\n\r\n                <img class=\"logo\" src=\"/content/images/logo.png\" />\r\n                <a href=\"/\">D<span>ream</span> S<span>pace</span></a>\r\n            </div>\r\n            <nav class=\"navbar\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </nav>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!navigation/sub-menu.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" if.bind=\"editMode !== true\" click.delegate=\"startEdit()\" class=\"btn btn-success\">Switch to Edit Mode</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 define('text!navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"item of menu.items\" class=\"${item.IsActive ? 'active' : ''}\">\r\n                            <a href.bind=\"$parent.getUrl(item)\">${item.Title}</a>\r\n                        </li>\r\n                    </ul>\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n\r\n                            <div if.bind=\"menu.editMode !== true\" class=\"btn-group\" role=\"group\">\r\n                                <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                    Configure\r\n                                    <span class=\"caret\"></span>\r\n                                </button>\r\n                                <ul class=\"dropdown-menu\">\r\n                                    <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                                    <li role=\"separator\" class=\"divider\"></li>\r\n                                    <li><a href=\"/categories\">Manage Categories</a></li>\r\n                                </ul>\r\n                            </div>\r\n\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });

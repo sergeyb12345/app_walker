@@ -44,6 +44,41 @@ namespace dream.walker.space.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("api/account/update")]
+        [ResponseType(typeof(UpdateProfileResponse))]
+        public async Task<IHttpActionResult> UpdateProfile([FromBody] UserInfo model)
+        {
+            var result = new UpdateProfileResponse()
+            {
+                User = model,
+                Status = UpdateProfileStatus.Failure
+            };
+
+            if (!ModelState.IsValid)
+            {
+                result.Status = UpdateProfileStatus.ValidationError;
+                result.ModelState = ModelState;
+                return Ok(result);
+            }
+
+            if (User?.Identity != null)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = await UserManager.FindByEmailAsync(User.Identity.Name);
+
+                    user.FirstName = model.FirstName;
+                    var response = await UserManager.UpdateAsync(user);
+                    if (response.Succeeded)
+                    {
+                        result.Status = UpdateProfileStatus.Success;
+                    }
+                }
+            }
+            return Ok(result);
+
+        }
 
         [HttpPost]
         [Route("api/account/login")]
@@ -104,6 +139,26 @@ namespace dream.walker.space.Controllers
             }
             return Ok(result);
         }
+
+    }
+
+    public class UpdateProfileResponse
+    {
+        public UpdateProfileResponse()
+        {
+            User = new UserInfo();
+        }
+
+        public UpdateProfileStatus Status { get; set; }
+        public UserInfo User { get; set; }
+        public ModelStateDictionary ModelState { get; set; }
+    }
+
+    public enum UpdateProfileStatus
+    {
+        Success = 0,
+        Failure = 3,
+        ValidationError = 99,
 
     }
 

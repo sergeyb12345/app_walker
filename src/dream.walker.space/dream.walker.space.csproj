@@ -407,6 +407,8 @@
     <Content Include="Scripts\text.js" />
     <Content Include="Scripts\vendor-bundle.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="src\account\edit.html" />
+    <Content Include="src\account\edit.js" />
     <Content Include="src\account\view.html" />
     <Content Include="src\account\view.js" />
     <Content Include="src\app.html" />
