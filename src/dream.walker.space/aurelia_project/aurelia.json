@@ -150,6 +150,11 @@
             "main": "aurelia-templating-router"
           },
           {
+            "name": "aurelia-validation",
+            "path": "../node_modules/aurelia-validation/dist/amd",
+            "main": "aurelia-validation"
+          },
+          {
             "name": "aurelia-testing",
             "path": "../node_modules/aurelia-testing/dist/amd",
             "main": "aurelia-testing",
