@@ -18,7 +18,8 @@ export function configure(aurelia) {
         .instance('homePage','strategies')
         .standardConfiguration()
         .feature('resources')
-        .feature('navigation');
+        .feature('navigation')
+        .plugin('aurelia-validation');
 
   if (environment.debug) {
     aurelia.use.developmentLogging();

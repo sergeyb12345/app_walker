@@ -2,19 +2,22 @@
     <header>
         <h3>User Profile</h3>
     </header>
-
-    <div class="row">
-        <div class="col-xs-2">First name</div>
-        <div class="col-xs-10">
-            <input type="text" class="form-control" value.bind="user.firstName" />
+    
+    <form submit.delegate='update()'>
+        <div class="form-group">
+            <label for="firstName">First name</label>
+            <input type="text" class="form-control" 
+                   value.bind="user.firstName & validate" 
+                   id="firstName" placeholder="First name" />
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-10">
-            <button type="button" click.delegate="update()" class="btn btn-primary">Update</button>
-        </div>
-    </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        
+        <!--<ul if.bind="validation.errors">
+            <li repeat.for="error of validation.errors">
+                ${error}
+            </li>
+        </ul>-->
+    </form>
 
 </template>
