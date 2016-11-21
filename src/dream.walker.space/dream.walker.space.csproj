@@ -407,14 +407,16 @@
     <Content Include="Scripts\text.js" />
     <Content Include="Scripts\vendor-bundle.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="src\account\view.html" />
+    <Content Include="src\account\view.js" />
     <Content Include="src\app.html" />
     <Content Include="src\app.js" />
-    <Content Include="src\common\user-context.js" />
+    <Content Include="src\account\user-context.js" />
     <Content Include="src\environment.js" />
-    <Content Include="src\login\login.html" />
-    <Content Include="src\login\login.js" />
-    <Content Include="src\login\navigation.html" />
-    <Content Include="src\login\navigation.js" />
+    <Content Include="src\account\login.html" />
+    <Content Include="src\account\login.js" />
+    <Content Include="src\account\navigation.html" />
+    <Content Include="src\account\navigation.js" />
     <Content Include="src\main.js" />
     <Content Include="src\navigation\index.js" />
     <Content Include="src\navigation\main-menu.html" />
@@ -481,7 +483,6 @@
     <Folder Include="src\resources\attributes\" />
     <Folder Include="src\resources\binding-behaviors\" />
     <Folder Include="src\resources\value-converters\" />
-    <Folder Include="src\services\" />
     <Folder Include="Views\Chart\" />
     <Folder Include="Views\Health\" />
   </ItemGroup>

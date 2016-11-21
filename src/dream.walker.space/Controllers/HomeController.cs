@@ -9,19 +9,21 @@ namespace dream.walker.space.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationUserManager _userManager;
         private ICompanyRepository _companyRepository;
 
-        public HomeController(ApplicationUserManager userManager, ICompanyRepository companyRepository)
+        public HomeController(ICompanyRepository companyRepository)
         {
-            _userManager = userManager;
             _companyRepository = companyRepository;
         }
 
         public ActionResult Index()
         {
-            //return View("AureliaStartPage");
             return View();
+        }
+
+        public ActionResult SinglePageApp()
+        {
+            return View("AureliaStartPage");
         }
 
         public ActionResult About()

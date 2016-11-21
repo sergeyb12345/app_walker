@@ -13,16 +13,35 @@ namespace dream.walker.space.Controllers
 {
     public class AccountApiController : ApiController
     {
-        private readonly ApplicationSignInManager _signInManager;
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
 
         public AccountApiController()
         {
-            _signInManager = HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
         }
 
-        public AccountApiController(ApplicationSignInManager signInManager)
+        public ApplicationUserManager UserManager
         {
-            _signInManager = signInManager;
+            get
+            {
+                return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set
+            {
+                _signInManager = value;
+            }
         }
 
 
@@ -40,14 +59,16 @@ namespace dream.walker.space.Controllers
                 return Ok(result);
             }
 
-            var signInStatus = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var signInStatus = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
             if (signInStatus == SignInStatus.Success)
             {
-                var user = User.Identity;
+                var user = await UserManager.FindByEmailAsync(User.Identity.Name);
+
                 result.Status =  LoginStatus.Success;
-                result.User.IsAuthenticated = user.IsAuthenticated;
-                result.User.Username = user.Name;
+                result.User.IsAuthenticated = true;
+                result.User.Username = user.UserName;
+                result.User.FirstName = user.FirstName;
             }
            
             return Ok(result);
@@ -66,14 +87,20 @@ namespace dream.walker.space.Controllers
         [HttpGet]
         [Route("api/account/user")]
         [ResponseType(typeof(UserInfo))]
-        public IHttpActionResult CurrentUser()
+        public async Task<IHttpActionResult> CurrentUser()
         {
 
             var result = new UserInfo();
             if (User?.Identity != null)
             {
-                result.Username = User.Identity.Name;
-                result.IsAuthenticated = User.Identity.IsAuthenticated;
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = await UserManager.FindByEmailAsync(User.Identity.Name);
+
+                    result.Username = user.UserName;
+                    result.IsAuthenticated = true;
+                    result.FirstName = user.FirstName;
+                }
             }
             return Ok(result);
         }
@@ -96,6 +123,7 @@ namespace dream.walker.space.Controllers
     {
         public string Username { get; set; }
         public bool IsAuthenticated { get; set; }
+        public string FirstName { get; set; }
     }
 
     public enum LoginStatus

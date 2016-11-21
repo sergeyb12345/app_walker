@@ -1,6 +1,6 @@
 import {inject} from "aurelia-framework";
 import {RedirectToRoute } from 'aurelia-router';
-import {UserContext} from './common/user-context';
+import {UserContext} from './account/user-context';
 
 export class App {
 
@@ -12,7 +12,7 @@ export class App {
         this.router = router;
         config.addPipelineStep('authorize', AuthorizeStep);
         config.map([
-            { route: ["login"], moduleId: "login/navigation", name:"login", title: "Login", nav: false },
+            { route: ["account"], moduleId: "account/navigation", name:"account", title: "Login", nav: false },
             { route: ["strategies"], moduleId: "strategies/navigation", name:"strategies", title: "Strategies", auth: true , nav:true },
             { route: '', redirect: 'strategies' }
 
@@ -22,11 +22,12 @@ export class App {
 }
 
 
-@inject(UserContext)
+@inject(UserContext, "homePage")
 class AuthorizeStep {
 
-    constructor(userContext) {
+    constructor(userContext, homePage) {
         this.isAuthenticated = userContext.user.isAuthenticated;
+        this.homePage = homePage;
     }
 
     run(navigationInstruction, next) {
@@ -35,13 +36,12 @@ class AuthorizeStep {
             if (this.isAuthenticated) {
                 return next();
             } else {
-                return next.cancel(new RedirectToRoute('login'));
+                return next.cancel(new RedirectToRoute('account'));
             }
         } else {
-            if (navigationInstruction
-                .getAllInstructions()
-                .some(i => i.config.name === 'login' && this.isAuthenticated)) {
-                return next.cancel(new RedirectToRoute('strategies'));
+            if (navigationInstruction.getAllInstructions()
+                .some(i => i.config.name === 'account-login' && this.isAuthenticated)) {
+                return next.cancel(new RedirectToRoute(this.homePage));
             }
             return next();
         }

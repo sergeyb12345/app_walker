@@ -13,11 +13,11 @@ namespace dream.walker.space
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //routes.MapRoute(
-            //        name: "AureliaRouting",
-            //        url: "{*.}",
-            //        defaults: new { controller = "Home", action = "Index" }
-            //    );
+            routes.MapRoute(
+                    name: "AureliaRouting",
+                    url: "{*.}",
+                    defaults: new { controller = "Home", action = "SinglePageApp" }
+                );
 
             routes.MapRoute(
                 name: "Default",

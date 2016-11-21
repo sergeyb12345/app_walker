@@ -1,6 +1,6 @@
 ﻿import {inject,bindable} from "aurelia-framework";
 import {Router} from 'aurelia-router';
-import {UserContext} from '../common/user-context';
+import {UserContext} from './user-context';
 //import {DOM} from 'aurelia-pal'
 
 @inject(Router, UserContext)
