@@ -404,7 +404,6 @@ define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], funct
         }
 
         BootstrapFormRenderer.prototype.render = function render(instruction) {
-
             for (var _iterator = instruction.unrender, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
                 var _ref;
 
@@ -493,6 +492,15 @@ define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], funct
             var formGroup = element.closest('.form-group');
             if (!formGroup) {
                 return;
+            }
+
+            var message = formGroup.querySelector('#validation-message-' + error.id);
+            if (message) {
+                formGroup.removeChild(message);
+
+                if (formGroup.querySelectorAll('.help-block.validation-message').length === 0) {
+                    formGroup.classList.remove('has-error');
+                }
             }
         };
 
@@ -741,18 +749,6 @@ define('navigation/sub-nav',['exports', 'aurelia-framework', 'aurelia-event-aggr
         return SubNav;
     }()) || _class);
 });
-define('resources/index',['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-  function configure(config) {
-    config.globalResources(['./elements/loading-indicator']);
-    config.globalResources(['./elements/any-chart']);
-  }
-});
 define('strategies/create',["exports"], function (exports) {
   "use strict";
 
@@ -816,6 +812,18 @@ define('strategies/navigation',['exports'], function (exports) {
 
         return Navigation;
     }();
+});
+define('resources/index',['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.configure = configure;
+  function configure(config) {
+    config.globalResources(['./elements/loading-indicator']);
+    config.globalResources(['./elements/any-chart']);
+  }
 });
 define('resources/elements/any-chart',['exports', 'aurelia-framework', 'npm-anystock'], function (exports, _aureliaFramework) {
     'use strict';
