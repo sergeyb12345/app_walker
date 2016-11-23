@@ -1,4 +1,5 @@
 using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace dream.walker.data.Repositories
 {
@@ -27,6 +28,10 @@ namespace dream.walker.data.Repositories
         {
             DbContext.SaveChanges();
         }
+        public async Task CommitAsync()
+        {
+            await DbContext.SaveChangesAsync();
+        }
     }
 
     public interface IDreamDbRepository<TEntity> where TEntity : class
@@ -34,5 +39,6 @@ namespace dream.walker.data.Repositories
         TEntity Add(TEntity entity);
         void Delete(TEntity entity);
         void Commit();
+        Task CommitAsync();
     }
 }
