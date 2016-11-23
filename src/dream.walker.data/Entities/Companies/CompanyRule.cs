@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using dream.walker.data.Entities.Strategies;
 
-namespace dream.walker.data.Entities
+namespace dream.walker.data.Entities.Companies
 {
     public class CompanyRule
     {

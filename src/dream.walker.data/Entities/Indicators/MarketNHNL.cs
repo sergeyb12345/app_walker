@@ -5,7 +5,7 @@ using dream.walker.data.Enums;
 using dream.walker.data.Models;
 using Newtonsoft.Json;
 
-namespace dream.walker.data.Entities
+namespace dream.walker.data.Entities.Indicators
 {
     public class MarketNHNL
     {

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using dream.walker.data.Entities;
+using dream.walker.data.Entities.Companies;
 using dream.walker.data.Enums;
 using dream.walker.data.Repositories;
 using dream.walker.space.Services.Models;

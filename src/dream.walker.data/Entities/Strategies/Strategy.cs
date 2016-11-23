@@ -1,8 +1,8 @@
-﻿namespace dream.walker.data.Entities
+﻿namespace dream.walker.data.Entities.Strategies
 {
-    public class Rule
+    public class Strategy
     {
-        public int RuleId { get; set; }
+        public int StrategyId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Deleted { get; set; }

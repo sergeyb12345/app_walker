@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Autofac;
 using dream.walker.data.Entities;
+using dream.walker.data.Entities.Companies;
+using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Enums;
 using dream.walker.data.Models;
 using dream.walker.data.Repositories;

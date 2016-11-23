@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dream.walker.data.Entities
+namespace dream.walker.data.Entities.Strategies
 {
     public class StrategyRule
     {

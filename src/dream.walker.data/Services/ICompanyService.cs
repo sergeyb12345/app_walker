@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using dream.walker.data.Entities;
+using dream.walker.data.Entities.Companies;
 using dream.walker.data.Managers;
 using dream.walker.data.Models;
 using dream.walker.data.Requests;

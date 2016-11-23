@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using dream.walker.data.Entities;
+using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Enums;
 using dream.walker.data.Models;
 

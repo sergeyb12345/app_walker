@@ -61,21 +61,24 @@
   <ItemGroup>
     <Compile Include="DreamDbContext.cs" />
     <Compile Include="DreamDbInitializer.cs" />
-    <Compile Include="Entities\Company.cs" />
-    <Compile Include="Entities\CompanyIndicator.cs" />
-    <Compile Include="Entities\CompanyIndicatorRule.cs" />
-    <Compile Include="Entities\CompanyNHNL.cs" />
-    <Compile Include="Entities\CompanyRule.cs" />
-    <Compile Include="Entities\IndicatorRule.cs" />
-    <Compile Include="Entities\MarketNHNL.cs" />
+    <Compile Include="Entities\Articles\Article.cs" />
+    <Compile Include="Entities\Articles\Category.cs" />
+    <Compile Include="Entities\Articles\Section.cs" />
+    <Compile Include="Entities\Companies\Company.cs" />
+    <Compile Include="Entities\Companies\CompanyIndicator.cs" />
+    <Compile Include="Entities\Companies\CompanyIndicatorRule.cs" />
+    <Compile Include="Entities\Companies\CompanyNHNL.cs" />
+    <Compile Include="Entities\Companies\CompanyRule.cs" />
+    <Compile Include="Entities\Indicators\IndicatorRule.cs" />
+    <Compile Include="Entities\Indicators\MarketNHNL.cs" />
     <Compile Include="Enums\ChartType.cs" />
     <Compile Include="Enums\NHNLPeriod.cs" />
-    <Compile Include="Entities\Strategy.cs" />
-    <Compile Include="Entities\StrategyRule.cs" />
+    <Compile Include="Entities\Strategies\Strategy.cs" />
+    <Compile Include="Entities\Strategies\StrategyRule.cs" />
     <Compile Include="Enums\RuleFunction.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
-    <Compile Include="Entities\Indicator.cs" />
-    <Compile Include="Entities\Rule.cs" />
+    <Compile Include="Entities\Indicators\Indicator.cs" />
+    <Compile Include="Entities\Strategies\Rule.cs" />
     <Compile Include="Enums\ValueLocationType.cs" />
     <Compile Include="Extensions\QuotesModelExtensions.cs" />
     <Compile Include="Migrations\201605151153585_CreateTableIndicatorRule.cs" />
@@ -125,6 +128,10 @@
     <Compile Include="Migrations\201611021710470_Alter_Company_Filtered.cs" />
     <Compile Include="Migrations\201611021710470_Alter_Company_Filtered.Designer.cs">
       <DependentUpon>201611021710470_Alter_Company_Filtered.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611231351140_CreateArticleTables.cs" />
+    <Compile Include="Migrations\201611231351140_CreateArticleTables.Designer.cs">
+      <DependentUpon>201611231351140_CreateArticleTables.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
@@ -231,6 +238,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611021710470_Alter_Company_Filtered.resx">
       <DependentUpon>201611021710470_Alter_Company_Filtered.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611231351140_CreateArticleTables.resx">
+      <DependentUpon>201611231351140_CreateArticleTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

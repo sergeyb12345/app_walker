@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace dream.walker.data.Entities
+﻿namespace dream.walker.data.Entities.Strategies
 {
-    public class Strategy
+    public class Rule
     {
-        public int StrategyId { get; set; }
+        public int RuleId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Deleted { get; set; }

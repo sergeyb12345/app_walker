@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using dream.walker.data.Entities;
+using dream.walker.data.Entities.Companies;
 using dream.walker.data.Models;
 using dream.walker.reader.Models;
 using Newtonsoft.Json;

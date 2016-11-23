@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using dream.walker.data.Models;
 using Newtonsoft.Json;
 
-namespace dream.walker.data.Entities
+namespace dream.walker.data.Entities.Companies
 {
     public class CompanyIndicator
     {

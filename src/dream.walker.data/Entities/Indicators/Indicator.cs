@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using dream.walker.data.Enums;
 using dream.walker.data.Models;
 using Newtonsoft.Json;
-using System.Drawing;
 
-namespace dream.walker.data.Entities
+namespace dream.walker.data.Entities.Indicators
 {
     public class Indicator
     {

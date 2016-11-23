@@ -2,7 +2,10 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using dream.walker.data.Entities;
+using dream.walker.data.Entities.Articles;
+using dream.walker.data.Entities.Companies;
+using dream.walker.data.Entities.Indicators;
+using dream.walker.data.Entities.Strategies;
 
 namespace dream.walker.data
 {
@@ -77,6 +80,25 @@ namespace dream.walker.data
             modelBuilder.Entity<CompanyNHNL>().HasKey(e => new { e.Ticker, e.Period });
             modelBuilder.Entity<CompanyNHNL>().Property(e => e.Ticker).IsRequired().HasColumnType("varchar").HasMaxLength(50);
 
+
+            modelBuilder.Entity<Article>().HasKey(t => t.ArticleId);
+            modelBuilder.Entity<Article>().HasRequired(a => a.Category).WithMany(t => t.Articles).HasForeignKey(p => p.CategoryId);
+            modelBuilder.Entity<Article>().Property(a => a.ArticleId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Article>().Property(a => a.Title).IsRequired().HasMaxLength(250);
+            modelBuilder.Entity<Article>().Property(a => a.Url).IsRequired().HasMaxLength(250);
+
+            modelBuilder.Entity<Category>().HasKey(t => t.CategoryId);
+            modelBuilder.Entity<Category>().Property(a => a.CategoryId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Category>().Property(a => a.Title).IsRequired().HasMaxLength(250);
+            modelBuilder.Entity<Category>().Property(a => a.Url).IsRequired().HasMaxLength(250);
+            modelBuilder.Entity<Category>().HasRequired(a => a.Section).WithMany(t => t.Categories).HasForeignKey(p => p.SectionId);
+
+            modelBuilder.Entity<Section>().HasKey(t => t.SectionId);
+            modelBuilder.Entity<Section>().Property(a => a.SectionId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Section>().Property(a => a.Title).IsRequired().HasMaxLength(250);
+            modelBuilder.Entity<Section>().Property(a => a.Url).IsRequired().HasMaxLength(250);
+
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
         }
@@ -92,5 +114,8 @@ namespace dream.walker.data
         public DbSet<StrategyRule> StrategyRules { get; set; }
         public DbSet<MarketNHNL> MarketNHNLs { get; set; }
         public DbSet<CompanyNHNL> CompanyNHNLs { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Section> Sections { get; set; }
     }
 }

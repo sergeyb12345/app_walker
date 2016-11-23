@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using dream.walker.data.Entities;
+using dream.walker.data.Entities.Companies;
 using dream.walker.data.Models;
 
 namespace dream.walker.data.Repositories

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace dream.walker.data.Entities
+namespace dream.walker.data.Entities.Companies
 {
     public class CompanyIndicatorRule
     {

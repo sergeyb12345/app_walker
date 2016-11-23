@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using dream.walker.data.Entities;
+using dream.walker.data.Entities.Indicators;
 using FluentAssertions;
 using NUnit.Framework;
 
