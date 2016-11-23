@@ -1,20 +1,19 @@
 ﻿import {inject,bindable} from "aurelia-framework";
-import {Router} from 'aurelia-router';
-import {UserContext} from './user-context';
 import {EventAggregator} from 'aurelia-event-aggregator';
 
-//import {DOM} from 'aurelia-pal'
-
-@inject(Router, UserContext, EventAggregator)
+@inject("User", EventAggregator)
 export class Login {
 
-    constructor(router, userContext, eventAggregator ) {
-        this.router = router;
+    constructor(userContext, eventAggregator ) {
         this.userContext = userContext;
         this.eventAggregator = eventAggregator;
 
         this.username = '';
         this.password = '';
+    }
+
+    activate(params, routeConfig, navigationInstruction) {
+        this.router = navigationInstruction.router;
     }
 
     login() {

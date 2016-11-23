@@ -1,4 +1,4 @@
-define('app',['exports', 'aurelia-framework', 'aurelia-router', './account/user-context'], function (exports, _aureliaFramework, _aureliaRouter, _userContext) {
+define('app',['exports', 'aurelia-framework', 'aurelia-router'], function (exports, _aureliaFramework, _aureliaRouter) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -32,12 +32,12 @@ define('app',['exports', 'aurelia-framework', 'aurelia-router', './account/user-
         return App;
     }();
 
-    var AuthorizeStep = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext, "homePage"), _dec(_class = function () {
-        function AuthorizeStep(userContext, homePage) {
+    var AuthorizeStep = (_dec = (0, _aureliaFramework.inject)("User", "settings"), _dec(_class = function () {
+        function AuthorizeStep(userContext, settings) {
             _classCallCheck(this, AuthorizeStep);
 
             this.isAuthenticated = userContext.user.isAuthenticated;
-            this.homePage = homePage;
+            this.homePage = settings.homePage;
         }
 
         AuthorizeStep.prototype.run = function run(navigationInstruction, next) {
@@ -76,7 +76,7 @@ define('environment',["exports"], function (exports) {
     testing: true
   };
 });
-define('main',['exports', './environment', './account/user-context'], function (exports, _environment, _userContext) {
+define('main',['exports', './environment', './settings', './account/user-context'], function (exports, _environment, _settings, _userContext) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -85,6 +85,8 @@ define('main',['exports', './environment', './account/user-context'], function (
   exports.configure = configure;
 
   var _environment2 = _interopRequireDefault(_environment);
+
+  var _settings2 = _interopRequireDefault(_settings);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
@@ -103,7 +105,7 @@ define('main',['exports', './environment', './account/user-context'], function (
     var userContext = aurelia.container.get(_userContext.UserContext);
     userContext.initialize();
 
-    aurelia.use.instance('homePage', 'strategies').standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
+    aurelia.use.instance('Settings', _settings2.default).instance('User', userContext).standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
 
     if (_environment2.default.debug) {
       aurelia.use.developmentLogging();
@@ -118,7 +120,17 @@ define('main',['exports', './environment', './account/user-context'], function (
     });
   }
 });
-define('account/edit',["exports", "aurelia-framework", "./user-context", "aurelia-event-aggregator", "aurelia-validation", "../common/bootstrap-form-renderer"], function (exports, _aureliaFramework, _userContext, _aureliaEventAggregator, _aureliaValidation, _bootstrapFormRenderer) {
+define('settings',['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = {
+        homePage: 'strategies'
+    };
+});
+define('account/edit',["exports", "aurelia-framework", "aurelia-event-aggregator", "aurelia-validation", "../common/bootstrap-form-renderer"], function (exports, _aureliaFramework, _aureliaEventAggregator, _aureliaValidation, _bootstrapFormRenderer) {
     "use strict";
 
     Object.defineProperty(exports, "__esModule", {
@@ -134,7 +146,7 @@ define('account/edit',["exports", "aurelia-framework", "./user-context", "aureli
 
     var _dec, _class;
 
-    var Edit = exports.Edit = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext, _aureliaEventAggregator.EventAggregator, _aureliaValidation.ValidationController), _dec(_class = function () {
+    var Edit = exports.Edit = (_dec = (0, _aureliaFramework.inject)("User", _aureliaEventAggregator.EventAggregator, _aureliaValidation.ValidationController), _dec(_class = function () {
         function Edit(userContext, eventAggregator, validation) {
             _classCallCheck(this, Edit);
 
@@ -178,8 +190,8 @@ define('account/edit',["exports", "aurelia-framework", "./user-context", "aureli
         return Edit;
     }()) || _class);
 });
-define('account/login',['exports', 'aurelia-framework', 'aurelia-router', './user-context', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaRouter, _userContext, _aureliaEventAggregator) {
-    'use strict';
+define('account/login',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -194,17 +206,20 @@ define('account/login',['exports', 'aurelia-framework', 'aurelia-router', './use
 
     var _dec, _class;
 
-    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)(_aureliaRouter.Router, _userContext.UserContext, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function Login(router, userContext, eventAggregator) {
+    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)("User", _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function Login(userContext, eventAggregator) {
             _classCallCheck(this, Login);
 
-            this.router = router;
             this.userContext = userContext;
             this.eventAggregator = eventAggregator;
 
             this.username = '';
             this.password = '';
         }
+
+        Login.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
+            this.router = navigationInstruction.router;
+        };
 
         Login.prototype.login = function login() {
             var _this = this;
@@ -289,7 +304,7 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
             var _this = this;
 
             return this.http.fetch("account/user").then(function (response) {
-                response.json().then(function (user) {
+                return response.json().then(function (user) {
                     _this.user = user;
                 });
             }).catch(function (error) {
@@ -351,8 +366,8 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
         return UserContext;
     }()) || _class);
 });
-define('account/view',['exports', 'aurelia-framework', './user-context', 'aurelia-router'], function (exports, _aureliaFramework, _userContext, _aureliaRouter) {
-    'use strict';
+define('account/view',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -367,15 +382,16 @@ define('account/view',['exports', 'aurelia-framework', './user-context', 'aureli
 
     var _dec, _class;
 
-    var View = exports.View = (_dec = (0, _aureliaFramework.inject)(_userContext.UserContext, _aureliaRouter.Router), _dec(_class = function () {
-        function View(userContext, router) {
+    var View = exports.View = (_dec = (0, _aureliaFramework.inject)("User"), _dec(_class = function () {
+        function View(userContext) {
             _classCallCheck(this, View);
 
             this.user = userContext.user;
-            this.router = router;
         }
 
-        View.prototype.acttivate = function acttivate() {};
+        View.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
+            this.router = navigationInstruction.router;
+        };
 
         View.prototype.edit = function edit() {
             this.router.navigate("edit");
@@ -749,6 +765,18 @@ define('navigation/sub-nav',['exports', 'aurelia-framework', 'aurelia-event-aggr
         return SubNav;
     }()) || _class);
 });
+define('resources/index',['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.configure = configure;
+  function configure(config) {
+    config.globalResources(['./elements/loading-indicator']);
+    config.globalResources(['./elements/any-chart']);
+  }
+});
 define('strategies/create',["exports"], function (exports) {
   "use strict";
 
@@ -812,18 +840,6 @@ define('strategies/navigation',['exports'], function (exports) {
 
         return Navigation;
     }();
-});
-define('resources/index',['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-  function configure(config) {
-    config.globalResources(['./elements/loading-indicator']);
-    config.globalResources(['./elements/any-chart']);
-  }
 });
 define('resources/elements/any-chart',['exports', 'aurelia-framework', 'npm-anystock'], function (exports, _aureliaFramework) {
     'use strict';

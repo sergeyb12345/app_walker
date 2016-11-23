@@ -1,6 +1,5 @@
 import {inject} from "aurelia-framework";
 import {RedirectToRoute } from 'aurelia-router';
-import {UserContext} from './account/user-context';
 
 export class App {
 
@@ -22,12 +21,12 @@ export class App {
 }
 
 
-@inject(UserContext, "homePage")
+@inject("User", "settings")
 class AuthorizeStep {
 
-    constructor(userContext, homePage) {
+    constructor(userContext, settings) {
         this.isAuthenticated = userContext.user.isAuthenticated;
-        this.homePage = homePage;
+        this.homePage = settings.homePage;
     }
 
     run(navigationInstruction, next) {

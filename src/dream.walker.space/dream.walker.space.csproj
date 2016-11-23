@@ -432,6 +432,7 @@
     <Content Include="src\resources\elements\any-chart.js" />
     <Content Include="src\resources\elements\loading-indicator.js" />
     <Content Include="src\resources\index.js" />
+    <Content Include="src\settings.js" />
     <Content Include="src\strategies\create.html" />
     <Content Include="src\strategies\create.js" />
     <Content Include="src\strategies\list.html" />

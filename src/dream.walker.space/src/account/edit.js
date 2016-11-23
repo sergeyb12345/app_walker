@@ -1,10 +1,9 @@
 ﻿import {inject} from "aurelia-framework";
-import {UserContext} from "./user-context";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation"
 import {BootstrapFormRenderer} from "../common/bootstrap-form-renderer"
 
-@inject(UserContext, EventAggregator, ValidationController)
+@inject("User", EventAggregator, ValidationController)
 export class Edit {
     
     constructor(userContext, eventAggregator, validation) {

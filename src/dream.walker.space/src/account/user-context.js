@@ -22,7 +22,7 @@ export class UserContext {
     initialize() {
         return this.http.fetch("account/user")
             .then(response => {
-                response.json().then(user => {
+                return response.json().then(user => {
                     this.user = user;
                 });
             })

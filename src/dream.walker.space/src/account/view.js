@@ -1,19 +1,17 @@
 ﻿
 import {inject} from "aurelia-framework";
-import {UserContext} from './user-context';
-import {Router} from 'aurelia-router';
 
-@inject(UserContext, Router)
+@inject("User")
 export class View {
 
-    constructor(userContext, router) {
+    constructor(userContext) {
         this.user = userContext.user;
-        this.router = router;
     }
 
-    acttivate() {
-        
+    activate(params, routeConfig, navigationInstruction) {
+        this.router = navigationInstruction.router;
     }
+
 
     edit() {
         this.router.navigate("edit");
