@@ -5,6 +5,7 @@ using dream.walker.data;
 using dream.walker.data.Repositories;
 using System.Web.Mvc;
 using Autofac.Integration.WebApi;
+using dream.walker.data.Services;
 
 namespace dream.walker.space.IoC
 {
@@ -51,9 +52,14 @@ namespace dream.walker.space.IoC
         private void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<CompanyRepository>().As<ICompanyRepository>().InstancePerDependency();
+            builder.RegisterType<ArticleRepository>().As<IArticleRepository>().InstancePerDependency();
+            builder.RegisterType<CategoryRepository>().As<ICategoryRepository>().InstancePerDependency();
+            builder.RegisterType<SectionRepository>().As<ISectionRepository>().InstancePerDependency();
             builder.RegisterType<IndicatorRepository>().As<IIndicatorRepository>().InstancePerDependency();
             builder.RegisterType<CompanyIndicatorRepository>().As<ICompanyIndicatorRepository>().InstancePerDependency();
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
+            builder.RegisterType<ArticleService>().As<IArticleService>();
+
         }
 
         public static IoCContainer Instance

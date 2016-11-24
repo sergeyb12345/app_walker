@@ -13,25 +13,29 @@ Promise.config({
 export function configure(aurelia) {
 
     let userContext = aurelia.container.get(UserContext);
-    userContext.initialize();
+    userContext.initialize()
+        .then(response => {
 
-    aurelia.use
-        .instance('Settings',settings)
-        .instance('User',userContext)
-        .standardConfiguration()
-        .feature('resources')
-        .feature('navigation')
-        .plugin('aurelia-validation');
+            aurelia.use
+                .instance('Settings',settings)
+                .instance('User',userContext)
+                .standardConfiguration()
+                .feature('resources')
+                .feature('navigation')
+                .plugin('aurelia-validation');
 
-  if (environment.debug) {
-    aurelia.use.developmentLogging();
-  }
+            if (environment.debug) {
+                aurelia.use.developmentLogging();
+            }
 
-  if (environment.testing) {
-    aurelia.use.plugin('aurelia-testing');
-  }
+            if (environment.testing) {
+                aurelia.use.plugin('aurelia-testing');
+            }
 
-  aurelia.start().then(() => {
-        aurelia.setRoot();
-  });
+            aurelia.start().then(() => {
+                aurelia.setRoot();
+            });
+            
+        });
+
 }

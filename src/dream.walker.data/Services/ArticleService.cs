@@ -17,7 +17,7 @@ namespace dream.walker.data.Services
         }
 
 
-        public async Task<Article> GetArticle(int id)
+        public async Task<Article> GetArticleAsync(int id)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
@@ -27,7 +27,7 @@ namespace dream.walker.data.Services
             }
         }
 
-        public async Task SaveArticle(Article article)
+        public async Task SaveArticleAsync(Article article)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
@@ -56,7 +56,7 @@ namespace dream.walker.data.Services
         }
 
 
-        public async Task SaveCategory(Category category)
+        public async Task SaveCategoryAsync(Category category)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
@@ -84,17 +84,17 @@ namespace dream.walker.data.Services
             }
         }
 
-        public async Task<Article> GetFeaturedArticle(int categoryId)
+        public async Task<Article> GetFeaturedArticleAsync(int categoryId)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
                 var repository = scope.Resolve<IArticleRepository>();
-                var record = await repository.GetFeaturedAsync(categoryId);
+                var record = await repository.GetFeaturedAsync(categoryId, true);
                 return record;
             }
         }
 
-        public async Task SetFeaturedArticle(int id)
+        public async Task SetFeaturedArticleAsync(int id)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
@@ -107,49 +107,110 @@ namespace dream.walker.data.Services
             }
         }
 
-        public List<Category> GetCategories(int sectionId)
+        public async Task<List<Category>> GetCategoriesAsync(int sectionId)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICategoryRepository>();
+                var records = await repository.GetBySectionIdAsync(sectionId);
+
+                return records;
+            }
         }
 
-        public Task<Section> GetSection(string sectionUrl)
+        public async Task<Section> GetSectionAsync(string sectionUrl)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ISectionRepository>();
+                var record = await repository.GetAsync(sectionUrl);
+
+                return record;
+            }
         }
 
-        public List<Section> GetSections()
+        public async Task<List<Section>> GetSectionsAsync()
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ISectionRepository>();
+                var record = await repository.GetAsync(false);
+
+                return record;
+            }
         }
 
-        public Task<Category> GetCategory(string categoryUrl)
+        public async Task<Category> GetCategoryAsync(string categoryUrl)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICategoryRepository>();
+                var record = await repository.GetAsync(categoryUrl, true);
+
+                return record;
+            }
         }
 
-        public List<Article> GetArticles(int categoryId)
+        public async Task<List<Article>> GetArticlesAsync(int categoryId)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IArticleRepository>();
+                var records = await repository.GetByCategoryAsync(categoryId);
+                return records;
+            }
         }
 
-        public Task<Article> GetArticle(int categoryId, string articleUrl)
+        public async Task<Article> GetArticleAsync(int categoryId, string articleUrl)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IArticleRepository>();
+                var record = await repository.GetByCategoryAsync(categoryId, articleUrl);
+                return record;
+            }
         }
 
-        public Task DeleteArticle(int id)
+        public async Task DeleteArticleAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IArticleRepository>();
+                var record = await repository.GetAsync(id);
+                if (record != null)
+                {
+                    repository.Delete(record);
+                    await repository.CommitAsync();
+                }
+            }
         }
 
-        public Task UpdateArticleOrder(int articleId, int orderId)
+        public async Task UpdateArticleOrderAsync(int articleId, int orderId)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IArticleRepository>();
+                var record = await repository.GetAsync(articleId);
+                if (record != null)
+                {
+                    record.OrderId = orderId;
+                    await repository.CommitAsync();
+                }
+            }
         }
 
-        public Task DeleteCategory(int id)
+        public async Task DeleteCategoryAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICategoryRepository>();
+                var record = await repository.GetAsync(id);
+                if (record != null)
+                {
+                    repository.Delete(record);
+                    await repository.CommitAsync();
+                }
+            }
         }
     }
 }

@@ -1,13 +1,10 @@
-﻿using System.Runtime.Serialization;
-using System.Security.Principal;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity.Owin;
 using dream.walker.space.Models;
-using Newtonsoft.Json;
 
 namespace dream.walker.space.Controllers
 {

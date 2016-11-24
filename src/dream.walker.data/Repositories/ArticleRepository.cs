@@ -12,8 +12,11 @@ namespace dream.walker.data.Repositories
         Task<Article> GetAsync(int id);
         Task CommitAsync();
         Article Add(Article article);
-        Task<Article> GetFeaturedAsync(int categoryId);
+        Task<Article> GetFeaturedAsync(int categoryId, bool withFallback);
         Task SetFeaturedAsync(int articleId, int recordCategoryId);
+        Task<List<Article>> GetByCategoryAsync(int categoryId);
+        Task<Article> GetByCategoryAsync(int categoryId, string articleUrl);
+        void Delete(Article record);
     }
 
 
@@ -29,9 +32,13 @@ namespace dream.walker.data.Repositories
             return record;
         }
 
-        public async Task<Article> GetFeaturedAsync(int categoryId)
+        public async Task<Article> GetFeaturedAsync(int categoryId, bool withFallback)
         {
             var record = await Dbset.FirstOrDefaultAsync(r => r.CategoryId == categoryId && r.IsFeatured);
+            if (record == null && withFallback)
+            {
+                record = await Dbset.Where(r => r.CategoryId == categoryId).OrderBy(r => r.OrderId).FirstOrDefaultAsync();
+            }
             return record;
         }
 
@@ -45,6 +52,22 @@ namespace dream.walker.data.Repositories
             };
 
             await DbContext.Database.ExecuteSqlCommandAsync(sql, parameters);
+        }
+
+        public async Task<List<Article>> GetByCategoryAsync(int categoryId)
+        {
+            var record = await Dbset.Where(r => r.CategoryId == categoryId).OrderBy(r => r.OrderId).ToListAsync();
+            return record;
+        }
+
+        public async Task<Article> GetByCategoryAsync(int categoryId, string articleUrl)
+        {
+            var record = await Dbset.FirstOrDefaultAsync(r => r.CategoryId == categoryId && r.Url.ToLower() == articleUrl.ToLower());
+            if (record == null)
+            {
+                return await GetFeaturedAsync(categoryId, true);
+            }
+            return record;
         }
     }
 }

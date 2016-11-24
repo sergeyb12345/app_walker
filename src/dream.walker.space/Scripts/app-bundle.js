@@ -77,48 +77,49 @@ define('environment',["exports"], function (exports) {
   };
 });
 define('main',['exports', './environment', './settings', './account/user-context'], function (exports, _environment, _settings, _userContext) {
-  'use strict';
+    'use strict';
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-
-  var _environment2 = _interopRequireDefault(_environment);
-
-  var _settings2 = _interopRequireDefault(_settings);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
-
-  Promise.config({
-    warnings: {
-      wForgottenReturn: false
-    }
-  });
-
-  function configure(aurelia) {
-
-    var userContext = aurelia.container.get(_userContext.UserContext);
-    userContext.initialize();
-
-    aurelia.use.instance('Settings', _settings2.default).instance('User', userContext).standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
-
-    if (_environment2.default.debug) {
-      aurelia.use.developmentLogging();
-    }
-
-    if (_environment2.default.testing) {
-      aurelia.use.plugin('aurelia-testing');
-    }
-
-    aurelia.start().then(function () {
-      aurelia.setRoot();
+    Object.defineProperty(exports, "__esModule", {
+        value: true
     });
-  }
+    exports.configure = configure;
+
+    var _environment2 = _interopRequireDefault(_environment);
+
+    var _settings2 = _interopRequireDefault(_settings);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
+    Promise.config({
+        warnings: {
+            wForgottenReturn: false
+        }
+    });
+
+    function configure(aurelia) {
+
+        var userContext = aurelia.container.get(_userContext.UserContext);
+        userContext.initialize().then(function (response) {
+
+            aurelia.use.instance('Settings', _settings2.default).instance('User', userContext).standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
+
+            if (_environment2.default.debug) {
+                aurelia.use.developmentLogging();
+            }
+
+            if (_environment2.default.testing) {
+                aurelia.use.plugin('aurelia-testing');
+            }
+
+            aurelia.start().then(function () {
+                aurelia.setRoot();
+            });
+        });
+    }
 });
 define('settings',['exports'], function (exports) {
     'use strict';
