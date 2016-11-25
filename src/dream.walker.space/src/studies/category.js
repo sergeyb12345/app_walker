@@ -281,13 +281,13 @@ export class Category {
         let blockDeletedChannel = 'delete-block';
 
         this.subscriptions.push(
-            this.eventAggregator.subscribe(this.navigation.section.Url+'-start-edit', flag => this.startEdit(flag)));
+            this.eventAggregator.subscribe(this.navigation.section.url+'-start-edit', flag => this.startEdit(flag)));
 
         this.subscriptions.push(
-            this.eventAggregator.subscribe(this.navigation.section.Url+'-cancel-edit', flag => this.cancelEdit(flag)));
+            this.eventAggregator.subscribe(this.navigation.section.url+'-cancel-edit', flag => this.cancelEdit(flag)));
 
         this.subscriptions.push(
-            this.eventAggregator.subscribe(this.navigation.section.Url+'-save-article', flag => this.saveArticle(flag)));
+            this.eventAggregator.subscribe(this.navigation.section.url+'-save-article', flag => this.saveArticle(flag)));
 
         this.subscriptions.push(
             this.eventAggregator.subscribe(moveBlockUpChannel, block => this.moveBlockUp(block)));
