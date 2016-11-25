@@ -23,7 +23,7 @@ export class BlobServices {
             fileBody: fileBody
         };
 
-        return this.http.fetch('blob', {
+        return this.http.fetch('blob/upload', {
             method: 'post',
             body:json(payload)
             })

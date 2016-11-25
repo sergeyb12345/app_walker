@@ -1,5 +1,5 @@
 ﻿<template>
-    <block-content if.bind="block.blockType === 'Heading'">
+    <block-content if.bind="block.BlockType === 'Heading'">
         <edit-mode if.bind="block.isEditing === true">
             <div class="row">
                 <div class="col-xs-2">
@@ -9,12 +9,12 @@
                     </select>
                 </div>
                 <div class="col-xs-10">
-                    <input type="text" class="form-control" value.bind="block.text" />
+                    <input type="text" class="form-control" value.bind="block.Text" />
                 </div>
             </div>
         </edit-mode>
         <read-mode if.bind="block.isEditing !== true">
-            <span class="${block.headingType}">${block.text}</span>
+            <span class="${block.headingType}">${block.Text}</span>
         </read-mode>
     </block-content>
 </template>

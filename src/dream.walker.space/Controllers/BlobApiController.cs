@@ -7,7 +7,7 @@ using dream.walker.data.Services;
 
 namespace dream.walker.space.Controllers
 {
-    [Route("api/blob")]
+    [RoutePrefix("api/blob")]
     public class BlobApiController : ApiController
     {
         private readonly IArticleStorageService _storage;

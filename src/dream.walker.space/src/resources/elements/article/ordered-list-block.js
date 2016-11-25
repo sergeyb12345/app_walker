@@ -19,7 +19,7 @@ export class OrderedListBlock {
     }
 
     subscribe() {
-        this.channel = 'article-block-' + this.block.blockId;
+        this.channel = 'article-block-' + this.block.BlockId;
         this.subscriptions.push(this.eventAggregator.subscribe(this.channel, update => this.updateBlock(update)));
         this.subscribed = true;
     }
@@ -29,7 +29,7 @@ export class OrderedListBlock {
             let block = this.block;
             let items = [];
 
-            let blockId = this.block.blockId;
+            let blockId = this.block.BlockId;
             let index = 0;
 
             this.block.Items.forEach(function(item) {
@@ -46,8 +46,8 @@ export class OrderedListBlock {
 
     appendItem() {
         if(this.isValidBlock()) {
-            if (!this.block.items) {
-                this.block.items = [];
+            if (!this.block.Items) {
+                this.block.Items = [];
                 if (this.subscribed !== true) {
                     this.subscribe();
                 }
@@ -58,7 +58,7 @@ export class OrderedListBlock {
 
     deleteItem(pos) {
         if(this.isValidBlock()) {
-            this.block.items.splice(pos, 1);
+            this.block.Items.splice(pos, 1);
         }
     }
 
@@ -69,6 +69,6 @@ export class OrderedListBlock {
     }
 
     isValidBlock() {
-        return this.block.blockType === 'OrderedList';
+        return this.block.BlockType === 'OrderedList';
     }
 }

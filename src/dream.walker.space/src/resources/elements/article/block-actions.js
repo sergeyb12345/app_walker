@@ -38,7 +38,7 @@ export class BlockActions {
     }    
     
     addBlock() {
-        if (this.block.blockType !== 'Select') {
+        if (this.block.BlockType !== 'Select') {
             this.block.isNew = false;
             this.block.isEditing = true;
         }
@@ -54,7 +54,7 @@ export class BlockActions {
 
     applyChanges() {
         if(this.requiresAction()) {
-            let channel = 'article-block-' + this.block.blockId;
+            let channel = 'article-block-' + this.block.BlockId;
             this.eventAggregator.publish(channel, true);
         } else {
             this.block.isEditing = false;
@@ -62,9 +62,9 @@ export class BlockActions {
     }
 
     requiresAction() {
-        return this.block.items
-            || this.block.blockType === 'Image'
-            || this.block.blockType === 'OrderedList';
+        return this.block.Items
+            || this.block.BlockType === 'Image'
+            || this.block.BlockType === 'OrderedList';
     }
 
     moveUp() {

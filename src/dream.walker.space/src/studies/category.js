@@ -86,7 +86,7 @@ export class Category {
         this.navigation.menu.editMode = editMode;
 
         if (this.article &&  this.article != null &&  this.article.blocks &&  this.article.blocks != null) {
-            this.article.Blocks.forEach(function(block) {
+            this.article.blocks.forEach(function(block) {
                 block.editMode = editMode;
                 if (editMode !== true) {
                     block.isEditing = false;

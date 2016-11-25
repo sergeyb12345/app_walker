@@ -1032,7 +1032,7 @@ define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-
                 fileBody: fileBody
             };
 
-            return this.http.fetch('blob', {
+            return this.http.fetch('blob/upload', {
                 method: 'post',
                 body: (0, _aureliaFetchClient.json)(payload)
             }).then(function (response) {
@@ -1203,7 +1203,7 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
             this.navigation.menu.editMode = editMode;
 
             if (this.article && this.article != null && this.article.blocks && this.article.blocks != null) {
-                this.article.Blocks.forEach(function (block) {
+                this.article.blocks.forEach(function (block) {
                     block.editMode = editMode;
                     if (editMode !== true) {
                         block.isEditing = false;
@@ -1651,7 +1651,7 @@ define('resources/elements/article/block-actions',['exports', 'aurelia-event-agg
         };
 
         BlockActions.prototype.addBlock = function addBlock() {
-            if (this.block.blockType !== 'Select') {
+            if (this.block.BlockType !== 'Select') {
                 this.block.isNew = false;
                 this.block.isEditing = true;
             }
@@ -1667,7 +1667,7 @@ define('resources/elements/article/block-actions',['exports', 'aurelia-event-agg
 
         BlockActions.prototype.applyChanges = function applyChanges() {
             if (this.requiresAction()) {
-                var channel = 'article-block-' + this.block.blockId;
+                var channel = 'article-block-' + this.block.BlockId;
                 this.eventAggregator.publish(channel, true);
             } else {
                 this.block.isEditing = false;
@@ -1675,7 +1675,7 @@ define('resources/elements/article/block-actions',['exports', 'aurelia-event-agg
         };
 
         BlockActions.prototype.requiresAction = function requiresAction() {
-            return this.block.items || this.block.blockType === 'Image' || this.block.blockType === 'OrderedList';
+            return this.block.Items || this.block.BlockType === 'Image' || this.block.BlockType === 'OrderedList';
         };
 
         BlockActions.prototype.moveUp = function moveUp() {
@@ -1853,7 +1853,7 @@ define('resources/elements/article/image-block',['exports', 'aurelia-framework',
             var _this = this;
 
             if (this.subscribed !== true) {
-                this.channel = 'article-block-' + this.block.blockId;
+                this.channel = 'article-block-' + this.block.BlockId;
                 this.subscriptions.push(this.eventAggregator.subscribe(this.channel, function (update) {
                     return _this.updateBlock(update);
                 }));
@@ -1874,7 +1874,7 @@ define('resources/elements/article/image-block',['exports', 'aurelia-framework',
                         reader.addEventListener("loadend", function () {
                             if (reader.readyState === 2) {
                                 self.blobServices.post(file.name, reader.result).then(function (content) {
-                                    self.block.imageUrl = content.imageUrl;
+                                    self.block.ImageUrl = content.mageUrl;
                                     self.block.isEditing = false;
                                 });
                             }
@@ -1886,7 +1886,7 @@ define('resources/elements/article/image-block',['exports', 'aurelia-framework',
         };
 
         ImageBlock.prototype.isValidBlock = function isValidBlock() {
-            return this.block.blockType === 'Image';
+            return this.block.BlockType === 'Image';
         };
 
         ImageBlock.prototype.blobToUrl = function blobToUrl(blob) {
@@ -2100,7 +2100,7 @@ define('resources/elements/article/ordered-list-block',['exports', 'aurelia-even
         OrderedListBlock.prototype.subscribe = function subscribe() {
             var _this = this;
 
-            this.channel = 'article-block-' + this.block.blockId;
+            this.channel = 'article-block-' + this.block.BlockId;
             this.subscriptions.push(this.eventAggregator.subscribe(this.channel, function (update) {
                 return _this.updateBlock(update);
             }));
@@ -2115,7 +2115,7 @@ define('resources/elements/article/ordered-list-block',['exports', 'aurelia-even
                     var block = _this2.block;
                     var items = [];
 
-                    var blockId = _this2.block.blockId;
+                    var blockId = _this2.block.BlockId;
                     var index = 0;
 
                     _this2.block.Items.forEach(function (item) {
@@ -2133,8 +2133,8 @@ define('resources/elements/article/ordered-list-block',['exports', 'aurelia-even
 
         OrderedListBlock.prototype.appendItem = function appendItem() {
             if (this.isValidBlock()) {
-                if (!this.block.items) {
-                    this.block.items = [];
+                if (!this.block.Items) {
+                    this.block.Items = [];
                     if (this.subscribed !== true) {
                         this.subscribe();
                     }
@@ -2145,7 +2145,7 @@ define('resources/elements/article/ordered-list-block',['exports', 'aurelia-even
 
         OrderedListBlock.prototype.deleteItem = function deleteItem(pos) {
             if (this.isValidBlock()) {
-                this.block.items.splice(pos, 1);
+                this.block.Items.splice(pos, 1);
             }
         };
 
@@ -2156,7 +2156,7 @@ define('resources/elements/article/ordered-list-block',['exports', 'aurelia-even
         };
 
         OrderedListBlock.prototype.isValidBlock = function isValidBlock() {
-            return this.block.blockType === 'OrderedList';
+            return this.block.BlockType === 'OrderedList';
         };
 
         return OrderedListBlock;
@@ -3845,10 +3845,10 @@ define('text!studies/category.html', ['module'], function(module) { module.expor
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
 define('text!resources/elements/article/block-actions.html', ['module'], function(module) { module.exports = "<template>\r\n    <div if.bind=\"editMode\" class=\"block-actions\">\r\n        <div if.bind=\"block.isEditing !== true && block.isDeleting !== true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"startEditing()\" class=\"btn btn-default btn-xs\">Edit</button>\r\n            <button type=\"button\" click.delegate=\"startDeleting()\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n            <button type=\"button\" click.delegate=\"moveUp()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n            </button>\r\n            <button type=\"button\" click.delegate=\"moveDown()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n            </button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isEditing === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"applyChanges()\" class=\"btn btn-success btn-xs\">Apply Changes</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isDeleting === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-danger btn-xs\">Delete Block</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isNew === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-success btn-xs\">Add Block</button>\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
-define('text!resources/elements/article/heading-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.blockType === 'Heading'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-2\">\r\n                    <select class=\"form-control\" value.bind=\"block.headingType\">\r\n                        <option>Select</option>\r\n                        <option repeat.for=\"heading of headingTypes\" value.bind=\"heading\">${heading}</option>\r\n                    </select>\r\n                </div>\r\n                <div class=\"col-xs-10\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.text\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <span class=\"${block.headingType}\">${block.text}</span>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
-define('text!resources/elements/article/image-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.blockType === 'Image'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Image Title</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.text\" />\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Select Image</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"file\"\r\n                            accept=\"image/*\" class=\"form-control\"\r\n                            files.bind=\"selectedFiles\">\r\n\r\n                    <ul>\r\n                        <li repeat.for=\"file of selectedFiles | fileListToArray\">\r\n                            <p>${file.name}: ${file.type} ${file.size / 1000} kb</p>\r\n                            <img src.bind=\"blobToUrl(file)\"><img>\r\n                        </li>\r\n                    </ul>\r\n\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\" if.bind=\"selectedFiles.length === 0\">\r\n                <div class=\"col-xs-9 col-xs-offset-3\">\r\n                    <img src.bind=\"block.imageUrl\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <article-image>\r\n                <img src.bind=\"block.imageUrl\" />\r\n                <p>${block.text}</p>\r\n            </article-image>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
-define('text!resources/elements/article/new-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.isNew === true\">\r\n        <edit-mode>\r\n\r\n            <div class=\"form-horizontal\">\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Block Type</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <select class=\"form-control\" value.bind=\"block.blockType\">\r\n                            <option>Select</option>\r\n                            <option repeat.for=\"blockType of blockTypes\" value.bind=\"blockType\">${blockType}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n        </edit-mode>\r\n    </block-content>\r\n</template>"; });
-define('text!resources/elements/article/ordered-list-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.blockType === 'OrderedList'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.items\" class=\"row\">\r\n                        <div class=\"col-xs-10\">\r\n                            <textarea rows=\"3\" id=\"${$parent.block.blockId}-${$index}\"\r\n                                      value.bind=\"item\"></textarea>\r\n                        </div>\r\n                        <div class=\"col-xs-2\" style=\"text-align: left;\">\r\n                            <button type=\"button\"\r\n                                    click.delegate=\"$parent.deleteItem($index)\"\r\n                                    class=\"btn btn-danger btn-xs\">\r\n                                Delete\r\n                            </button>\r\n                        </div>\r\n                </li>\r\n            </ol>\r\n            <button type=\"button\" \r\n                    click.delegate=\"appendItem()\" \r\n                    class=\"btn btn-primary btn-xs\">\r\n                Add List Item\r\n            </button>\r\n\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.items\">${item}</li>\r\n            </ol>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
-define('text!resources/elements/article/paragraph-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.blockType === 'Paragraph'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <textarea rows=\"4\" value.bind=\"block.text\">\r\n            </textarea>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <p>${block.text}</p>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
+define('text!resources/elements/article/heading-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Heading'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-2\">\r\n                    <select class=\"form-control\" value.bind=\"block.headingType\">\r\n                        <option>Select</option>\r\n                        <option repeat.for=\"heading of headingTypes\" value.bind=\"heading\">${heading}</option>\r\n                    </select>\r\n                </div>\r\n                <div class=\"col-xs-10\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.Text\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <span class=\"${block.headingType}\">${block.Text}</span>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
+define('text!resources/elements/article/image-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Image'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Image Title</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.Text\" />\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Select Image</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"file\"\r\n                            accept=\"image/*\" class=\"form-control\"\r\n                            files.bind=\"selectedFiles\">\r\n\r\n                    <ul>\r\n                        <li repeat.for=\"file of selectedFiles | fileListToArray\">\r\n                            <p>${file.name}: ${file.type} ${file.size / 1000} kb</p>\r\n                            <img src.bind=\"blobToUrl(file)\"><img>\r\n                        </li>\r\n                    </ul>\r\n\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\" if.bind=\"selectedFiles.length === 0\">\r\n                <div class=\"col-xs-9 col-xs-offset-3\">\r\n                    <img src.bind=\"block.ImageUrl\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <article-image>\r\n                <img src.bind=\"block.ImageUrl\" />\r\n                <p>${block.Text}</p>\r\n            </article-image>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
+define('text!resources/elements/article/new-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.isNew === true\">\r\n        <edit-mode>\r\n\r\n            <div class=\"form-horizontal\">\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Block Type</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <select class=\"form-control\" value.bind=\"block.BlockType\">\r\n                            <option>Select</option>\r\n                            <option repeat.for=\"blockType of blockTypes\" value.bind=\"blockType\">${blockType}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n        </edit-mode>\r\n    </block-content>\r\n</template>"; });
+define('text!resources/elements/article/ordered-list-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'OrderedList'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.items\" class=\"row\">\r\n                        <div class=\"col-xs-10\">\r\n                            <textarea rows=\"3\" id=\"${$parent.block.BlockId}-${$index}\"\r\n                                      value.bind=\"item\"></textarea>\r\n                        </div>\r\n                        <div class=\"col-xs-2\" style=\"text-align: left;\">\r\n                            <button type=\"button\"\r\n                                    click.delegate=\"$parent.deleteItem($index)\"\r\n                                    class=\"btn btn-danger btn-xs\">\r\n                                Delete\r\n                            </button>\r\n                        </div>\r\n                </li>\r\n            </ol>\r\n            <button type=\"button\" \r\n                    click.delegate=\"appendItem()\" \r\n                    class=\"btn btn-primary btn-xs\">\r\n                Add List Item\r\n            </button>\r\n\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.Items\">${item}</li>\r\n            </ol>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
+define('text!resources/elements/article/paragraph-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Paragraph'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <textarea rows=\"4\" value.bind=\"block.Text\">\r\n            </textarea>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <p>${block.text}</p>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

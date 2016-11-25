@@ -1,10 +1,10 @@
 ﻿<template>
-    <block-content if.bind="block.blockType === 'OrderedList'">
+    <block-content if.bind="block.BlockType === 'OrderedList'">
         <edit-mode if.bind="block.isEditing === true">
             <ol class="f">
                 <li repeat.for="item of block.items" class="row">
                         <div class="col-xs-10">
-                            <textarea rows="3" id="${$parent.block.blockId}-${$index}"
+                            <textarea rows="3" id="${$parent.block.BlockId}-${$index}"
                                       value.bind="item"></textarea>
                         </div>
                         <div class="col-xs-2" style="text-align: left;">
@@ -25,7 +25,7 @@
         </edit-mode>
         <read-mode if.bind="block.isEditing !== true">
             <ol class="f">
-                <li repeat.for="item of block.items">${item}</li>
+                <li repeat.for="item of block.Items">${item}</li>
             </ol>
         </read-mode>
     </block-content>

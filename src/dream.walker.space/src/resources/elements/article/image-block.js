@@ -23,7 +23,7 @@ export class ImageBlock {
 
     subscribe() {
         if (this.subscribed !== true) {
-            this.channel = 'article-block-' + this.block.blockId;
+            this.channel = 'article-block-' + this.block.BlockId;
             this.subscriptions.push(this.eventAggregator.subscribe(this.channel, update => this.updateBlock(update)));
             this.subscribed = true;
         }
@@ -40,7 +40,7 @@ export class ImageBlock {
                     if (reader.readyState === 2) {
                         self.blobServices.post(file.name, reader.result)
                             .then(content => {
-                                self.block.imageUrl = content.imageUrl;
+                                self.block.ImageUrl = content.mageUrl;
                                 self.block.isEditing = false;
                             });
                     }
@@ -52,7 +52,7 @@ export class ImageBlock {
     }
 
     isValidBlock() {
-        return this.block.blockType === 'Image';
+        return this.block.BlockType === 'Image';
     }
 
     blobToUrl(blob) {
