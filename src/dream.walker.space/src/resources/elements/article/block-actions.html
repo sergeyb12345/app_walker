@@ -1,0 +1,29 @@
+﻿<template>
+    <div if.bind="editMode" class="block-actions">
+        <div if.bind="block.isEditing !== true && block.isDeleting !== true && block.isNew !== true" class="btn-group" role="group" aria-label="Actions">
+            <button type="button" click.delegate="startEditing()" class="btn btn-default btn-xs">Edit</button>
+            <button type="button" click.delegate="startDeleting()" class="btn btn-danger btn-xs">Delete</button>
+            <button type="button" click.delegate="moveUp()" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+            </button>
+            <button type="button" click.delegate="moveDown()" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <div if.bind="block.isEditing === true && block.isNew !== true" class="btn-group" role="group" aria-label="Actions">
+            <button type="button" click.delegate="applyChanges()" class="btn btn-success btn-xs">Apply Changes</button>
+            <button type="button" click.delegate="cancelEditing()" class="btn btn-default btn-xs">Cancel</button>
+        </div>
+
+        <div if.bind="block.isDeleting === true && block.isNew !== true" class="btn-group" role="group" aria-label="Actions">
+            <button type="button" click.delegate="deleteBlock()" class="btn btn-danger btn-xs">Delete Block</button>
+            <button type="button" click.delegate="cancelEditing()" class="btn btn-default btn-xs">Cancel</button>
+        </div>
+
+        <div if.bind="block.isNew === true" class="btn-group" role="group" aria-label="Actions">
+            <button type="button" click.delegate="addBlock()" class="btn btn-success btn-xs">Add Block</button>
+            <button type="button" click.delegate="deleteBlock()" class="btn btn-default btn-xs">Cancel</button>
+        </div>
+    </div>
+</template>

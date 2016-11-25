@@ -1,10 +1,12 @@
-﻿using System.Reflection;
+﻿using System.Configuration;
+using System.Reflection;
 using Autofac;
 using Autofac.Integration.Mvc;
 using dream.walker.data;
 using dream.walker.data.Repositories;
 using System.Web.Mvc;
 using Autofac.Integration.WebApi;
+using dream.walker.data.Azure;
 using dream.walker.data.Services;
 
 namespace dream.walker.space.IoC
@@ -43,6 +45,7 @@ namespace dream.walker.space.IoC
             DependencyResolver.SetResolver(new AutofacDependencyResolver(_container));
         }
 
+        public IContainer Container => _container;
 
         private IoCContainer()
         {
@@ -59,6 +62,14 @@ namespace dream.walker.space.IoC
             builder.RegisterType<CompanyIndicatorRepository>().As<ICompanyIndicatorRepository>().InstancePerDependency();
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
             builder.RegisterType<ArticleService>().As<IArticleService>();
+            builder.Register(c => new StorageAccountConfiguration
+            {
+                AccountName = ConfigurationManager.AppSettings["AzureStorageAccountName"],
+                ConnectionString = ConfigurationManager.AppSettings["AzureStorageConnection"]
+            }).SingleInstance();
+
+            builder.RegisterType<AzureStorageClient>().As<IStorageClient>();
+            builder.RegisterType<ArticleStorageService>().As<IArticleStorageService>();
 
         }
 

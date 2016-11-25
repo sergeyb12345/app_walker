@@ -1,0 +1,11 @@
+﻿<template>
+    <block-content if.bind="block.blockType === 'Paragraph'">
+        <edit-mode if.bind="block.isEditing === true">
+            <textarea rows="4" value.bind="block.text">
+            </textarea>
+        </edit-mode>
+        <read-mode if.bind="block.isEditing !== true">
+            <p>${block.text}</p>
+        </read-mode>
+    </block-content>
+</template>

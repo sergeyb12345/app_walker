@@ -1,0 +1,71 @@
+﻿<template>
+    <div class="row">
+
+        <div class="col-md-8 article">
+            <edit-mode if.bind="editMode === true" class="form-horizontal">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" value.bind="article.title">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Url</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" value.bind="article.url" placeholder="Atricle Url (no spaces)">
+                    </div>
+                </div>
+
+            </edit-mode>
+            <read-mode if.bind="editMode !== true">
+                <h2>${article.title}</h2>
+            </read-mode>
+
+            <article-part class="${$parent.editMode === true ? 'edit-mode': ''}"
+                          repeat.for="block of article.sortedBlocks">
+                <block-actions block.bind="block"></block-actions>
+                <article-block block.bind="block"></article-block>
+            </article-part>
+
+            <div if.bind="editMode === true" class="block-actions">
+                <div class="btn-group" role="group" aria-label="Actions">
+                    <button type="button" click.delegate="addBlock()" class="btn btn-primary btn-xs">Add New Block</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 side-navigation">
+            <h3>${category.title}</h3>
+            <ul>
+                <li repeat.for="item of sortedArticles" class="${$parent.editMode === true ? 'edit-mode': ''}" if.bind="item.isDeleted !== true">
+                    <div if.bind="editMode" class="block-actions">
+                        <div if.bind="item.isDeleting !== true" class="btn-group" role="group" aria-label="Actions">
+                            <button type="button" click.delegate="$parent.deleteArticle(item)" class="btn btn-danger btn-xs">Delete</button>
+                            <button type="button" click.delegate="$parent.moveUpArticle(item)" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                            </button>
+                            <button type="button" click.delegate="$parent.moveDownArticle(item)" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        <div if.bind="item.isDeleting === true" class="btn-group" role="group" aria-label="Actions">
+                            <button type="button" click.delegate="$parent.confirmDeleteArticle(item)" class="btn btn-danger btn-xs">Confirm Delete</button>
+                            <button type="button" click.delegate="$parent.cancelDeleteArticle(item)" class="btn btn-default btn-xs">Cancel</button>
+                        </div>
+                    </div>
+
+                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                    <a href.bind="$parent.getArticleUrl(item)" class="${item.articleId === article.articleId ? 'active' : ''}">${item.title}</a>
+                </li>
+            </ul>
+            <div if.bind="editMode === true" class="block-actions">
+                <div class="btn-group" role="group" aria-label="Actions">
+                    <button type="button" click.delegate="addArticle()" class="btn btn-primary btn-xs">Add New Article</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

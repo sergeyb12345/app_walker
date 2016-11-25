@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Autofac;
 using dream.walker.data.Entities.Articles;
 using dream.walker.data.Services;
 using dream.walker.space.Models.Articles;
@@ -11,7 +12,7 @@ using Newtonsoft.Json;
 namespace dream.walker.space.Controllers
 {
 
-    [Route("api/articles")]
+    [RoutePrefix("api/article")]
     public class ArticlesApiController : ApiController
     {
         private readonly IArticleService _service;
@@ -19,6 +20,11 @@ namespace dream.walker.space.Controllers
         public ArticlesApiController(IArticleService articleService)
         {
             _service = articleService;
+        }
+
+        public ArticlesApiController()
+        {
+            _service = IoC.IoCContainer.Instance.Container.Resolve<IArticleService>();
         }
 
         [HttpGet]

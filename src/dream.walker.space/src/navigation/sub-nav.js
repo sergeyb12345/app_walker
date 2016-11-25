@@ -11,22 +11,22 @@ export class SubNav {
 
     activate(menu) {
         this.menu = menu;
-        this.categoriesUrl = this.menu.section.Url + '/categories/' +  this.menu.section.SectionId;
+        this.categoriesUrl = this.menu.section.url + '/categories/' +  this.menu.section.sectionId;
     }
 
     getUrl(menuItem) {
-        return '' + this.menu.section.Url + '/' + menuItem.Url;
+        return '' + this.menu.section.url + '/' + menuItem.url;
     }
 
     startEdit() {
-        this.eventAggregator.publish(this.menu.section.Url + '-start-edit', true);
+        this.eventAggregator.publish(this.menu.section.url + '-start-edit', true);
     }
 
     applyChanges() {
-        this.eventAggregator.publish(this.menu.section.Url + '-save-article', true);
+        this.eventAggregator.publish(this.menu.section.url + '-save-article', true);
     }
 
     cancelEdit() {
-        this.eventAggregator.publish(this.menu.section.Url + '-cancel-edit', true);
+        this.eventAggregator.publish(this.menu.section.url + '-cancel-edit', true);
     }
 }

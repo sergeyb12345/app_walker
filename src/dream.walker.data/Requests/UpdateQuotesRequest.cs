@@ -4,7 +4,7 @@ using System.Linq;
 using dream.walker.reader.Models;
 using Newtonsoft.Json;
 
-namespace dream.walker.data.Services
+namespace dream.walker.data.Requests
 {
     public class UpdateQuotesRequest
     {

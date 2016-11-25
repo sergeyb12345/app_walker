@@ -1,0 +1,42 @@
+﻿<template>
+    <block-content if.bind="block.blockType === 'Image'">
+        <edit-mode if.bind="block.isEditing === true">
+            <div class="row">
+                <div class="col-xs-3">Image Title</div>
+                <div class="col-xs-9">
+                    <input type="text" class="form-control" value.bind="block.text" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-3">Select Image</div>
+                <div class="col-xs-9">
+                    <input type="file"
+                            accept="image/*" class="form-control"
+                            files.bind="selectedFiles">
+
+                    <ul>
+                        <li repeat.for="file of selectedFiles | fileListToArray">
+                            <p>${file.name}: ${file.type} ${file.size / 1000} kb</p>
+                            <img src.bind="blobToUrl(file)"><img>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="row" if.bind="selectedFiles.length === 0">
+                <div class="col-xs-9 col-xs-offset-3">
+                    <img src.bind="block.imageUrl" />
+                </div>
+            </div>
+        </edit-mode>
+
+        <read-mode if.bind="block.isEditing !== true">
+            <article-image>
+                <img src.bind="block.imageUrl" />
+                <p>${block.text}</p>
+            </article-image>
+        </read-mode>
+    </block-content>
+</template>

@@ -1,0 +1,32 @@
+﻿<template>
+    <block-content if.bind="block.blockType === 'OrderedList'">
+        <edit-mode if.bind="block.isEditing === true">
+            <ol class="f">
+                <li repeat.for="item of block.items" class="row">
+                        <div class="col-xs-10">
+                            <textarea rows="3" id="${$parent.block.blockId}-${$index}"
+                                      value.bind="item"></textarea>
+                        </div>
+                        <div class="col-xs-2" style="text-align: left;">
+                            <button type="button"
+                                    click.delegate="$parent.deleteItem($index)"
+                                    class="btn btn-danger btn-xs">
+                                Delete
+                            </button>
+                        </div>
+                </li>
+            </ol>
+            <button type="button" 
+                    click.delegate="appendItem()" 
+                    class="btn btn-primary btn-xs">
+                Add List Item
+            </button>
+
+        </edit-mode>
+        <read-mode if.bind="block.isEditing !== true">
+            <ol class="f">
+                <li repeat.for="item of block.items">${item}</li>
+            </ol>
+        </read-mode>
+    </block-content>
+</template>

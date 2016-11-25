@@ -1,0 +1,9 @@
+﻿<template>
+
+    <compose repeat.for="menu of menus" model.bind="menu" view-model="../navigation/sub-nav"></compose>
+
+    <div class="container page-content">
+        <router-view></router-view>
+    </div>
+
+</template>

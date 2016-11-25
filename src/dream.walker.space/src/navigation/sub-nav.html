@@ -4,8 +4,8 @@
             <div class="container">
                 <nav class="navbar">
                     <ul class="nav navbar-nav">
-                        <li repeat.for="item of menu.items" class="${item.IsActive ? 'active' : ''}">
-                            <a href.bind="$parent.getUrl(item)">${item.Title}</a>
+                        <li repeat.for="item of menu.items" class="${item.isActive ? 'active' : ''}">
+                            <a href.bind="$parent.getUrl(item)">${item.title}</a>
                         </li>
                     </ul>
                     <div class="actions">
