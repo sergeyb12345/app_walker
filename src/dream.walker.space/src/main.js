@@ -35,7 +35,7 @@ export function configure(aurelia) {
                     }
 
                     if (environment.testing) {
-                        aurelia.use.plugin('aurelia-testing');
+                        //aurelia.use.plugin('aurelia-testing');
                     }
 
                     aurelia.start().then(() => {

@@ -111,9 +111,7 @@ define('main',['exports', './environment', './settings', './common/error-handler
 
                 if (_environment2.default.debug) {}
 
-                if (_environment2.default.testing) {
-                    aurelia.use.plugin('aurelia-testing');
-                }
+                if (_environment2.default.testing) {}
 
                 aurelia.start().then(function () {
                     aurelia.setRoot();
@@ -938,8 +936,8 @@ define('navigation/sub-menu',['exports', 'aurelia-framework', 'aurelia-event-agg
         initializer: null
     })), _class2)) || _class);
 });
-define('navigation/sub-nav',['exports', 'aurelia-framework', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaEventAggregator) {
-    'use strict';
+define('navigation/sub-nav',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -954,12 +952,13 @@ define('navigation/sub-nav',['exports', 'aurelia-framework', 'aurelia-event-aggr
 
     var _dec, _class;
 
-    var SubNav = exports.SubNav = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function SubNav(eventAggregator) {
+    var SubNav = exports.SubNav = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, "User"), _dec(_class = function () {
+        function SubNav(eventAggregator, userContext) {
             _classCallCheck(this, SubNav);
 
             this.eventAggregator = eventAggregator;
             this.categoriesUrl = '';
+            this.powerUser = userContext.user.isAuthenticated;
         }
 
         SubNav.prototype.activate = function activate(menu) {
@@ -2122,10 +2121,14 @@ define('resources/elements/article/image-block',['exports', 'aurelia-framework',
                         var file = _this2.selectedFiles.item(0);
                         var self = _this2;
                         reader.addEventListener("loadend", function () {
+                            var _this3 = this;
+
                             if (reader.readyState === 2) {
-                                self.blobServices.post(file.name, reader.result).then(function (content) {
-                                    self.block.ImageUrl = content.mageUrl;
+                                self.blobServices.post(file.name, reader.result).then(function (imageUrl) {
+                                    self.block.ImageUrl = imageUrl;
                                     self.block.isEditing = false;
+                                }).catch(function (error) {
+                                    return _this3.handleError(error, "updateBlock");
                                 });
                             }
                         });
@@ -2142,6 +2145,15 @@ define('resources/elements/article/image-block',['exports', 'aurelia-framework',
         ImageBlock.prototype.blobToUrl = function blobToUrl(blob) {
             this.subscribe();
             return URL.createObjectURL(blob);
+        };
+
+        ImageBlock.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "ImageBlock->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
         };
 
         return ImageBlock;
@@ -4087,7 +4099,7 @@ define('text!account/navigation.html', ['module'], function(module) { module.exp
 define('text!account/view.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>User Profile</h3>\r\n    </header>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">First name</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.firstName}</span>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Email</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.username}</span>\r\n        </div>\r\n    </div>\r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"edit()\" class=\"btn btn-primary\">Edit</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!navigation/main-menu.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-menu\">\r\n        <div class=\"container\">\r\n            <div class=\"navbar-brand\">\r\n\r\n                <img class=\"logo\" src=\"/content/images/logo.png\" />\r\n                <a href=\"/\">D<span>ream</span> S<span>pace</span></a>\r\n            </div>\r\n            <nav class=\"navbar\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </nav>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!navigation/sub-menu.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" if.bind=\"editMode !== true\" click.delegate=\"startEdit()\" class=\"btn btn-success\">Switch to Edit Mode</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
-define('text!navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"item of menu.items\" class=\"${item.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"$parent.getUrl(item)\">${item.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n\r\n                            <div if.bind=\"menu.editMode !== true\" class=\"btn-group\" role=\"group\">\r\n                                <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                    Configure\r\n                                    <span class=\"caret\"></span>\r\n                                </button>\r\n                                <ul class=\"dropdown-menu\">\r\n                                    <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                                    <li role=\"separator\" class=\"divider\"></li>\r\n                                    <li><a href=\"/categories\">Manage Categories</a></li>\r\n                                </ul>\r\n                            </div>\r\n\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
+define('text!navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"item of menu.items\" class=\"${item.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"$parent.getUrl(item)\">${item.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                    <div class=\"actions\" if.bind=\"powerUser\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n\r\n                            <div if.bind=\"menu.editMode !== true\" class=\"btn-group\" role=\"group\">\r\n                                <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                    Configure\r\n                                    <span class=\"caret\"></span>\r\n                                </button>\r\n                                <ul class=\"dropdown-menu\">\r\n                                    <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                                    <li role=\"separator\" class=\"divider\"></li>\r\n                                    <li><a href=\"/categories\">Manage Categories</a></li>\r\n                                </ul>\r\n                            </div>\r\n\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 define('text!strategies/create.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Create new strategy</h3>\r\n    </header>\r\n    \r\n</template>"; });
 define('text!strategies/list.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <header>\r\n        <h3>Defined Strategies</h3>\r\n    </header>\r\n\r\n</template>"; });
 define('text!strategies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-menu router.bind=\"router\" section.bind=\"section\"></sub-menu>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });

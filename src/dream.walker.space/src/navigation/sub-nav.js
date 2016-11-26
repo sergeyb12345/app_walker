@@ -1,12 +1,13 @@
 ﻿import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 
-@inject(EventAggregator)
+@inject(EventAggregator, "User")
 export class SubNav {
 
-    constructor (eventAggregator) {
+    constructor (eventAggregator, userContext) {
         this.eventAggregator = eventAggregator;
         this.categoriesUrl = '';
+        this.powerUser = userContext.user.isAuthenticated;
     }
 
     activate(menu) {

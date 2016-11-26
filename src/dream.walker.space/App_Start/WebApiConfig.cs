@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -38,12 +39,20 @@ namespace dream.walker.space
 
     public class NoStackExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        public override void OnException(HttpActionExecutedContext actionExecutedContext)
+        public override void OnException(HttpActionExecutedContext context)
         {
-            var exception = actionExecutedContext.Exception;
-            var message = new StringBuilder();
-            var source = new StringBuilder(exception.Source);
 
+            if (context.Exception is NotImplementedException)
+            {
+                context.Response = new HttpResponseMessage(HttpStatusCode.NotImplemented);
+                return;
+            }
+
+            var exception = context.Exception;
+            var message = new StringBuilder();
+            var source = new StringBuilder(context.Request.RequestUri.PathAndQuery);
+
+            source.Append($" => {exception.Source}");
             message.AppendLine($"{exception.Message}. ");
 
             while (exception.InnerException != null)
@@ -59,9 +68,8 @@ namespace dream.walker.space
                 Message = message.ToString()
             };
 
-            actionExecutedContext.Response = new HttpResponseMessage
+            context.Response = new HttpResponseMessage
             {
-                //Content = new StringContent( JsonConvert.SerializeObject(error), Encoding.UTF8, "text/plain"),
                 Content = new StringContent( JsonConvert.SerializeObject(error), Encoding.UTF8, "application/json"),
                 StatusCode = System.Net.HttpStatusCode.InternalServerError
             };

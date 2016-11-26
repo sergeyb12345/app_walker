@@ -39,9 +39,12 @@ export class ImageBlock {
                 reader.addEventListener("loadend", function() {
                     if (reader.readyState === 2) {
                         self.blobServices.post(file.name, reader.result)
-                            .then(content => {
-                                self.block.ImageUrl = content.mageUrl;
+                            .then(imageUrl => {
+                                self.block.ImageUrl = imageUrl;
                                 self.block.isEditing = false;
+                            })
+                            .catch(error => {
+                                return this.handleError(error, "updateBlock");
                             });
                     }
                 });
@@ -58,6 +61,15 @@ export class ImageBlock {
     blobToUrl(blob) {
         this.subscribe();
         return URL.createObjectURL(blob);
+    }
+
+    handleError(error,  source) {
+        let exception = {
+            source: "ImageBlock->" + source,
+            exception: error
+        }
+        this.eventAggregator.publish('GeneralExceptions', exception);
+        return error;
     }
 }
 
