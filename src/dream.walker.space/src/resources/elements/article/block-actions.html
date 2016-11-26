@@ -1,5 +1,5 @@
 ﻿<template>
-    <div if.bind="editMode" class="block-actions">
+    <div if.bind="block.editMode" class="block-actions">
         <div if.bind="block.isEditing !== true && block.isDeleting !== true && block.isNew !== true" class="btn-group" role="group" aria-label="Actions">
             <button type="button" click.delegate="startEditing()" class="btn btn-default btn-xs">Edit</button>
             <button type="button" click.delegate="startDeleting()" class="btn btn-danger btn-xs">Delete</button>

@@ -77,7 +77,7 @@ define('environment',["exports"], function (exports) {
     testing: true
   };
 });
-define('main',['exports', './environment', './settings', './account/user-context'], function (exports, _environment, _settings, _userContext) {
+define('main',['exports', './environment', './settings', './common/error-handler', './account/user-context'], function (exports, _environment, _settings, _errorHandler, _userContext) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -100,7 +100,7 @@ define('main',['exports', './environment', './settings', './account/user-context
     });
 
     function configure(aurelia) {
-
+        var errorHandler = aurelia.container.get(_errorHandler.ErrorHandler);
         var userContext = aurelia.container.get(_userContext.UserContext);
         var settings = aurelia.container.get(_settings.Settings);
 
@@ -109,9 +109,7 @@ define('main',['exports', './environment', './settings', './account/user-context
             settings.initialize().then(function (response) {
                 aurelia.use.instance('Settings', settings).instance('User', userContext).standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
 
-                if (_environment2.default.debug) {
-                    aurelia.use.developmentLogging();
-                }
+                if (_environment2.default.debug) {}
 
                 if (_environment2.default.testing) {
                     aurelia.use.plugin('aurelia-testing');
@@ -124,7 +122,7 @@ define('main',['exports', './environment', './settings', './account/user-context
         });
     }
 });
-define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client'], function (exports, _aureliaFramework, _aureliaFetchClient) {
+define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -140,9 +138,11 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client'], func
 
     var _dec, _class;
 
-    var Settings = exports.Settings = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient), _dec(_class = function () {
+    var Settings = exports.Settings = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
         function Settings(httpClient, eventAggregator) {
             _classCallCheck(this, Settings);
+
+            this.eventAggregator = eventAggregator;
 
             httpClient.configure(function (config) {
                 config.useStandardConfiguration().withBaseUrl('api/');
@@ -183,12 +183,16 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client'], func
 
                 return _this;
             }).catch(function (error) {
-                return _this.handleError(error);
+                return _this.handleError(error, "initialize");
             });
         };
 
-        Settings.prototype.handleError = function handleError(error) {
-            this.eventAggregator.publish('GeneralExceptions', error);
+        Settings.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "Settings->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
             return error;
         };
 
@@ -244,12 +248,17 @@ define('account/edit',["exports", "aurelia-framework", "aurelia-event-aggregator
                     _this.router.navigate("view");
                 }
             }).catch(function (error) {
-                return _this.handleError(error);
+                return _this.handleError(error, "update");
             });
         };
 
-        Edit.prototype.handleError = function handleError(error) {
-            this.eventAggregator.publish('GeneralExceptions', error);
+        Edit.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "Account.Edit->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
         };
 
         return Edit;
@@ -295,12 +304,17 @@ define('account/login',["exports", "aurelia-framework", "aurelia-event-aggregato
                     window.location.href = url;
                 }
             }).catch(function (error) {
-                return _this.handleError(error);
+                return _this.handleError(error, "login");
             });
         };
 
-        Login.prototype.handleError = function handleError(error) {
-            this.eventAggregator.publish('GeneralExceptions', error);
+        Login.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "Account.Login->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
         };
 
         return Login;
@@ -373,7 +387,7 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
                     _this.user = user;
                 });
             }).catch(function (error) {
-                _this.handleError(error);
+                _this.handleError(error, "initialize");
             });
         };
 
@@ -397,7 +411,7 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
                     return result.status;
                 });
             }).catch(function (error) {
-                return _this2.handleError(error);
+                return _this2.handleError(error, "login");
             });
         };
 
@@ -420,12 +434,17 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
                     return result.status;
                 });
             }).catch(function (error) {
-                return _this3.handleError(error);
+                return _this3.handleError(error, "update");
             });
         };
 
-        UserContext.prototype.handleError = function handleError(error) {
-            this.eventAggregator.publish('GeneralExceptions', error);
+        UserContext.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "UserContext->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
         };
 
         return UserContext;
@@ -588,17 +607,457 @@ define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], funct
         return BootstrapFormRenderer;
     }();
 });
-define('resources/index',['exports'], function (exports) {
-  'use strict';
+define('common/error-handler',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.ErrorHandler = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var ErrorHandler = exports.ErrorHandler = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function ErrorHandler(eventAggregator) {
+            var _this = this;
+
+            _classCallCheck(this, ErrorHandler);
+
+            eventAggregator.subscribe("GeneralExceptions", function (error) {
+                return _this.handleError(error);
+            });
+
+            this.lastError = {
+                client: {
+                    source: "",
+                    message: ""
+                },
+                server: {
+                    source: "",
+                    message: ""
+                }
+
+            };
+        }
+
+        ErrorHandler.prototype.parseErrorFromStream = function parseErrorFromStream(stream) {
+
+            var promise = new Promise(function (resolve, reject) {
+
+                var result = {
+                    source: "",
+                    message: ""
+                };
+
+                try {
+
+                    var reader = stream.getReader();
+
+                    reader.read().then(function (result) {
+
+                        var enc = new TextDecoder();
+                        var message = enc.decode(result.value);
+
+                        try {
+                            var json = JSON.parse(message);
+
+                            result.message = json.Message;
+                            result.source = json.Source;
+                        } catch (e) {
+                            result.message = message;
+                        }
+
+                        resolve(result);
+                    }).catch(function (err) {
+                        reject(err);
+                    });
+                } catch (e) {
+                    reject(e);
+                }
+            });
+
+            return promise;
+        };
+
+        ErrorHandler.prototype.handleError = function handleError(error) {
+            var _this2 = this;
+
+            var errorInfo = {
+                client: {
+                    source: "",
+                    message: ""
+                },
+                server: {
+                    source: "",
+                    message: ""
+                }
+            };
+
+            if (error.source) {
+                errorInfo.client.source = error.source;
+            }
+
+            if (error.message) {
+                errorInfo.client.message = error.message;
+            }
+
+            if (error.exception) {
+                (function () {
+                    var self = _this2;
+
+                    _this2.parseErrorFromStream(error.exception.body).then(function (serverError) {
+                        errorInfo.server.source = serverError.source;
+                        errorInfo.server.message = serverError.message;
+
+                        self.logError(errorInfo);
+                    }).catch(function (error) {
+                        errorInfo.server.message = "Failed to extract server message";
+                        self.logError(errorInfo);
+                    });
+                })();
+            } else {
+                if (errorInfo.client.source.length === 0 && errorInfo.client.message.length === 0) {
+                    errorInfo.client.message = error;
+                }
+
+                this.logError(errorInfo);
+            }
+        };
+
+        ErrorHandler.prototype.getLastError = function getLastError() {
+            return this.lastError;
+        };
+
+        ErrorHandler.prototype.logError = function logError(errorInfo) {
+            this.lastError = errorInfo;
+
+            var logger = errorInfo.client.source + " (" + errorInfo.server.source + ")";
+            console.error("ERROR [" + logger + "] " + errorInfo.client.message + " SERVER: " + errorInfo.server.message);
+        };
+
+        return ErrorHandler;
+    }()) || _class);
+});
+define('navigation/index',['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.configure = configure;
+    function configure(config) {
+        config.globalResources('./main-menu', './sub-menu', './sub-nav');
+    }
+});
+define('navigation/main-menu',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.MainMenu = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _desc, _value, _class, _descriptor;
+
+    var MainMenu = exports.MainMenu = (_class = function MainMenu() {
+        _classCallCheck(this, MainMenu);
+
+        _initDefineProp(this, "router", _descriptor, this);
+    }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "router", [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: function initializer() {
+            return null;
+        }
+    })), _class);
+});
+define('navigation/sub-menu',['exports', 'aurelia-framework', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.SubMenu = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor, _descriptor2;
+
+    var SubMenu = exports.SubMenu = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator), _dec(_class = (_class2 = function () {
+        function SubMenu(eventAggregator) {
+            _classCallCheck(this, SubMenu);
+
+            _initDefineProp(this, 'router', _descriptor, this);
+
+            _initDefineProp(this, 'section', _descriptor2, this);
+
+            this.editMode = false;
+            this.eventAggregator = eventAggregator;
+            this.subscriptions = [];
+        }
+
+        SubMenu.prototype.startEdit = function startEdit() {
+            this.editMode = true;
+            this.eventAggregator.publish(this.section + '-edit-mode', this.editMode);
+        };
+
+        SubMenu.prototype.cancelEdit = function cancelEdit() {
+            this.editMode = false;
+            this.eventAggregator.publish(this.section + '-edit-mode', this.editMode);
+        };
+
+        SubMenu.prototype.applyChanges = function applyChanges() {
+            this.eventAggregator.publish(this.section + '-save', true);
+        };
+
+        SubMenu.prototype.sectionChanged = function sectionChanged(newValue, oldValue) {
+            this.section = newValue;
+        };
+
+        SubMenu.prototype.attached = function attached() {
+            var _this = this;
+
+            this.subscriptions.push(this.eventAggregator.subscribe(this.section + '-cancel-edit', function (flag) {
+                return _this.cancelEdit();
+            }));
+        };
+
+        SubMenu.prototype.detached = function detached() {
+            this.subscriptions.forEach(function (subscription) {
+                subscription.dispose();
+            });
+        };
+
+        return SubMenu;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'router', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'section', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    })), _class2)) || _class);
+});
+define('navigation/sub-nav',['exports', 'aurelia-framework', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.SubNav = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var SubNav = exports.SubNav = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function SubNav(eventAggregator) {
+            _classCallCheck(this, SubNav);
+
+            this.eventAggregator = eventAggregator;
+            this.categoriesUrl = '';
+        }
+
+        SubNav.prototype.activate = function activate(menu) {
+            this.menu = menu;
+            this.categoriesUrl = this.menu.section.url + '/categories/' + this.menu.section.sectionId;
+        };
+
+        SubNav.prototype.getUrl = function getUrl(menuItem) {
+            return '' + this.menu.section.url + '/' + menuItem.url;
+        };
+
+        SubNav.prototype.startEdit = function startEdit() {
+            this.eventAggregator.publish(this.menu.section.url + '-start-edit', true);
+        };
+
+        SubNav.prototype.applyChanges = function applyChanges() {
+            this.eventAggregator.publish(this.menu.section.url + '-save-article', true);
+        };
+
+        SubNav.prototype.cancelEdit = function cancelEdit() {
+            this.eventAggregator.publish(this.menu.section.url + '-cancel-edit', true);
+        };
+
+        return SubNav;
+    }()) || _class);
+});
+define('resources/custom-log-appender',["exports"], function (exports) {
+  "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.configure = configure;
-  function configure(config) {
-    config.globalResources(['./elements/chart/any-chart']);
-    config.globalResources('./elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
   }
+
+  var CustomLogAppender = exports.CustomLogAppender = function () {
+    function CustomLogAppender() {
+      _classCallCheck(this, CustomLogAppender);
+    }
+
+    CustomLogAppender.prototype.debug = function debug(logger, message) {
+      var _console;
+
+      for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        rest[_key - 2] = arguments[_key];
+      }
+
+      (_console = console).debug.apply(_console, ["DEBUG [" + logger.id + "] " + message].concat(rest));
+    };
+
+    CustomLogAppender.prototype.info = function info(logger, message) {
+      var _console2;
+
+      for (var _len2 = arguments.length, rest = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        rest[_key2 - 2] = arguments[_key2];
+      }
+
+      (_console2 = console).info.apply(_console2, ["INFO [" + logger.id + "] " + message].concat(rest));
+    };
+
+    CustomLogAppender.prototype.warn = function warn(logger, message) {
+      var _console3;
+
+      for (var _len3 = arguments.length, rest = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+        rest[_key3 - 2] = arguments[_key3];
+      }
+
+      (_console3 = console).warn.apply(_console3, ["WARN [" + logger.id + "] " + message].concat(rest));
+    };
+
+    CustomLogAppender.prototype.error = function error(logger, message) {
+      var _console4;
+
+      for (var _len4 = arguments.length, rest = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
+        rest[_key4 - 2] = arguments[_key4];
+      }
+
+      (_console4 = console).error.apply(_console4, ["ERROR [" + logger.id + "] " + message].concat(rest));
+    };
+
+    return CustomLogAppender;
+  }();
+});
+define('resources/index',['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.configure = configure;
+    function configure(config) {
+        config.globalResources(['./elements/chart/any-chart']);
+        config.globalResources('./elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
+    }
 });
 define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
     'use strict';
@@ -634,7 +1093,7 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/" + id).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this.handleError(error);
+                return _this.handleError(error, "getArticle");
             });
         };
 
@@ -644,7 +1103,7 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/" + id, { method: 'delete' }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this2.handleError(error);
+                return _this2.handleError(error, "deleteArticle");
             });
         };
 
@@ -659,7 +1118,7 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/" + articleId + "/order", { method: 'put', body: (0, _aureliaFetchClient.json)(article) }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this3.handleError(error);
+                return _this3.handleError(error, "updateArticleOrder");
             });
         };
 
@@ -669,7 +1128,7 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/url/" + categotyId + "/" + articleUrl).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this4.handleError(error);
+                return _this4.handleError(error, "getArticleByUrl");
             });
         };
 
@@ -679,7 +1138,7 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/section/" + url).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this5.handleError(error);
+                return _this5.handleError(error, "getSection");
             });
         };
 
@@ -689,7 +1148,7 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/categories/" + sectionId).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this6.handleError(error);
+                return _this6.handleError(error, "getCategories");
             });
         };
 
@@ -709,7 +1168,7 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/" + categoryId + "/featured").then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this8.handleError(error);
+                return _this8.handleError(error, "getFeatured");
             });
         };
 
@@ -719,45 +1178,61 @@ define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetc
             return this.http.fetch("article/" + categoryId + "/all").then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this9.handleError(error);
+                return _this9.handleError(error, "getArticles");
             });
         };
 
         ArticleService.prototype.saveArticle = function saveArticle(article) {
+            var _this10 = this;
+
             return this.http.fetch('article', {
                 method: 'post',
                 body: (0, _aureliaFetchClient.json)(article)
             }).then(function (response) {
                 return response.json();
+            }).catch(function (error) {
+                _this10.handleError(error, "saveArticle");
             });
         };
 
         ArticleService.prototype.saveCategory = function saveCategory(category) {
+            var _this11 = this;
+
             return this.http.fetch('article/category', {
                 method: 'post',
                 body: (0, _aureliaFetchClient.json)(category)
             }).then(function (response) {
                 return response.json();
+            }).catch(function (error) {
+                _this11.handleError(error, "saveCategory");
             });
         };
 
         ArticleService.prototype.deleteCategory = function deleteCategory(categoryId) {
+            var _this12 = this;
+
             return this.http.fetch('article/category/' + categoryId, {
                 method: 'delete'
             }).then(function (response) {
                 return response.json();
+            }).catch(function (error) {
+                _this12.handleError(error, "deleteCategory");
             });
         };
 
-        ArticleService.prototype.handleError = function handleError(error) {
-            this.eventAggregator.publish('GeneralExceptions', error);
+        ArticleService.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "ArticleService->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
             return error;
         };
 
         return ArticleService;
     }()) || _class);
 });
-define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-client'], function (exports, _aureliaFramework, _aureliaFetchClient) {
+define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -773,18 +1248,21 @@ define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-
 
     var _dec, _class;
 
-    var BlobServices = exports.BlobServices = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient), _dec(_class = function () {
-        function BlobServices(http) {
+    var BlobServices = exports.BlobServices = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function BlobServices(http, eventAggregator) {
             _classCallCheck(this, BlobServices);
 
             http.configure(function (config) {
                 config.useStandardConfiguration().withBaseUrl('api/');
             });
 
+            this.eventAggregator = eventAggregator;
             this.http = http;
         }
 
         BlobServices.prototype.post = function post(fileName, fileBody) {
+            var _this = this;
+
             var payload = {
                 fileName: fileName,
                 fileBody: fileBody
@@ -795,7 +1273,18 @@ define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-
                 body: (0, _aureliaFetchClient.json)(payload)
             }).then(function (response) {
                 return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error, "post");
             });
+        };
+
+        BlobServices.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "BlobServices->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
         };
 
         return BlobServices;
@@ -922,6 +1411,7 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
 
             this.articleService.getArticleByUrl(categoryId, articleUrl).then(function (result) {
                 _this.article = result;
+                _this.setEditMode(false);
                 _this.sort();
             });
         };
@@ -986,7 +1476,7 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
             var isEditing = false;
             var self = this;
 
-            this.article.Blocks.forEach(function (block) {
+            this.article.blocks.forEach(function (block) {
                 if (block.isEditing === true) {
                     isEditing = true;
                 }
@@ -1254,248 +1744,6 @@ define('studies/navigation',["exports", "aurelia-framework", "../services/articl
         return Navigation;
     }()) || _class);
 });
-define('navigation/index',['exports'], function (exports) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.configure = configure;
-    function configure(config) {
-        config.globalResources('./main-menu', './sub-menu', './sub-nav');
-    }
-});
-define('navigation/main-menu',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
-    "use strict";
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.MainMenu = undefined;
-
-    function _initDefineProp(target, property, descriptor, context) {
-        if (!descriptor) return;
-        Object.defineProperty(target, property, {
-            enumerable: descriptor.enumerable,
-            configurable: descriptor.configurable,
-            writable: descriptor.writable,
-            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
-        });
-    }
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-        var desc = {};
-        Object['ke' + 'ys'](descriptor).forEach(function (key) {
-            desc[key] = descriptor[key];
-        });
-        desc.enumerable = !!desc.enumerable;
-        desc.configurable = !!desc.configurable;
-
-        if ('value' in desc || desc.initializer) {
-            desc.writable = true;
-        }
-
-        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-            return decorator(target, property, desc) || desc;
-        }, desc);
-
-        if (context && desc.initializer !== void 0) {
-            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-            desc.initializer = undefined;
-        }
-
-        if (desc.initializer === void 0) {
-            Object['define' + 'Property'](target, property, desc);
-            desc = null;
-        }
-
-        return desc;
-    }
-
-    function _initializerWarningHelper(descriptor, context) {
-        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
-    }
-
-    var _desc, _value, _class, _descriptor;
-
-    var MainMenu = exports.MainMenu = (_class = function MainMenu() {
-        _classCallCheck(this, MainMenu);
-
-        _initDefineProp(this, "router", _descriptor, this);
-    }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "router", [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: function initializer() {
-            return null;
-        }
-    })), _class);
-});
-define('navigation/sub-menu',['exports', 'aurelia-framework', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaEventAggregator) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.SubMenu = undefined;
-
-    function _initDefineProp(target, property, descriptor, context) {
-        if (!descriptor) return;
-        Object.defineProperty(target, property, {
-            enumerable: descriptor.enumerable,
-            configurable: descriptor.configurable,
-            writable: descriptor.writable,
-            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
-        });
-    }
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-        var desc = {};
-        Object['ke' + 'ys'](descriptor).forEach(function (key) {
-            desc[key] = descriptor[key];
-        });
-        desc.enumerable = !!desc.enumerable;
-        desc.configurable = !!desc.configurable;
-
-        if ('value' in desc || desc.initializer) {
-            desc.writable = true;
-        }
-
-        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-            return decorator(target, property, desc) || desc;
-        }, desc);
-
-        if (context && desc.initializer !== void 0) {
-            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-            desc.initializer = undefined;
-        }
-
-        if (desc.initializer === void 0) {
-            Object['define' + 'Property'](target, property, desc);
-            desc = null;
-        }
-
-        return desc;
-    }
-
-    function _initializerWarningHelper(descriptor, context) {
-        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
-    }
-
-    var _dec, _class, _desc, _value, _class2, _descriptor, _descriptor2;
-
-    var SubMenu = exports.SubMenu = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator), _dec(_class = (_class2 = function () {
-        function SubMenu(eventAggregator) {
-            _classCallCheck(this, SubMenu);
-
-            _initDefineProp(this, 'router', _descriptor, this);
-
-            _initDefineProp(this, 'section', _descriptor2, this);
-
-            this.editMode = false;
-            this.eventAggregator = eventAggregator;
-            this.subscriptions = [];
-        }
-
-        SubMenu.prototype.startEdit = function startEdit() {
-            this.editMode = true;
-            this.eventAggregator.publish(this.section + '-edit-mode', this.editMode);
-        };
-
-        SubMenu.prototype.cancelEdit = function cancelEdit() {
-            this.editMode = false;
-            this.eventAggregator.publish(this.section + '-edit-mode', this.editMode);
-        };
-
-        SubMenu.prototype.applyChanges = function applyChanges() {
-            this.eventAggregator.publish(this.section + '-save', true);
-        };
-
-        SubMenu.prototype.sectionChanged = function sectionChanged(newValue, oldValue) {
-            this.section = newValue;
-        };
-
-        SubMenu.prototype.attached = function attached() {
-            var _this = this;
-
-            this.subscriptions.push(this.eventAggregator.subscribe(this.section + '-cancel-edit', function (flag) {
-                return _this.cancelEdit();
-            }));
-        };
-
-        SubMenu.prototype.detached = function detached() {
-            this.subscriptions.forEach(function (subscription) {
-                subscription.dispose();
-            });
-        };
-
-        return SubMenu;
-    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'router', [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: null
-    }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'section', [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: null
-    })), _class2)) || _class);
-});
-define('navigation/sub-nav',['exports', 'aurelia-framework', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaEventAggregator) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.SubNav = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var SubNav = exports.SubNav = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function SubNav(eventAggregator) {
-            _classCallCheck(this, SubNav);
-
-            this.eventAggregator = eventAggregator;
-            this.categoriesUrl = '';
-        }
-
-        SubNav.prototype.activate = function activate(menu) {
-            this.menu = menu;
-            this.categoriesUrl = this.menu.section.url + '/categories/' + this.menu.section.sectionId;
-        };
-
-        SubNav.prototype.getUrl = function getUrl(menuItem) {
-            return '' + this.menu.section.url + '/' + menuItem.url;
-        };
-
-        SubNav.prototype.startEdit = function startEdit() {
-            this.eventAggregator.publish(this.menu.section.url + '-start-edit', true);
-        };
-
-        SubNav.prototype.applyChanges = function applyChanges() {
-            this.eventAggregator.publish(this.menu.section.url + '-save-article', true);
-        };
-
-        SubNav.prototype.cancelEdit = function cancelEdit() {
-            this.eventAggregator.publish(this.menu.section.url + '-cancel-edit', true);
-        };
-
-        return SubNav;
-    }()) || _class);
-});
 define('resources/elements/article/article-block',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
     'use strict';
 
@@ -1635,7 +1883,9 @@ define('resources/elements/article/block-actions',['exports', 'aurelia-event-agg
             this.moveBlockDownChannel = 'move-block-down';
         }
 
-        BlockActions.prototype.blockChanged = function blockChanged(newValue, oldValue) {};
+        BlockActions.prototype.blockChanged = function blockChanged(newValue, oldValue) {
+            if (this.requiresAction()) {}
+        };
 
         BlockActions.prototype.startEditing = function startEditing() {
             this.block.isEditing = true;
@@ -3844,7 +4094,7 @@ define('text!strategies/navigation.html', ['module'], function(module) { module.
 define('text!studies/category.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"row\">\r\n\r\n        <div class=\"col-md-8 article\">\r\n            <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Title</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Url</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n                    </div>\r\n                </div>\r\n\r\n            </edit-mode>\r\n            <read-mode if.bind=\"editMode !== true\">\r\n                <h2>${article.title}</h2>\r\n            </read-mode>\r\n\r\n            <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                          repeat.for=\"block of article.sortedBlocks\">\r\n                <block-actions block.bind=\"block\"></block-actions>\r\n                <article-block block.bind=\"block\"></article-block>\r\n            </article-part>\r\n\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"col-md-4 side-navigation\">\r\n            <h3>${category.title}</h3>\r\n            <ul>\r\n                <li repeat.for=\"item of sortedArticles\" class=\"${$parent.editMode === true ? 'edit-mode': ''}\" if.bind=\"item.isDeleted !== true\">\r\n                    <div if.bind=\"editMode\" class=\"block-actions\">\r\n                        <div if.bind=\"item.isDeleting !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.deleteArticle(item)\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveUpArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveDownArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                        </div>\r\n\r\n                        <div if.bind=\"item.isDeleting === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.confirmDeleteArticle(item)\" class=\"btn btn-danger btn-xs\">Confirm Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.cancelDeleteArticle(item)\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                    <a href.bind=\"$parent.getArticleUrl(item)\" class=\"${item.articleId === article.articleId ? 'active' : ''}\">${item.title}</a>\r\n                </li>\r\n            </ul>\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addArticle()\" class=\"btn btn-primary btn-xs\">Add New Article</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
-define('text!resources/elements/article/block-actions.html', ['module'], function(module) { module.exports = "<template>\r\n    <div if.bind=\"editMode\" class=\"block-actions\">\r\n        <div if.bind=\"block.isEditing !== true && block.isDeleting !== true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"startEditing()\" class=\"btn btn-default btn-xs\">Edit</button>\r\n            <button type=\"button\" click.delegate=\"startDeleting()\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n            <button type=\"button\" click.delegate=\"moveUp()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n            </button>\r\n            <button type=\"button\" click.delegate=\"moveDown()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n            </button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isEditing === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"applyChanges()\" class=\"btn btn-success btn-xs\">Apply Changes</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isDeleting === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-danger btn-xs\">Delete Block</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isNew === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-success btn-xs\">Add Block</button>\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
+define('text!resources/elements/article/block-actions.html', ['module'], function(module) { module.exports = "<template>\r\n    <div if.bind=\"block.editMode\" class=\"block-actions\">\r\n        <div if.bind=\"block.isEditing !== true && block.isDeleting !== true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"startEditing()\" class=\"btn btn-default btn-xs\">Edit</button>\r\n            <button type=\"button\" click.delegate=\"startDeleting()\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n            <button type=\"button\" click.delegate=\"moveUp()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n            </button>\r\n            <button type=\"button\" click.delegate=\"moveDown()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n            </button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isEditing === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"applyChanges()\" class=\"btn btn-success btn-xs\">Apply Changes</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isDeleting === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-danger btn-xs\">Delete Block</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isNew === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-success btn-xs\">Add Block</button>\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/article/heading-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Heading'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-2\">\r\n                    <select class=\"form-control\" value.bind=\"block.headingType\">\r\n                        <option>Select</option>\r\n                        <option repeat.for=\"heading of headingTypes\" value.bind=\"heading\">${heading}</option>\r\n                    </select>\r\n                </div>\r\n                <div class=\"col-xs-10\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.Text\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <span class=\"${block.headingType}\">${block.Text}</span>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/image-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Image'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Image Title</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.Text\" />\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Select Image</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"file\"\r\n                            accept=\"image/*\" class=\"form-control\"\r\n                            files.bind=\"selectedFiles\">\r\n\r\n                    <ul>\r\n                        <li repeat.for=\"file of selectedFiles | fileListToArray\">\r\n                            <p>${file.name}: ${file.type} ${file.size / 1000} kb</p>\r\n                            <img src.bind=\"blobToUrl(file)\"><img>\r\n                        </li>\r\n                    </ul>\r\n\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\" if.bind=\"selectedFiles.length === 0\">\r\n                <div class=\"col-xs-9 col-xs-offset-3\">\r\n                    <img src.bind=\"block.ImageUrl\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <article-image>\r\n                <img src.bind=\"block.ImageUrl\" />\r\n                <p>${block.Text}</p>\r\n            </article-image>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/new-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.isNew === true\">\r\n        <edit-mode>\r\n\r\n            <div class=\"form-horizontal\">\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Block Type</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <select class=\"form-control\" value.bind=\"block.BlockType\">\r\n                            <option>Select</option>\r\n                            <option repeat.for=\"blockType of blockTypes\" value.bind=\"blockType\">${blockType}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n        </edit-mode>\r\n    </block-content>\r\n</template>"; });

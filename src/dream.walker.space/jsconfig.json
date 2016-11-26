@@ -3,5 +3,6 @@
     "target": "ES6",
     "module": "amd",
     "experimentalDecorators": true
+
   }
 }

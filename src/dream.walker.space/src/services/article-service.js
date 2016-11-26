@@ -24,7 +24,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "getArticle");
             });
     }    
     
@@ -34,7 +34,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "deleteArticle");
             });
     }
     
@@ -49,7 +49,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "updateArticleOrder");
             });
     }
 
@@ -59,7 +59,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "getArticleByUrl");
             });
     }
 
@@ -70,7 +70,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "getSection");
             });
     }
     
@@ -81,7 +81,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "getCategories");
             });
     }
 
@@ -101,7 +101,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "getFeatured");
             });
     }    
 
@@ -111,7 +111,7 @@ export class ArticleService {
                 return response.json();
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "getArticles");
             });
     }
 
@@ -120,7 +120,10 @@ export class ArticleService {
             method: 'post',
             body:json(article)
         })
-        .then(response => response.json());
+        .then(response => response.json())
+        .catch(error => {
+            this.handleError(error, "saveArticle");
+        });
     }
 
     saveCategory(category) {
@@ -128,18 +131,29 @@ export class ArticleService {
             method: 'post',
             body:json(category)
         })
-        .then(response => response.json());
+        .then(response => response.json())
+        .catch(error => {
+            this.handleError(error, "saveCategory");
+        });
     }
 
     deleteCategory(categoryId) {
         return this.http.fetch('article/category/'+categoryId, {
             method: 'delete'
         })
-        .then(response => response.json());
+        .then(response => response.json())
+        .catch(error => {
+            this.handleError(error, "deleteCategory");
+        });
+
     }
 
-    handleError(error) {
-        this.eventAggregator.publish('GeneralExceptions', error);
+    handleError(error,  source) {
+        let exception = {
+            source: "ArticleService->" + source,
+            exception: error
+        }
+        this.eventAggregator.publish('GeneralExceptions', exception);
         return error;
     }
 }

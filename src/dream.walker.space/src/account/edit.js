@@ -38,12 +38,17 @@ export class Edit {
                 }
             })
         .catch(error => {
-            return this.handleError(error);
+            return this.handleError(error, "update");
         });
     
     }
 
-    handleError(error) {
-        this.eventAggregator.publish('GeneralExceptions', error);
+    handleError(error,  source) {
+        let exception = {
+            source: "Account.Edit->" + source,
+            exception: error
+        }
+        this.eventAggregator.publish('GeneralExceptions', exception);
+        return error;
     }
 }

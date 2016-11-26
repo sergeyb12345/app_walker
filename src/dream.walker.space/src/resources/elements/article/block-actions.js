@@ -14,13 +14,13 @@ export class BlockActions {
     }
 
     blockChanged(newValue, oldValue) {
-        //if(this.requiresAction()) {
-        //    this.subscriptions.push(
-        //        this.eventAggregator.subscribe("apply-changes-"+newValue.BlockId, block => {
-        //            block.isEditing = false;
-        //        })
-        //     );
-        //}
+        if(this.requiresAction()) {
+            //this.subscriptions.push(
+            //    this.eventAggregator.subscribe("apply-changes-"+newValue.BlockId, block => {
+            //        block.isEditing = false;
+            //    })
+            // );
+        }
     }
 
     startEditing () {

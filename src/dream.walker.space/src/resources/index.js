@@ -1,4 +1,6 @@
 export function configure(config) {
+    
+    //config.globalResources(['./custom-log-appender']);
   config.globalResources(['./elements/chart/any-chart']);
   config.globalResources(
     './elements/article/article-block',

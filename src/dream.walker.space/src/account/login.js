@@ -25,11 +25,16 @@ export class Login {
                 }
             })
         .catch(error => {
-            return this.handleError(error);
+            return this.handleError(error, "login");
         });
     }
 
-    handleError(error) {
-        this.eventAggregator.publish('GeneralExceptions', error);
+    handleError(error,  source) {
+        let exception = {
+            source: "Account.Login->" + source,
+            exception: error
+        }
+        this.eventAggregator.publish('GeneralExceptions', exception);
+        return error;
     }
 }

@@ -27,7 +27,7 @@ export class UserContext {
                 });
             })
             .catch(error => {
-                this.handleError(error);
+                this.handleError(error, "initialize");
             });
     }
 
@@ -54,7 +54,7 @@ export class UserContext {
                     });
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "login");
             });
     }
 
@@ -79,11 +79,16 @@ export class UserContext {
                     });
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "update");
             });
     }
 
-    handleError(error) {
-        this.eventAggregator.publish('GeneralExceptions', error);
+    handleError(error,  source) {
+        let exception = {
+            source: "UserContext->" + source,
+            exception: error
+        }
+        this.eventAggregator.publish('GeneralExceptions', exception);
+        return error;
     }
 }

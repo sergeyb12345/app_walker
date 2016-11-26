@@ -1,11 +1,12 @@
 ﻿import {inject} from "aurelia-framework";
 import {HttpClient, json} from 'aurelia-fetch-client';
+import {EventAggregator} from 'aurelia-event-aggregator';
 
-@inject(HttpClient)
+@inject(HttpClient, EventAggregator)
 export class BlobServices {
     
 
-    constructor (http) {
+    constructor (http, eventAggregator) {
         http.configure(config => {
             config
                 .useStandardConfiguration()
@@ -13,6 +14,7 @@ export class BlobServices {
 
         });
 
+        this.eventAggregator = eventAggregator;
         this.http = http;
     }
 
@@ -27,6 +29,19 @@ export class BlobServices {
             method: 'post',
             body:json(payload)
             })
-        .then(response => response.json());
+        .then(response => response.json())
+        .catch(error => {
+            return this.handleError(error, "post");
+        });
+    }
+
+    
+    handleError(error,  source) {
+        let exception = {
+            source: "BlobServices->" + source,
+            exception: error
+        }
+        this.eventAggregator.publish('GeneralExceptions', exception);
+        return error;
     }
 }

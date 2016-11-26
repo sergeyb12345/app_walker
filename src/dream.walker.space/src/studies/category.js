@@ -49,6 +49,7 @@ export class Category {
         this.articleService.getArticleByUrl(categoryId, articleUrl)
         .then(result => {
             this.article = result;
+            this.setEditMode(false);
             this.sort();
          });
     }
@@ -106,10 +107,12 @@ export class Category {
     }
 
     saveArticle(flag) {
+
         let isEditing = false;
         let self = this;
 
-        this.article.Blocks.forEach(function(block) {
+
+        this.article.blocks.forEach(function(block) {
             if (block.isEditing === true) {
                 isEditing = true;
             }

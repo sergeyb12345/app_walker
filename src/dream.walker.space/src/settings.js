@@ -1,11 +1,14 @@
-﻿
-import {inject} from "aurelia-framework";
+﻿import {inject} from "aurelia-framework";
 import {HttpClient, json} from 'aurelia-fetch-client';
+import {EventAggregator} from 'aurelia-event-aggregator';
+import {LogManager} from 'aurelia-framework';
 
-@inject(HttpClient)
+@inject(HttpClient, EventAggregator)
 export class Settings {
 
     constructor (httpClient, eventAggregator) {
+        this.eventAggregator = eventAggregator;
+
         httpClient.configure(config => {
             config
                 .useStandardConfiguration()
@@ -46,14 +49,18 @@ export class Settings {
                 return this;
             })
             .catch(error => {
-                return this.handleError(error);
+                return this.handleError(error, "initialize");
             });
     }
 
 
 
-    handleError(error) {
-        this.eventAggregator.publish('GeneralExceptions', error);
+    handleError(error,  source) {
+        let exception = {
+            source: "Settings->" + source,
+            exception: error
+        }
+        this.eventAggregator.publish('GeneralExceptions', exception);
         return error;
     }
 }

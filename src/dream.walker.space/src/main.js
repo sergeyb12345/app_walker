@@ -1,6 +1,8 @@
 import environment from './environment';
 import {Settings} from './settings';
+import {ErrorHandler} from './common/error-handler';
 import {UserContext} from './account/user-context';
+
 
 //Configure Bluebird Promises.
 //Note: You may want to use environment-specific configuration.
@@ -11,7 +13,7 @@ Promise.config({
 });
 
 export function configure(aurelia) {
-
+    let errorHandler = aurelia.container.get(ErrorHandler);
     let userContext = aurelia.container.get(UserContext);
     let settings = aurelia.container.get(Settings);
 
@@ -29,7 +31,7 @@ export function configure(aurelia) {
                         .plugin('aurelia-validation');
 
                     if (environment.debug) {
-                        aurelia.use.developmentLogging();
+                        //aurelia.use.developmentLogging();
                     }
 
                     if (environment.testing) {
