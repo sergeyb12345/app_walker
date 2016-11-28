@@ -17,5 +17,6 @@ namespace dream.walker.data.Entities.Articles
 
         public Category Category { get; set; }
         public bool IsFeatured { get; set; }
+        public bool Deleted { get; set; }
     }
 }

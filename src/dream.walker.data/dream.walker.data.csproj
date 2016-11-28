@@ -159,6 +159,10 @@
     <Compile Include="Migrations\201611231351140_CreateArticleTables.Designer.cs">
       <DependentUpon>201611231351140_CreateArticleTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611282052436_AlterStrategy_AddUrl.cs" />
+    <Compile Include="Migrations\201611282052436_AlterStrategy_AddUrl.Designer.cs">
+      <DependentUpon>201611282052436_AlterStrategy_AddUrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\ValueLocation.cs" />
@@ -277,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611231351140_CreateArticleTables.resx">
       <DependentUpon>201611231351140_CreateArticleTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611282052436_AlterStrategy_AddUrl.resx">
+      <DependentUpon>201611282052436_AlterStrategy_AddUrl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

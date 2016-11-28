@@ -77,7 +77,7 @@ define('environment',["exports"], function (exports) {
     testing: true
   };
 });
-define('main',['exports', './environment', './settings', './common/error-handler', './account/user-context'], function (exports, _environment, _settings, _errorHandler, _userContext) {
+define('main',['exports', './environment', './settings', './common/error-parser', './account/user-context'], function (exports, _environment, _settings, _errorParser, _userContext) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -100,14 +100,14 @@ define('main',['exports', './environment', './settings', './common/error-handler
     });
 
     function configure(aurelia) {
-        var errorHandler = aurelia.container.get(_errorHandler.ErrorHandler);
+        var errorparser = aurelia.container.get(_errorParser.ErrorParser);
         var userContext = aurelia.container.get(_userContext.UserContext);
         var settings = aurelia.container.get(_settings.Settings);
 
         userContext.initialize().then(function (response) {
 
             settings.initialize().then(function (response) {
-                aurelia.use.instance('Settings', settings).instance('User', userContext).standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
+                aurelia.use.instance('ErrorParser', errorparser).instance('Settings', settings).instance('User', userContext).standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
 
                 if (_environment2.default.debug) {}
 
@@ -621,11 +621,13 @@ define('common/error-handler',["exports", "aurelia-framework", "aurelia-event-ag
 
     var _dec, _class;
 
-    var ErrorHandler = exports.ErrorHandler = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function ErrorHandler(eventAggregator) {
+    var ErrorHandler = exports.ErrorHandler = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, "ErrorParser"), _dec(_class = function () {
+        function ErrorHandler(eventAggregator, errorParser) {
             var _this = this;
 
             _classCallCheck(this, ErrorHandler);
+
+            this.errorParser = errorParser;
 
             eventAggregator.subscribe("GeneralExceptions", function (error) {
                 return _this.handleError(error);
@@ -644,7 +646,47 @@ define('common/error-handler',["exports", "aurelia-framework", "aurelia-event-ag
             };
         }
 
-        ErrorHandler.prototype.parseErrorFromStream = function parseErrorFromStream(stream) {
+        ErrorHandler.prototype.handleError = function handleError(error) {
+            var self = this;
+
+            this.errorParser.parseError(error).then(function (errorInfo) {
+                self.logError(errorInfo);
+            });
+        };
+
+        ErrorHandler.prototype.getLastError = function getLastError() {
+            return this.lastError;
+        };
+
+        ErrorHandler.prototype.logError = function logError(errorInfo) {
+            this.lastError = errorInfo;
+
+            var logger = errorInfo.client.source + " (" + errorInfo.server.source + ")";
+            console.error("ERROR [" + logger + "] " + errorInfo.client.message + " SERVER: " + errorInfo.server.message);
+        };
+
+        return ErrorHandler;
+    }()) || _class);
+});
+define('common/error-parser',["exports"], function (exports) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var ErrorParser = exports.ErrorParser = function () {
+        function ErrorParser() {
+            _classCallCheck(this, ErrorParser);
+        }
+
+        ErrorParser.prototype.parseErrorFromStream = function parseErrorFromStream(stream) {
 
             var promise = new Promise(function (resolve, reject) {
 
@@ -657,10 +699,10 @@ define('common/error-handler',["exports", "aurelia-framework", "aurelia-event-ag
 
                     var reader = stream.getReader();
 
-                    reader.read().then(function (result) {
+                    reader.read().then(function (data) {
 
                         var enc = new TextDecoder();
-                        var message = enc.decode(result.value);
+                        var message = enc.decode(data.value);
 
                         try {
                             var json = JSON.parse(message);
@@ -683,64 +725,54 @@ define('common/error-handler',["exports", "aurelia-framework", "aurelia-event-ag
             return promise;
         };
 
-        ErrorHandler.prototype.handleError = function handleError(error) {
-            var _this2 = this;
+        ErrorParser.prototype.parseError = function parseError(error) {
 
-            var errorInfo = {
-                client: {
-                    source: "",
-                    message: ""
-                },
-                server: {
-                    source: "",
-                    message: ""
+            var promise = new Promise(function (resolve, reject) {
+
+                var errorInfo = {
+                    client: {
+                        source: "",
+                        message: ""
+                    },
+                    server: {
+                        source: "",
+                        message: ""
+                    }
+                };
+
+                if (error.source) {
+                    errorInfo.client.source = error.source;
                 }
-            };
 
-            if (error.source) {
-                errorInfo.client.source = error.source;
-            }
+                if (error.message) {
+                    errorInfo.client.message = error.message;
+                }
 
-            if (error.message) {
-                errorInfo.client.message = error.message;
-            }
+                if (error.exception) {
 
-            if (error.exception) {
-                (function () {
-                    var self = _this2;
-
-                    _this2.parseErrorFromStream(error.exception.body).then(function (serverError) {
+                    this.parseErrorFromStream(error.exception.body).then(function (serverError) {
                         errorInfo.server.source = serverError.source;
                         errorInfo.server.message = serverError.message;
 
-                        self.logError(errorInfo);
+                        resolve(errorInfo);
                     }).catch(function (error) {
                         errorInfo.server.message = "Failed to extract server message";
-                        self.logError(errorInfo);
+                        resolve(errorInfo);
                     });
-                })();
-            } else {
-                if (errorInfo.client.source.length === 0 && errorInfo.client.message.length === 0) {
-                    errorInfo.client.message = error;
+                } else {
+                    if (errorInfo.client.source.length === 0 && errorInfo.client.message.length === 0) {
+                        errorInfo.client.message = error;
+                    }
+
+                    resolve(errorInfo);
                 }
+            });
 
-                this.logError(errorInfo);
-            }
+            return promise;
         };
 
-        ErrorHandler.prototype.getLastError = function getLastError() {
-            return this.lastError;
-        };
-
-        ErrorHandler.prototype.logError = function logError(errorInfo) {
-            this.lastError = errorInfo;
-
-            var logger = errorInfo.client.source + " (" + errorInfo.server.source + ")";
-            console.error("ERROR [" + logger + "] " + errorInfo.client.message + " SERVER: " + errorInfo.server.message);
-        };
-
-        return ErrorHandler;
-    }()) || _class);
+        return ErrorParser;
+    }();
 });
 define('navigation/index',['exports'], function (exports) {
     'use strict';
@@ -1289,6 +1321,58 @@ define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-
         return BlobServices;
     }()) || _class);
 });
+define('services/strategy-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.StrategyService = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var StrategyService = exports.StrategyService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function StrategyService(http, eventAggregator) {
+            _classCallCheck(this, StrategyService);
+
+            http.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.eventAggregator = eventAggregator;
+            this.http = http;
+        }
+
+        StrategyService.prototype.getAll = function getAll() {
+            var _this = this;
+
+            return this.http.fetch('strategy/getAll', {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error, "getAll");
+            });
+        };
+
+        StrategyService.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "StrategyServices->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return exception;
+        };
+
+        return StrategyService;
+    }()) || _class);
+});
 define('strategies/create',["exports"], function (exports) {
   "use strict";
 
@@ -1306,22 +1390,135 @@ define('strategies/create',["exports"], function (exports) {
     _classCallCheck(this, Create);
   };
 });
-define('strategies/list',["exports"], function (exports) {
-  "use strict";
+define('strategies/edit',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
+    'use strict';
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Edit = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
     }
-  }
 
-  var List = exports.List = function List() {
-    _classCallCheck(this, List);
-  };
+    var _dec, _class;
+
+    var Edit = exports.Edit = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _strategyService.StrategyService, "ErrorParser"), _dec(_class = function () {
+        function Edit(eventAggregator, strategyService, errorParser) {
+            _classCallCheck(this, Edit);
+
+            this.errorParser = errorParser;
+            this.eventAggregator = eventAggregator;
+            this.strategyService = strategyService;
+            this.subscriptions = [];
+            this.editMode = false;
+            this.errors = [];
+        }
+
+        Edit.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
+
+            var self = this;
+            this.router = navigationInstruction.router;
+
+            if (!params.strategy) {
+                params.strategy = "default";
+            }
+        };
+
+        Edit.prototype.attached = function attached() {};
+
+        Edit.prototype.detached = function detached() {
+            if (this.subscriptions.length > 0) {
+                this.subscriptions.forEach(function (subscription) {
+                    subscription.dispose();
+                });
+            }
+        };
+
+        Edit.prototype.handleError = function handleError(error) {
+            var self = this;
+
+            this.errorParser.parseError(error).then(function (errorInfo) {
+                self.errors.push(errorInfo);
+            });
+        };
+
+        return Edit;
+    }()) || _class);
+});
+define('strategies/list',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.List = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var List = exports.List = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _strategyService.StrategyService, "ErrorParser"), _dec(_class = function () {
+        function List(eventAggregator, strategyService, errorParser) {
+            _classCallCheck(this, List);
+
+            this.errorParser = errorParser;
+            this.eventAggregator = eventAggregator;
+            this.strategyService = strategyService;
+            this.subscriptions = [];
+            this.editMode = false;
+            this.errors = [];
+            this.strategies = [];
+        }
+
+        List.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
+            var _this = this;
+
+            var self = this;
+            this.router = navigationInstruction.router;
+            this.strategyService.getAll().then(function (data) {
+                self.strategies = data;
+            }).catch(function (error) {
+                _this.handleError(error);
+            });
+        };
+
+        List.prototype.attached = function attached() {};
+
+        List.prototype.generateUrl = function generateUrl(strategy) {
+            var url = "";
+
+            if (strategy && strategy.strategyId) {
+                url = this.router.generate("strategy-edit", { strategy: strategy.url });
+            }
+            return url;
+        };
+
+        List.prototype.detached = function detached() {
+            if (this.subscriptions.length > 0) {
+                this.subscriptions.forEach(function (subscription) {
+                    subscription.dispose();
+                });
+            }
+        };
+
+        List.prototype.handleError = function handleError(error) {
+            var self = this;
+
+            this.errorParser.parseError(error).then(function (errorInfo) {
+                self.errors.push(errorInfo);
+            });
+        };
+
+        return List;
+    }()) || _class);
 });
 define('strategies/navigation',['exports'], function (exports) {
     'use strict';
@@ -1344,7 +1541,7 @@ define('strategies/navigation',['exports'], function (exports) {
         Navigation.prototype.configureRouter = function configureRouter(config, router) {
             config.title = 'Strategies';
 
-            config.map([{ route: ['', 'list'], moduleId: "./list", name: "list", title: "Strategies", nav: true }, { route: ['create'], moduleId: "./create", name: "create", title: "Create New Strategy", nav: true }]);
+            config.map([{ route: ['', 'list'], moduleId: "./list", name: "strategy-list", title: "Strategies", nav: true }, { route: ['create'], moduleId: "./create", name: "strategy-create", title: "Create Strategy", nav: true, auth: true }, { route: ['edit', 'edit/:strategy'], moduleId: "./edit", name: "strategy-edit", title: "Modify Strategy", nav: false, auth: true }]);
 
             this.router = router;
             this.section = config.title;
@@ -4101,7 +4298,8 @@ define('text!navigation/main-menu.html', ['module'], function(module) { module.e
 define('text!navigation/sub-menu.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" if.bind=\"editMode !== true\" click.delegate=\"startEdit()\" class=\"btn btn-success\">Switch to Edit Mode</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 define('text!navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"item of menu.items\" class=\"${item.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"$parent.getUrl(item)\">${item.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                    <div class=\"actions\" if.bind=\"powerUser\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n\r\n                            <div if.bind=\"menu.editMode !== true\" class=\"btn-group\" role=\"group\">\r\n                                <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                    Configure\r\n                                    <span class=\"caret\"></span>\r\n                                </button>\r\n                                <ul class=\"dropdown-menu\">\r\n                                    <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                                    <li role=\"separator\" class=\"divider\"></li>\r\n                                    <li><a href=\"/categories\">Manage Categories</a></li>\r\n                                </ul>\r\n                            </div>\r\n\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"menu.editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 define('text!strategies/create.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Create new strategy</h3>\r\n    </header>\r\n    \r\n</template>"; });
-define('text!strategies/list.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <header>\r\n        <h3>Defined Strategies</h3>\r\n    </header>\r\n\r\n</template>"; });
+define('text!strategies/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Modify strategy</h3>\r\n    </header>\r\n    \r\n</template>"; });
+define('text!strategies/list.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <header>\r\n        <h3>Defined Strategies</h3>\r\n    </header>\r\n    \r\n    <table class=\"table table-hover\">\r\n        <thead>\r\n        <tr>\r\n            <th>Name</th>\r\n            <th>Active</th>\r\n        </tr>\r\n        </thead>\r\n        <tbody>\r\n        <tr repeat.for=\"strategy of strategies\"\r\n            class=\"${strategy.deleted === true ? 'danger': ''}\">\r\n            <td>\r\n                <a href.bind=\"$parent.generateUrl(strategy)\">${strategy.name}</a>\r\n            </td>\r\n            <td>${strategy.deleted}</td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n</template>"; });
 define('text!strategies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-menu router.bind=\"router\" section.bind=\"section\"></sub-menu>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!studies/category.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"row\">\r\n\r\n        <div class=\"col-md-8 article\">\r\n            <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Title</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Url</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n                    </div>\r\n                </div>\r\n\r\n            </edit-mode>\r\n            <read-mode if.bind=\"editMode !== true\">\r\n                <h2>${article.title}</h2>\r\n            </read-mode>\r\n\r\n            <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                          repeat.for=\"block of article.sortedBlocks\">\r\n                <block-actions block.bind=\"block\"></block-actions>\r\n                <article-block block.bind=\"block\"></article-block>\r\n            </article-part>\r\n\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"col-md-4 side-navigation\">\r\n            <h3>${category.title}</h3>\r\n            <ul>\r\n                <li repeat.for=\"item of sortedArticles\" class=\"${$parent.editMode === true ? 'edit-mode': ''}\" if.bind=\"item.isDeleted !== true\">\r\n                    <div if.bind=\"editMode\" class=\"block-actions\">\r\n                        <div if.bind=\"item.isDeleting !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.deleteArticle(item)\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveUpArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveDownArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                        </div>\r\n\r\n                        <div if.bind=\"item.isDeleting === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.confirmDeleteArticle(item)\" class=\"btn btn-danger btn-xs\">Confirm Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.cancelDeleteArticle(item)\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                    <a href.bind=\"$parent.getArticleUrl(item)\" class=\"${item.articleId === article.articleId ? 'active' : ''}\">${item.title}</a>\r\n                </li>\r\n            </ul>\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addArticle()\" class=\"btn btn-primary btn-xs\">Add New Article</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });

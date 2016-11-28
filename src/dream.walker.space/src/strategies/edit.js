@@ -3,7 +3,7 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 import {StrategyService} from '../services/strategy-service';
 
 @inject(EventAggregator, StrategyService, "ErrorParser")
-export class List {
+export class Edit {
 
     constructor (eventAggregator, strategyService, errorParser) {
 
@@ -13,34 +13,30 @@ export class List {
         this.subscriptions = [];
         this.editMode = false;
         this.errors = [];
-        this.strategies = [];
     }
 
     activate(params, routeConfig, navigationInstruction) {
 
         let self = this;
         this.router = navigationInstruction.router;
-        this.strategyService.getAll()
-            .then(data => {
-                self.strategies = data;
-            })
-            .catch(error => {
-                this.handleError(error);
-            });
+
+        if (!params.strategy) {
+            params.strategy = "default";
+        }
+
+        //this.strategyService.getAll()
+        //    .then(data => {
+        //        self.strategies = data;
+        //    })
+        //    .catch(error => {
+        //        this.handleError(error);
+        //    });
     }
 
     attached() {
         //subscribe here
     }
 
-    generateUrl(strategy) {
-        let url = "";
-
-        if (strategy && strategy.strategyId) {
-            url = this.router.generate("strategy-edit", {strategy: strategy.url});
-        }
-        return url;
-    }
 
     detached() {
         if (this.subscriptions.length > 0) {

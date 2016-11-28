@@ -3,7 +3,7 @@ import {HttpClient, json} from 'aurelia-fetch-client';
 import {EventAggregator} from 'aurelia-event-aggregator';
 
 @inject(HttpClient, EventAggregator)
-export class StrategyServices {
+export class StrategyService {
     
 
     constructor (http, eventAggregator) {
