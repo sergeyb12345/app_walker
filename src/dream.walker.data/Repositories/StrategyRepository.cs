@@ -10,6 +10,10 @@ namespace dream.walker.data.Repositories
     {
         Strategy Get(int id);
         Task<List<Strategy>> GetAllAsync(bool includeDeleted);
+        Task<Strategy> GetByUrlAsync(string url);
+        Strategy Add(Strategy strategy);
+        Task<Strategy> GetAsync(int strategyId);
+        Task CommitAsync();
     }
 
 
@@ -29,6 +33,18 @@ namespace dream.walker.data.Repositories
         {
             var records = await Dbset.Where(r => !r.Deleted || includeDeleted).OrderBy(r => r.Name).ToListAsync();
             return records;
+        }
+
+        public async Task<Strategy> GetByUrlAsync(string url)
+        {
+            var record = await Dbset.FirstOrDefaultAsync(r => r.Url.ToLower() == url.ToLower());
+            return record;
+        }
+
+        public async Task<Strategy> GetAsync(int strategyId)
+        {
+            var record = await Dbset.FirstOrDefaultAsync(r => r.StrategyId == strategyId);
+            return record;
         }
     }
 }

@@ -30,7 +30,28 @@ export class StrategyService {
         });
     }
 
-    
+    getByUrl(url) {
+
+        return this.http.fetch('strategy/getByUrl/'+url, {
+            method: 'get'
+            })
+        .then(response => response.json())
+        .catch(error => {
+            return this.handleError(error, "getByUrl");
+        });
+    }
+
+    update(strategy) {
+        return this.http.fetch('strategy', {
+            method: 'post',
+            body:json(strategy)
+        })
+        .then(response => response.json())
+        .catch(error => {
+            this.handleError(error, "update");
+        });
+    }
+
     handleError(error,  source) {
         let exception = {
             source: "StrategyServices->" + source,

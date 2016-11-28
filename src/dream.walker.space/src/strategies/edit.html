@@ -3,5 +3,32 @@
     <header>
         <h3>Modify strategy</h3>
     </header>
-    
+
+    <form class="form-horizontal" submit.delegate='update()'>
+        <div class="form-group">
+            <label for="txtName" class="col-sm-3 control-label">Strategy Name</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="txtName" value.bind="strategy.name & validate" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="txtUrl" class="col-sm-3 control-label">Url (alpha-numeric only)</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="txtUrl" value.bind="strategy.url & validate" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="txtDescription" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+                <textarea rows="5" class="form-control" id="txtDescription" value.bind="strategy.description">
+                    
+                </textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </form>
 </template>
