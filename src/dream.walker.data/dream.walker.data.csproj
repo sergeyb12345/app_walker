@@ -212,6 +212,7 @@
     <Compile Include="Services\ICompanyService.cs" />
     <Compile Include="Services\IStrategyService.cs" />
     <Compile Include="Requests\UpdateQuotesRequest.cs" />
+    <Compile Include="Services\StrategyService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

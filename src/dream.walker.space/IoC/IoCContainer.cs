@@ -59,9 +59,13 @@ namespace dream.walker.space.IoC
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>().InstancePerDependency();
             builder.RegisterType<SectionRepository>().As<ISectionRepository>().InstancePerDependency();
             builder.RegisterType<IndicatorRepository>().As<IIndicatorRepository>().InstancePerDependency();
+            builder.RegisterType<StrategyRepository>().As<IStrategyRepository>().InstancePerDependency();
             builder.RegisterType<CompanyIndicatorRepository>().As<ICompanyIndicatorRepository>().InstancePerDependency();
+
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
+
             builder.RegisterType<ArticleService>().As<IArticleService>();
+            builder.RegisterType<StrategyService>().As<IStrategyService>();
             builder.Register(c => new StorageAccountConfiguration
             {
                 AccountName = ConfigurationManager.AppSettings["AzureStorageAccountName"],

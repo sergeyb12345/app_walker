@@ -1,6 +1,6 @@
 import environment from './environment';
 import {Settings} from './settings';
-import {ErrorHandler} from './common/error-handler';
+import {ErrorParser} from './common/error-parser';
 import {UserContext} from './account/user-context';
 
 
@@ -13,7 +13,7 @@ Promise.config({
 });
 
 export function configure(aurelia) {
-    let errorHandler = aurelia.container.get(ErrorHandler);
+    let errorparser = aurelia.container.get(ErrorParser);
     let userContext = aurelia.container.get(UserContext);
     let settings = aurelia.container.get(Settings);
 
@@ -23,6 +23,7 @@ export function configure(aurelia) {
             settings.initialize()
                 .then(response => {
                     aurelia.use
+                        .instance('ErrorParser',errorparser)
                         .instance('Settings',settings)
                         .instance('User',userContext)
                         .standardConfiguration()

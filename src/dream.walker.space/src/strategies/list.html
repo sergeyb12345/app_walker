@@ -3,5 +3,21 @@
     <header>
         <h3>Defined Strategies</h3>
     </header>
-
+    
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Active</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr repeat.for="strategy of strategies" class="${strategy.deleted === true ? 'danger': ''}">
+            <td>${strategy.id}</td>
+            <td>${strategy.name}</td>
+            <td>${strategy.deleted}</td>
+        </tr>
+        </tbody>
+    </table>
 </template>

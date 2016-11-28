@@ -271,6 +271,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IndicatorController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\StrategiesApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -443,6 +444,7 @@
     <Content Include="src\app.js" />
     <Content Include="src\account\user-context.js" />
     <Content Include="src\common\bootstrap-form-renderer.js" />
+    <Content Include="src\common\error-parser.js" />
     <Content Include="src\common\error-handler.js" />
     <Content Include="src\environment.js" />
     <Content Include="src\account\login.html" />
@@ -477,6 +479,7 @@
     <Content Include="src\resources\elements\chart\any-chart.js" />
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
+    <Content Include="src\services\strategy-services.js" />
     <Content Include="src\services\blob-services.js" />
     <Content Include="src\settings.js" />
     <Content Include="src\strategies\create.html" />
