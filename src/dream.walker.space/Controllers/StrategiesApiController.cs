@@ -2,11 +2,8 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using dream.walker.data.Entities.Articles;
 using dream.walker.data.Entities.Strategies;
 using dream.walker.data.Services;
-using dream.walker.space.Models.Articles;
-using Newtonsoft.Json;
 
 namespace dream.walker.space.Controllers
 {
@@ -35,6 +32,15 @@ namespace dream.walker.space.Controllers
         public async Task<IHttpActionResult> GetStrategyByUrl(string url)
         {
             var records = await _service.GetStrategyByUrlAsync(url);
+            return Ok(records);
+        }
+
+        [HttpGet]
+        [Route("get/{id:int:min(1)}")]
+        [ResponseType(typeof(Strategy))]
+        public async Task<IHttpActionResult> GetStrategyById(int id)
+        {
+            var records = await _service.GetStrategyAsync(id);
             return Ok(records);
         }
 

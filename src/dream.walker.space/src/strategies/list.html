@@ -17,7 +17,20 @@
             <td>
                 <a href.bind="$parent.generateUrl(strategy)">${strategy.name}</a>
             </td>
-            <td>${strategy.deleted}</td>
+            <td>${strategy.deleted !== true}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Action <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li if.bind="strategy.deleted === true"><a click.trigger="$parent.enable(strategy)">Activate</a></li>
+                        <li if.bind="strategy.deleted !== true"><a click.trigger="$parent.disable(strategy)">Deactivate</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Manage Rules</a></li>
+                    </ul>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>

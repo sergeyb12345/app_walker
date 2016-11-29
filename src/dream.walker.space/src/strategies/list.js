@@ -33,6 +33,34 @@ export class List {
         //subscribe here
     }
 
+    enable(strategy) {
+        if (strategy && strategy.strategyId) {
+            this.strategyService.enable(strategy.strategyId)
+                .then(data => {
+                    if (data) {
+                        strategy.deleted = data.deleted;
+                    }
+                })
+                .catch(error => {
+                    this.handleError(error);
+                });
+        }
+    }
+
+    disable(strategy) {
+        if (strategy && strategy.strategyId) {
+            this.strategyService.disable(strategy.strategyId)
+                .then(data => {
+                    if (data) {
+                        strategy.deleted = data.deleted;
+                    }
+                })
+                .catch(error => {
+                    this.handleError(error);
+                });
+        }
+    }
+
     generateUrl(strategy) {
         let url = "";
 

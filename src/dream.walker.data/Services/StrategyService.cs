@@ -57,10 +57,20 @@ namespace dream.walker.data.Services
                     record.Name = model.Name;
                     record.Url = model.Url;
                     record.Description = model.Description;
-                    
+                    record.Deleted = model.Deleted;
                     await repository.CommitAsync();
                 }
 
+                return record;
+            }
+        }
+
+        public async Task<Strategy> GetStrategyAsync(int id)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IStrategyRepository>();
+                var record = await repository.GetAsync(id);
                 return record;
             }
         }

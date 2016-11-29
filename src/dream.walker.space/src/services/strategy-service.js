@@ -41,6 +41,17 @@ export class StrategyService {
         });
     }
 
+    getById(id) {
+
+        return this.http.fetch('strategy/get/'+id, {
+            method: 'get'
+            })
+        .then(response => response.json())
+        .catch(error => {
+            return this.handleError(error, "getById");
+        });
+    }
+
     update(strategy) {
         return this.http.fetch('strategy', {
             method: 'post',
@@ -60,4 +71,27 @@ export class StrategyService {
         this.eventAggregator.publish('GeneralExceptions', exception);
         return exception;
     }
+
+    enable(strategyId) {
+        let self = this;
+        return this.getById(strategyId)
+            .then(strategy => {
+                if (strategy && strategy.deleted) {
+                    strategy.deleted = false;
+                    return self.update(strategy);
+                }
+            });
+    }
+
+    disable(strategyId) {
+        let self = this;
+        return this.getById(strategyId)
+            .then(strategy => {
+                if (strategy && !strategy.deleted) {
+                    strategy.deleted = true;
+                    return self.update(strategy);
+                }
+            });
+    }
+
 }

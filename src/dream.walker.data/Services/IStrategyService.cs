@@ -9,5 +9,6 @@ namespace dream.walker.data.Services
         Task<List<Strategy>> GetStrategiesAsync(bool includeDeleted);
         Task<Strategy> GetStrategyByUrlAsync(string url);
         Task<Strategy> SaveStrategyAsync(Strategy model);
+        Task<Strategy> GetStrategyAsync(int id);
     }
 }
