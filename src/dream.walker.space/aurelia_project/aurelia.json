@@ -136,6 +136,7 @@
           "aurelia-templating",
           "aurelia-templating-binding",
           "toastr",
+          "moment",
           {
             "name": "text",
             "path": "../scripts/text"

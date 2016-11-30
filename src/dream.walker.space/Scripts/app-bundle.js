@@ -605,13 +605,21 @@ define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], funct
         return BootstrapFormRenderer;
     }();
 });
-define('common/error-handler',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
-    "use strict";
+define('common/error-handler',['exports', 'aurelia-framework', 'aurelia-event-aggregator', 'toastr'], function (exports, _aureliaFramework, _aureliaEventAggregator, _toastr) {
+    'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
     exports.ErrorHandler = undefined;
+
+    var _toastr2 = _interopRequireDefault(_toastr);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -661,8 +669,11 @@ define('common/error-handler',["exports", "aurelia-framework", "aurelia-event-ag
         ErrorHandler.prototype.logError = function logError(errorInfo) {
             this.lastError = errorInfo;
 
-            var logger = errorInfo.client.source + " (" + errorInfo.server.source + ")";
-            console.error("ERROR [" + logger + "] " + errorInfo.client.message + " SERVER: " + errorInfo.server.message);
+            var logger = errorInfo.client.source + ' (' + errorInfo.server.source + ')';
+            var message = 'ERROR [' + logger + '] ' + errorInfo.client.message + ' SERVER: ' + errorInfo.server.message;
+
+            console.error(message);
+            _toastr2.default.error(message);
         };
 
         return ErrorHandler;
