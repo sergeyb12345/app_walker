@@ -1,0 +1,30 @@
+﻿/// <reference path="../base/_variables" />
+
+
+form {
+    label {
+        font-weight: normal;
+        //margin-bottom: 0;
+    }
+    textarea {
+        &.html {
+            font-family: monospace;
+        }
+    }
+    .validation-summary-error {
+        color: @font-color-error;
+        .glyphicon {
+            font-size: 18px;
+            position:relative;
+        }
+        .col-xs-1 {
+            width: 20px;
+        }
+        ul {
+            padding-left:0;
+            li {
+                list-style: none;
+            }
+        }
+    }
+}

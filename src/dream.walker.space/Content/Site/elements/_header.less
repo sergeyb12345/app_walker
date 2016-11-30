@@ -1,0 +1,48 @@
+﻿/// <reference path="../base/_variables" />
+
+h2, .h2 {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+h3, .h3, .H3 {
+    color: @h3-color;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+ul, ol {
+    li {padding: 3px 0;}
+}
+
+ul.dropdown-menu {
+    li {
+        padding:0;
+        margin: 3px 0;
+        cursor: pointer;
+    }
+}
+
+/* buttons */
+.btn-warning:focus, .btn-warning.focus {
+    outline:none;
+    border-color: #eea236;
+}
+.btn-success:focus, .btn-success.focus {
+    outline:none;
+    border-color: #4cae4c;
+}
+
+header {
+    position: fixed;
+    top: 0px;
+    z-index: 999;
+    left: 0px;
+    right: 0px;
+    margin: 0px auto;
+    background: #ffffff;
+    background-color: @main-menu-bg-color;
+    padding: 0;
+
+}

@@ -2,5 +2,13 @@
   {
     "outputFile": "Content/market-hunter.css",
     "inputFile": "Content/market-hunter.less"
+  },
+  {
+    "outputFile": "Content/Site/dream-space.css",
+    "inputFile": "Content/Site/dream-space.less"
+  },
+  {
+    "outputFile": "Content/Site/elements/header.css",
+    "inputFile": "Content/Site/elements/header.less"
   }
 ]

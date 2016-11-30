@@ -332,11 +332,17 @@
     <Content Include="Content\Images\ec04f001.jpg" />
     <Content Include="Content\Images\indicator.gif" />
     <Content Include="Content\Images\logo.png" />
-    <Content Include="Content\market-hunter.css">
-      <DependentUpon>market-hunter.less</DependentUpon>
+    <Content Include="Content\Site\dream-space.css">
+      <DependentUpon>dream-space.less</DependentUpon>
     </Content>
-    <Content Include="Content\market-hunter.min.css">
-      <DependentUpon>market-hunter.css</DependentUpon>
+    <Content Include="Content\Site\dream-space.min.css">
+      <DependentUpon>dream-space.css</DependentUpon>
+    </Content>
+    <Content Include="Content\Site\elements\header.css">
+      <DependentUpon>_header.less</DependentUpon>
+    </Content>
+    <Content Include="Content\Site\elements\header.min.css">
+      <DependentUpon>header.css</DependentUpon>
     </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -404,11 +410,21 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="node_modules\npm-anystock\package.json" />
     <Content Include="node_modules\npm-anystock\README.md" />
-    <Content Include="Content\market-hunter.less" />
+    <Content Include="Content\Site\dream-space.less" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="Content\Site\elements\_header.less" />
+    <Content Include="Content\Site\elements\_body.less" />
+    <Content Include="Content\Site\base\_variables.less" />
+    <Content Include="Content\Site\elements\_navigation.less" />
+    <Content Include="Content\Site\objects\_form.less" />
+    <Content Include="Content\Site\components\_side-navigation.less" />
+    <Content Include="Content\Site\components\_article.less" />
+    <Content Include="Content\Site\components\_page.less" />
+    <Content Include="Content\Site\components\_category.less" />
+    <Content Include="Content\Site\elements\_container.less" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />
@@ -480,6 +496,10 @@
     <Content Include="src\resources\elements\article\paragraph-block.js" />
     <Content Include="src\resources\elements\chart\any-chart.html" />
     <Content Include="src\resources\elements\chart\any-chart.js" />
+    <Content Include="src\resources\elements\header\header.html" />
+    <Content Include="src\resources\elements\header\header.js" />
+    <Content Include="src\resources\elements\navigation\main-nav.html" />
+    <Content Include="src\resources\elements\navigation\main-nav.js" />
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
     <Content Include="src\services\strategy-service.js" />

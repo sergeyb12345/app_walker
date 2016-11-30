@@ -1,0 +1,148 @@
+﻿/// <reference path="../base/_variables" />
+
+.main-menu {
+
+    ul.nav {
+        position: relative;
+        float: right;
+
+        li {
+            float: left;
+            padding: 0;
+            position: relative;
+            margin-left: 1px;
+            &:first-child {
+                margin-left: 0;
+            }
+
+            a {
+                position: relative;
+                padding: 0 20px;
+                text-align: center;
+                font: 14px/40px 'Istok Web';
+                text-transform: uppercase;
+                background: transparent;
+                color: @font-color;
+                -webkit-transition: all 0.35s ease;
+                transition: all 0.35s ease;
+            }
+            &:hover {
+                a {
+                    background: rgba(226, 32, 4, 0.38);
+                    border-radius: 4px 4px 0 0;
+                }
+            }
+            &.active {
+                a {
+                    color: #ffffff;
+                    background: @link-color;
+                    border-radius: 4px 4px 0 0;
+                }
+            }            
+
+        }
+    }
+
+    .container {
+        width: 1024px;
+
+        .navbar-brand {
+            margin: 0;
+            padding: 0;
+            float: left;
+            font-size: 26px;
+            line-height: 58px;
+            cursor: pointer;
+
+            img.logo {
+                margin-right: -2px;
+                top: -2px;
+                position: relative;
+                display: inline-block;
+                width: 47px;
+                opacity: 0.96;
+            }
+
+            a, a:hover {
+                span {
+                    color: @font-color;
+                }
+            }
+
+            span.pound {
+                color: @link-color;
+                font-weight: bold;
+                font-size: 46px;
+                line-height: 25px;
+                position: relative;
+                top: 6px;
+            }
+        }
+    }
+
+    nav.navbar {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 14px 0;
+        min-height: 0;
+        border-color: #e7e7e7;
+
+        ul.navbar-nav {
+            top: 5px;
+        }
+    }
+
+}
+
+.sub-menu {
+    .navbar-fixed-top{
+        top: 59px;
+        box-shadow: 0 4px 5px 0 rgba(0,0,0,0.2);
+        background-color: white;
+    }
+    .navbar {
+        margin-bottom: 0;
+        min-height: 33px;
+        height: 33px;
+
+        .actions {
+            margin-top: 3px;
+            float: right;
+            margin-right: 20px;
+
+            .btn {
+                padding:4px 10px;
+                border-radius: 4px 4px 0 0;
+            }
+        }
+    }
+
+    .navbar-nav {
+        margin-bottom:-2px;
+    }
+
+    .navbar-nav > li {
+         margin-right: 20px;
+         padding:0;
+        a {
+            padding: 10px 0 3px 0;
+            color: #252d2c;
+            font: 13px/20px 'Istok Web';
+            text-transform: uppercase;
+        }
+
+        &:hover {
+            border-bottom: 3px solid rgba(226, 32, 4, 0.38);
+        }
+        
+        &.active {
+            border-bottom: 3px solid @link-color;
+        }        
+        
+    }
+    .nav > li > a:hover, .nav > li > a:focus {
+        text-decoration: none;
+        background-color: transparent;
+    }
+}
