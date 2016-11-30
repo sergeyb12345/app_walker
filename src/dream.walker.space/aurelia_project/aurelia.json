@@ -135,6 +135,7 @@
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
+          "toastr",
           {
             "name": "text",
             "path": "../scripts/text"

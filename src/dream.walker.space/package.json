@@ -15,7 +15,8 @@
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
     "jquery": "^2.2.4",
-    "nprogress": "^0.2.0"
+    "nprogress": "^0.2.0",
+    "toastr": "^2.1.2" 
   },
   "peerDependencies": {},
   "devDependencies": {

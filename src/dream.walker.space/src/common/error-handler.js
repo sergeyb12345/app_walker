@@ -1,5 +1,6 @@
 ﻿import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
+import toastr from 'toastr'
 
 @inject(EventAggregator, "ErrorParser")
 export class ErrorHandler {
@@ -41,6 +42,9 @@ export class ErrorHandler {
         this.lastError = errorInfo;
 
         let logger = `${errorInfo.client.source} (${errorInfo.server.source})`;
-        console.error(`ERROR [${logger}] ${errorInfo.client.message} SERVER: ${errorInfo.server.message}`);
+        let message = `ERROR [${logger}] ${errorInfo.client.message} SERVER: ${errorInfo.server.message}`;
+        
+        console.error(message);
+        toastr.error(message);
     }
 }

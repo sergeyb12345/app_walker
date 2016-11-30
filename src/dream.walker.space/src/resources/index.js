@@ -2,6 +2,7 @@ export function configure(config) {
     
     config.globalResources(['./elements/header/header']);
     config.globalResources(['./elements/navigation/main-nav']);
+    config.globalResources(['./elements/navigation/sub-nav']);
     config.globalResources(['./elements/chart/any-chart']);
     config.globalResources(
         './elements/article/article-block',

@@ -1,0 +1,54 @@
+﻿
+/// <reference path="../base/_variables" />
+
+.sub-nav {
+    .navbar-fixed-top{
+        top: 59px;
+        box-shadow: 0 4px 5px 0 rgba(0,0,0,0.2);
+        background-color: white;
+    }
+    .navbar {
+        margin-bottom: 0;
+        min-height: 33px;
+        height: 33px;
+
+        .actions {
+            margin-top: 3px;
+            float: right;
+            margin-right: 20px;
+
+            .btn {
+                padding:4px 10px;
+                border-radius: 4px 4px 0 0;
+            }
+        }
+    }
+
+    .navbar-nav {
+        margin-bottom:-2px;
+    }
+
+    .navbar-nav > li {
+         margin-right: 20px;
+         padding:0;
+        a {
+            padding: 10px 0 3px 0;
+            color: #252d2c;
+            font: 13px/20px 'Istok Web';
+            text-transform: uppercase;
+        }
+
+        &:hover {
+            border-bottom: 3px solid rgba(226, 32, 4, 0.38);
+        }
+        
+        &.active {
+            border-bottom: 3px solid @link-color;
+        }        
+        
+    }
+    .nav > li > a:hover, .nav > li > a:focus {
+        text-decoration: none;
+        background-color: transparent;
+    }
+}

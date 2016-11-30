@@ -338,12 +338,6 @@
     <Content Include="Content\Site\dream-space.min.css">
       <DependentUpon>dream-space.css</DependentUpon>
     </Content>
-    <Content Include="Content\Site\elements\header.css">
-      <DependentUpon>_header.less</DependentUpon>
-    </Content>
-    <Content Include="Content\Site\elements\header.min.css">
-      <DependentUpon>header.css</DependentUpon>
-    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -418,13 +412,14 @@
     <Content Include="Content\Site\elements\_header.less" />
     <Content Include="Content\Site\elements\_body.less" />
     <Content Include="Content\Site\base\_variables.less" />
-    <Content Include="Content\Site\elements\_navigation.less" />
+    <Content Include="Content\Site\elements\_sub-nav.less" />
     <Content Include="Content\Site\objects\_form.less" />
     <Content Include="Content\Site\components\_side-navigation.less" />
     <Content Include="Content\Site\components\_article.less" />
     <Content Include="Content\Site\components\_page.less" />
     <Content Include="Content\Site\components\_category.less" />
     <Content Include="Content\Site\elements\_container.less" />
+    <Content Include="Content\Site\elements\_main-nav.less" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />
@@ -478,7 +473,6 @@
     <Content Include="src\navigation\sub-menu.js" />
     <Content Include="src\navigation\sub-nav.html" />
     <Content Include="src\navigation\sub-nav.js" />
-    <Content Include="src\resources\custom-log-appender.js" />
     <Content Include="src\resources\elements\article\article-block.html" />
     <Content Include="src\resources\elements\article\article-block.js" />
     <Content Include="src\resources\elements\article\block-actions.html" />
@@ -500,6 +494,8 @@
     <Content Include="src\resources\elements\header\header.js" />
     <Content Include="src\resources\elements\navigation\main-nav.html" />
     <Content Include="src\resources\elements\navigation\main-nav.js" />
+    <Content Include="src\resources\elements\navigation\sub-nav.html" />
+    <Content Include="src\resources\elements\navigation\sub-nav.js" />
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
     <Content Include="src\services\strategy-service.js" />
