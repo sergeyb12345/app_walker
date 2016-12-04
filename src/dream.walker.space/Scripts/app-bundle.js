@@ -111,7 +111,9 @@ define('main',['exports', 'jquery', './environment', './settings', './common/err
             settings.initialize().then(function (response) {
                 aurelia.use.instance('ErrorParser', errorparser).instance('Settings', settings).instance('User', userContext).standardConfiguration().feature('resources').feature('navigation').plugin('aurelia-validation');
 
-                if (_environment2.default.debug) {}
+                if (_environment2.default.debug) {
+                    aurelia.use.developmentLogging();
+                }
 
                 if (_environment2.default.testing) {}
 
@@ -956,7 +958,8 @@ define('resources/index',['exports'], function (exports) {
         config.globalResources(['./elements/navigation/main-nav']);
         config.globalResources(['./elements/navigation/sub-nav']);
         config.globalResources(['./elements/chart/any-chart']);
-        config.globalResources('./elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
+
+        config.globalResources('./elements/article/article', './elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
     }
 });
 define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
@@ -1585,23 +1588,13 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
             this.loadCategory(params.category);
         };
 
-        Category.prototype.sort = function sort() {
-            if (this.article.blocks) {
-                this.article.sortedBlocks = this.article.blocks.filter(function (item) {
-                    return item.deleted !== true;
-                }).slice(0).sort(function (a, b) {
-                    return a['orderId'] - b['orderId'];
-                });
-            }
-        };
-
         Category.prototype.loadArticle = function loadArticle(categoryId, articleUrl) {
             var _this = this;
 
             this.articleService.getArticleByUrl(categoryId, articleUrl).then(function (result) {
                 _this.article = result;
                 _this.setEditMode(false);
-                _this.sort();
+                _this.subscribe();
             });
         };
 
@@ -1638,15 +1631,6 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
         Category.prototype.setEditMode = function setEditMode(editMode) {
             this.editMode = editMode;
             this.navigation.menu.editMode = editMode;
-
-            if (this.article && this.article != null && this.article.blocks && this.article.blocks != null) {
-                this.article.blocks.forEach(function (block) {
-                    block.editMode = editMode;
-                    if (editMode !== true) {
-                        block.isEditing = false;
-                    }
-                });
-            }
         };
 
         Category.prototype.getUrl = function getUrl(menuItem) {
@@ -1654,88 +1638,43 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
         };
 
         Category.prototype.startEdit = function startEdit(flag) {
-            this.originalArticle = Object.assign({}, this.article);
+            if (this.article && this.article.articleId) {
+                this.eventAggregator.publish('start-edit-article-' + this.article.articleId, true);
+            }
+
             this.setEditMode(true);
         };
 
         Category.prototype.cancelEdit = function cancelEdit(flag) {
-            this.article = this.originalArticle;
+            if (this.article && this.article.articleId) {
+                this.eventAggregator.publish('cancel-edit-article-' + this.article.articleId, true);
+            }
+
             this.setEditMode(false);
         };
 
         Category.prototype.saveArticle = function saveArticle(flag) {
-            var _this4 = this;
 
-            var isEditing = false;
-            var self = this;
-
-            this.article.blocks.forEach(function (block) {
-                if (block.isEditing === true) {
-                    isEditing = true;
-                }
-            });
-
-            if (isEditing !== true) {
-                this.articleService.saveArticle(this.article).then(function (response) {
-                    _this4.setEditMode(false);
-                });
-            } else {
-                alert("Some block are in edit mode. Apply changes to those blocks first.");
+            if (this.article && this.article.articleId) {
+                this.eventAggregator.publish('save-article-' + this.article.articleId, true);
             }
+        };
 
-            if (this.articles) {
-                this.articles.forEach(function (article) {
-                    if (article.changed === true) {
-                        if (article.IsDeleted) {
-                            self.removeArticle(article.articleId);
-                        } else {
-                            self.updateArticleOrder(article.articleId, article.orderId);
+        Category.prototype.onArticleSaved = function onArticleSaved(flag) {
+            if (flag) {
+                this.setEditMode(false);
+
+                if (this.articles) {
+                    this.articles.forEach(function (article) {
+                        if (article.changed === true) {
+                            if (article.IsDeleted) {
+                                self.removeArticle(article.articleId);
+                            } else {
+                                self.updateArticleOrder(article.articleId, article.orderId);
+                            }
                         }
-                    }
-                });
-            }
-        };
-
-        Category.prototype.addBlock = function addBlock() {
-            if (!this.article.blocks) {
-                this.article.blocks = [];
-            }
-
-            var block = {
-                isNew: true,
-                BlockId: this.maxBlockId(this.article.blocks) + 1,
-                OrderId: this.maxOrderId(this.article.blocks) + 1,
-
-                Text: ''
-            };
-
-            this.article.blocks.push(block);
-            this.sort();
-        };
-
-        Category.prototype.moveBlockUp = function moveBlockUp(block) {
-            var order = block.orderId - 1;
-            var up = this.article.blocks.find(function (x) {
-                return x.orderId === order;
-            });
-            if (up && up.orderId === order) {
-                up.orderId = block.orderId;
-                block.orderId = order;
-
-                this.sort();
-            }
-        };
-
-        Category.prototype.moveBlockDown = function moveBlockDown(block) {
-            var order = block.orderId + 1;
-            var down = this.article.blocks.find(function (x) {
-                return x.orderId === order;
-            });
-            if (down && down.orderId === order) {
-                down.orderId = block.orderId;
-                block.orderId = order;
-
-                this.sort();
+                    });
+                }
             }
         };
 
@@ -1750,26 +1689,6 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
                 orderId: this.maxOrderId(this.articles) + 1,
                 blocks: []
             };
-        };
-
-        Category.prototype.maxOrderId = function maxOrderId(list) {
-            var max = 0;
-            list.forEach(function (item) {
-                if (max < item.orderId) {
-                    max = item.orderId;
-                }
-            });
-            return max;
-        };
-
-        Category.prototype.maxBlockId = function maxBlockId(list) {
-            var max = 0;
-            list.forEach(function (item) {
-                if (max < item.blockId) {
-                    max = item.blockId;
-                }
-            });
-            return max;
         };
 
         Category.prototype.deleteArticle = function deleteArticle(article) {
@@ -1834,42 +1753,28 @@ define('studies/category',['exports', 'aurelia-framework', 'aurelia-event-aggreg
             }
         };
 
-        Category.prototype.attached = function attached() {
-            var _this5 = this;
+        Category.prototype.subscribe = function subscribe() {
+            var _this4 = this;
 
-            var moveBlockUpChannel = 'move-block-up';
-            var moveBlockDownChannel = 'move-block-down';
-            var blockDeletedChannel = 'delete-block';
+            if (this.article && this.article.articleId) {
+                this.unsubscribe();
 
-            this.subscriptions.push(this.eventAggregator.subscribe(this.navigation.section.url + '-start-edit', function (flag) {
-                return _this5.startEdit(flag);
-            }));
+                this.subscriptions.push(this.eventAggregator.subscribe('article-saved-' + this.article.articleId, function (flag) {
+                    return _this4.onArticleSaved(flag);
+                }));
+            }
+        };
 
-            this.subscriptions.push(this.eventAggregator.subscribe(this.navigation.section.url + '-cancel-edit', function (flag) {
-                return _this5.cancelEdit(flag);
-            }));
-
-            this.subscriptions.push(this.eventAggregator.subscribe(this.navigation.section.url + '-save-article', function (flag) {
-                return _this5.saveArticle(flag);
-            }));
-
-            this.subscriptions.push(this.eventAggregator.subscribe(moveBlockUpChannel, function (block) {
-                return _this5.moveBlockUp(block);
-            }));
-
-            this.subscriptions.push(this.eventAggregator.subscribe(moveBlockDownChannel, function (block) {
-                return _this5.moveBlockDown(block);
-            }));
-
-            this.subscriptions.push(this.eventAggregator.subscribe(blockDeletedChannel, function (block) {
-                return _this5.sort();
-            }));
+        Category.prototype.unsubscribe = function unsubscribe() {
+            if (this.subscriptions.length > 0) {
+                this.subscriptions.forEach(function (subscription) {
+                    subscription.dispose();
+                });
+            }
         };
 
         Category.prototype.detached = function detached() {
-            this.subscriptions.forEach(function (subscription) {
-                subscription.dispose();
-            });
+            this.unsubscribe();
         };
 
         return Category;
@@ -2142,6 +2047,258 @@ define('resources/elements/article/article-block',['exports', 'aurelia-framework
         enumerable: true,
         initializer: null
     })), _class);
+});
+define('resources/elements/article/article',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/article-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _articleService) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Article = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor;
+
+    var Article = exports.Article = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _articleService.ArticleService, "User"), _dec(_class = (_class2 = function () {
+        function Article(eventAggregator, articleService, userContext) {
+            _classCallCheck(this, Article);
+
+            _initDefineProp(this, 'article', _descriptor, this);
+
+            this.powerUser = userContext.user.isAuthenticated;
+            this.eventAggregator = eventAggregator;
+            this.articleService = articleService;
+            this.subscriptions = [];
+            this.editMode = false;
+            this.article = {};
+        }
+
+        Article.prototype.articleChanged = function articleChanged(article) {
+            if (article && article.articleId) {
+                this.article = article;
+                this.subscribe();
+                this.setEditMode(false);
+            }
+        };
+
+        Article.prototype.sort = function sort(article) {
+            if (article && article.blocks) {
+                var sortedBlocks = article.blocks.filter(function (item) {
+                    return item.deleted !== true;
+                }).slice(0).sort(function (a, b) {
+                    return a['orderId'] - b['orderId'];
+                });
+                article.blocks = sortedBlocks;
+            }
+        };
+
+        Article.prototype.startEdit = function startEdit(flag) {
+            this.originalArticle = Object.assign({}, this.article);
+            this.setEditMode(true);
+        };
+
+        Article.prototype.cancelEdit = function cancelEdit(flag) {
+            this.article = this.originalArticle;
+            this.setEditMode(false);
+        };
+
+        Article.prototype.saveArticle = function saveArticle(flag) {
+            var _this = this;
+
+            var isEditing = false;
+            var self = this;
+
+            this.article.blocks.forEach(function (block) {
+                if (block.isEditing === true) {
+                    isEditing = true;
+                }
+            });
+
+            if (isEditing !== true) {
+                this.articleService.saveArticle(this.article).then(function (response) {
+                    _this.eventAggregator.publish('article-saved-' + response.articleId, true);
+                    _this.setEditMode(false);
+                }).catch(function (error) {
+                    _this.eventAggregator.publish('article-saved-' + response.articleId, false);
+                });
+            } else {
+                alert("Some block are in edit mode. Apply changes to those blocks first.");
+            }
+        };
+
+        Article.prototype.setEditMode = function setEditMode(editMode) {
+            if (this.article && this.article.articleId) {
+                this.editMode = editMode;
+
+                this.article.blocks.forEach(function (block) {
+                    block.editMode = editMode;
+                    if (editMode !== true) {
+                        block.isEditing = false;
+                    }
+                });
+            }
+        };
+
+        Article.prototype.addBlock = function addBlock() {
+            if (!this.article.blocks) {
+                this.article.blocks = [];
+            }
+
+            var block = {
+                isNew: true,
+                BlockId: this.maxBlockId(this.article.blocks) + 1,
+                OrderId: this.maxOrderId(this.article.blocks) + 1,
+
+                Text: ''
+            };
+
+            this.article.blocks.push(block);
+        };
+
+        Article.prototype.moveBlockUp = function moveBlockUp(block) {
+            var order = block.orderId - 1;
+            var up = this.article.blocks.find(function (x) {
+                return x.orderId === order;
+            });
+            if (up && up.orderId === order) {
+                up.orderId = block.orderId;
+                block.orderId = order;
+
+                this.sort(this.article);
+            }
+        };
+
+        Article.prototype.moveBlockDown = function moveBlockDown(block) {
+            var order = block.orderId + 1;
+            var down = this.article.blocks.find(function (x) {
+                return x.orderId === order;
+            });
+            if (down && down.orderId === order) {
+                down.orderId = block.orderId;
+                block.orderId = order;
+
+                this.sort(this.article);
+            }
+        };
+
+        Article.prototype.maxOrderId = function maxOrderId(list) {
+            var max = 0;
+            list.forEach(function (item) {
+                if (max < item.orderId) {
+                    max = item.orderId;
+                }
+            });
+            return max;
+        };
+
+        Article.prototype.maxBlockId = function maxBlockId(list) {
+            var max = 0;
+            list.forEach(function (item) {
+                if (max < item.blockId) {
+                    max = item.blockId;
+                }
+            });
+            return max;
+        };
+
+        Article.prototype.subscribe = function subscribe() {
+            var _this2 = this;
+
+            this.unsubscribe();
+
+            if (this.article && this.article.articleId) {
+
+                this.subscriptions.push(this.eventAggregator.subscribe('start-edit-article-' + this.article.articleId, function (flag) {
+                    return _this2.startEdit(flag);
+                }));
+
+                this.subscriptions.push(this.eventAggregator.subscribe('cancel-edit-article-' + this.article.articleId, function (flag) {
+                    return _this2.cancelEdit(flag);
+                }));
+
+                this.subscriptions.push(this.eventAggregator.subscribe('save-article-' + this.article.articleId, function (flag) {
+                    return _this2.saveArticle(flag);
+                }));
+
+                this.subscriptions.push(this.eventAggregator.subscribe('move-block-up', function (block) {
+                    return _this2.moveBlockUp(block);
+                }));
+
+                this.subscriptions.push(this.eventAggregator.subscribe('move-block-down', function (block) {
+                    return _this2.moveBlockDown(block);
+                }));
+
+                this.subscriptions.push(this.eventAggregator.subscribe('delete-block', function (block) {
+                    return _this2.sort();
+                }));
+            }
+        };
+
+        Article.prototype.detached = function detached() {
+            this.unsubscribe();
+        };
+
+        Article.prototype.unsubscribe = function unsubscribe() {
+            if (this.subscriptions.length > 0) {
+                this.subscriptions.forEach(function (subscription) {
+                    subscription.dispose();
+                });
+            }
+        };
+
+        return Article;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'article', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    })), _class2)) || _class);
 });
 define('resources/elements/article/block-actions',['exports', 'aurelia-event-aggregator', 'aurelia-framework'], function (exports, _aureliaEventAggregator, _aureliaFramework) {
     'use strict';
@@ -2534,7 +2691,7 @@ define('resources/elements/article/index',['exports'], function (exports) {
     });
     exports.configure = configure;
     function configure(config) {
-        config.globalResources('./article-block', './heading-block', './paragraph-block', './image-block', './ordered-list-block', './block-actions', './new-block');
+        config.globalResources('./article', './article-block', './heading-block', './paragraph-block', './image-block', './ordered-list-block', './block-actions', './new-block');
     }
 });
 define('resources/elements/article/new-block',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
@@ -3081,15 +3238,13 @@ define('resources/elements/navigation/sub-nav',["exports", "aurelia-framework", 
         throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
     }
 
-    var _dec, _class, _desc, _value, _class2, _descriptor, _descriptor2;
+    var _dec, _class, _desc, _value, _class2, _descriptor;
 
     var SubNav = exports.SubNav = (_dec = (0, _aureliaFramework.inject)("User", _aureliaEventAggregator.EventAggregator), _dec(_class = (_class2 = function () {
         function SubNav(userContext, eventAggregator) {
             _classCallCheck(this, SubNav);
 
             _initDefineProp(this, "router", _descriptor, this);
-
-            _initDefineProp(this, "actions", _descriptor2, this);
 
             this.powerUser = userContext.user.isAuthenticated;
             this.eventAggregator = eventAggregator;
@@ -3114,9 +3269,6 @@ define('resources/elements/navigation/sub-nav',["exports", "aurelia-framework", 
 
         return SubNav;
     }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "router", [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: null
-    }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "actions", [_aureliaFramework.bindable], {
         enumerable: true,
         initializer: null
     })), _class2)) || _class);
@@ -4625,7 +4777,7 @@ define('text!strategies/create.html', ['module'], function(module) { module.expo
 define('text!strategies/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Modify strategy</h3>\r\n    </header>\r\n\r\n    <form class=\"form-horizontal\" submit.delegate='update()'>\r\n        <div class=\"form-group\">\r\n            <label for=\"txtName\" class=\"col-sm-3 control-label\">Strategy Name</label>\r\n            <div class=\"col-sm-7\">\r\n                <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"strategy.name & validate\" >\r\n            </div>\r\n        </div>\r\n        <div class=\"form-group\">\r\n            <label for=\"txtUrl\" class=\"col-sm-3 control-label\">Url (alpha-numeric only)</label>\r\n            <div class=\"col-sm-7\">\r\n                <input type=\"text\" class=\"form-control\" id=\"txtUrl\" value.bind=\"strategy.url & validate\" >\r\n            </div>\r\n        </div>\r\n        <div class=\"form-group\">\r\n            <label for=\"txtDescription\" class=\"col-sm-3 control-label\">Description</label>\r\n            <div class=\"col-sm-9\">\r\n                <textarea rows=\"5\" class=\"form-control\" id=\"txtDescription\" value.bind=\"strategy.description\">\r\n                    \r\n                </textarea>\r\n            </div>\r\n        </div>\r\n        <div class=\"form-group\">\r\n            <div class=\"col-sm-offset-3 col-sm-9\">\r\n                <button type=\"submit\" class=\"btn btn-primary\">Update</button>\r\n            </div>\r\n        </div>\r\n    </form>\r\n</template>"; });
 define('text!strategies/list.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <header>\r\n        <h3>Defined Strategies</h3>\r\n    </header>\r\n    \r\n    <table class=\"table table-hover\">\r\n        <thead>\r\n        <tr>\r\n            <th>Name</th>\r\n            <th>Active</th>\r\n        </tr>\r\n        </thead>\r\n        <tbody>\r\n        <tr repeat.for=\"strategy of strategies\"\r\n            class=\"${strategy.deleted === true ? 'danger': ''}\">\r\n            <td>\r\n                <a href.bind=\"$parent.generateUrl(strategy)\">${strategy.name}</a>\r\n            </td>\r\n            <td>${strategy.deleted !== true}</td>\r\n            <td>\r\n                <div class=\"btn-group\">\r\n                    <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                        Action <span class=\"caret\"></span>\r\n                    </button>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li if.bind=\"strategy.deleted === true\"><a click.trigger=\"$parent.enable(strategy)\">Activate</a></li>\r\n                        <li if.bind=\"strategy.deleted !== true\"><a click.trigger=\"$parent.disable(strategy)\">Deactivate</a></li>\r\n                        <li role=\"separator\" class=\"divider\"></li>\r\n                        <li><a href=\"#\">Manage Rules</a></li>\r\n                    </ul>\r\n                </div>\r\n            </td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n</template>"; });
 define('text!strategies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-nav router.bind=\"router\" ></sub-nav>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
-define('text!studies/category.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"actions\" if.bind=\"powerUser\">\r\n\r\n        <div if.bind=\"editMode !== true\" class=\"btn-group\" role=\"group\">\r\n            <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                Configure\r\n                <span class=\"caret\"></span>\r\n            </button>\r\n            <ul class=\"dropdown-menu\">\r\n                <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                <li role=\"separator\" class=\"divider\"></li>\r\n                <li><a href=\"/categories\">Manage Categories</a></li>\r\n            </ul>\r\n        </div>\r\n\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"saveArticle()\" class=\"btn btn-success\">Apply Changes</button>\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n\r\n        <div class=\"col-md-8 article\">\r\n            <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Title</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Url</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n                    </div>\r\n                </div>\r\n\r\n            </edit-mode>\r\n            <read-mode if.bind=\"editMode !== true\">\r\n                <h2>${article.title}</h2>\r\n            </read-mode>\r\n\r\n            <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                          repeat.for=\"block of article.sortedBlocks\">\r\n                <block-actions block.bind=\"block\"></block-actions>\r\n                <article-block block.bind=\"block\"></article-block>\r\n            </article-part>\r\n\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"col-md-4 side-navigation\">\r\n            <h3>${category.title}</h3>\r\n            <ul>\r\n                <li repeat.for=\"item of sortedArticles\" class=\"${$parent.editMode === true ? 'edit-mode': ''}\" if.bind=\"item.isDeleted !== true\">\r\n                    <div if.bind=\"editMode\" class=\"block-actions\">\r\n                        <div if.bind=\"item.isDeleting !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.deleteArticle(item)\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveUpArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveDownArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                        </div>\r\n\r\n                        <div if.bind=\"item.isDeleting === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.confirmDeleteArticle(item)\" class=\"btn btn-danger btn-xs\">Confirm Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.cancelDeleteArticle(item)\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                    <a href.bind=\"$parent.getArticleUrl(item)\" class=\"${item.articleId === article.articleId ? 'active' : ''}\">${item.title}</a>\r\n                </li>\r\n            </ul>\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addArticle()\" class=\"btn btn-primary btn-xs\">Add New Article</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>"; });
+define('text!studies/category.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"actions\" if.bind=\"powerUser\">\r\n\r\n        <div if.bind=\"editMode !== true\" class=\"btn-group\" role=\"group\">\r\n            <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                Configure\r\n                <span class=\"caret\"></span>\r\n            </button>\r\n            <ul class=\"dropdown-menu\">\r\n                <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                <li role=\"separator\" class=\"divider\"></li>\r\n                <li><a href=\"/categories\">Manage Categories</a></li>\r\n            </ul>\r\n        </div>\r\n\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"saveArticle()\" class=\"btn btn-success\">Apply Changes</button>\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n\r\n        <div class=\"col-md-8 article\">\r\n            <article article.bind=\"article\"></article> \r\n        </div>\r\n\r\n        <div class=\"col-md-4 side-navigation\">\r\n            <h3>${category.title}</h3>\r\n            <ul>\r\n                <li repeat.for=\"item of sortedArticles\" class=\"${$parent.editMode === true ? 'edit-mode': ''}\" if.bind=\"item.isDeleted !== true\">\r\n                    <div if.bind=\"editMode\" class=\"block-actions\">\r\n                        <div if.bind=\"item.isDeleting !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.deleteArticle(item)\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveUpArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveDownArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                        </div>\r\n\r\n                        <div if.bind=\"item.isDeleting === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.confirmDeleteArticle(item)\" class=\"btn btn-danger btn-xs\">Confirm Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.cancelDeleteArticle(item)\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                    <a href.bind=\"$parent.getArticleUrl(item)\" class=\"${item.articleId === article.articleId ? 'active' : ''}\">${item.title}</a>\r\n                </li>\r\n            </ul>\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addArticle()\" class=\"btn btn-primary btn-xs\">Add New Article</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!strategies/rules/create.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Register Rule</h3>\r\n    </header>\r\n</template>"; });
 define('text!strategies/rules/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Modify Rule</h3>\r\n    </header>\r\n</template>"; });
@@ -4633,6 +4785,7 @@ define('text!strategies/rules/list.html', ['module'], function(module) { module.
 define('text!strategies/rules/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-nav router.bind=\"router\"></sub-nav>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!strategies/rules/strategy-rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Strategy Rules</h3>\r\n    </header>\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
+define('text!resources/elements/article/article.html', ['module'], function(module) { module.exports = "<template>\r\n    <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Title</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Url</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n            </div>\r\n        </div>\r\n\r\n    </edit-mode>\r\n    <read-mode if.bind=\"editMode !== true\">\r\n        <h2>${article.title}</h2>\r\n    </read-mode>\r\n\r\n    <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                  repeat.for=\"block of article.blocks\">\r\n        <block-actions block.bind=\"block\"></block-actions>\r\n        <article-block block.bind=\"block\"></article-block>\r\n    </article-part>\r\n\r\n    <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/article/block-actions.html', ['module'], function(module) { module.exports = "<template>\r\n    <div if.bind=\"block.editMode\" class=\"block-actions\">\r\n        <div if.bind=\"block.isEditing !== true && block.isDeleting !== true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"startEditing()\" class=\"btn btn-default btn-xs\">Edit</button>\r\n            <button type=\"button\" click.delegate=\"startDeleting()\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n            <button type=\"button\" click.delegate=\"moveUp()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n            </button>\r\n            <button type=\"button\" click.delegate=\"moveDown()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n            </button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isEditing === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"applyChanges()\" class=\"btn btn-success btn-xs\">Apply Changes</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isDeleting === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-danger btn-xs\">Delete Block</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isNew === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-success btn-xs\">Add Block</button>\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/article/heading-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Heading'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-2\">\r\n                    <select class=\"form-control\" value.bind=\"block.headingType\">\r\n                        <option>Select</option>\r\n                        <option repeat.for=\"heading of headingTypes\" value.bind=\"heading\">${heading}</option>\r\n                    </select>\r\n                </div>\r\n                <div class=\"col-xs-10\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.Text\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <span class=\"${block.headingType}\">${block.Text}</span>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/image-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Image'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Image Title</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"text\" class=\"form-control\" value.bind=\"block.Text\" />\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-3\">Select Image</div>\r\n                <div class=\"col-xs-9\">\r\n                    <input type=\"file\"\r\n                            accept=\"image/*\" class=\"form-control\"\r\n                            files.bind=\"selectedFiles\">\r\n\r\n                    <ul>\r\n                        <li repeat.for=\"file of selectedFiles | fileListToArray\">\r\n                            <p>${file.name}: ${file.type} ${file.size / 1000} kb</p>\r\n                            <img src.bind=\"blobToUrl(file)\"><img>\r\n                        </li>\r\n                    </ul>\r\n\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"row\" if.bind=\"selectedFiles.length === 0\">\r\n                <div class=\"col-xs-9 col-xs-offset-3\">\r\n                    <img src.bind=\"block.ImageUrl\" />\r\n                </div>\r\n            </div>\r\n        </edit-mode>\r\n\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <article-image>\r\n                <img src.bind=\"block.ImageUrl\" />\r\n                <p>${block.Text}</p>\r\n            </article-image>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
@@ -4642,5 +4795,5 @@ define('text!resources/elements/article/paragraph-block.html', ['module'], funct
 define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
 define('text!resources/elements/navigation/main-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-nav\">\r\n        <div class=\"container\">\r\n            <div class=\"main-nav-items\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!resources/elements/navigation/nav-header.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"container\">\r\n        <div class=\"navbar-brand\">\r\n\r\n            <img class=\"logo\" src=\"/content/images/logo.png\"/>\r\n            <a href=\"/\">O<span>rder</span> V<span>iew</span></a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav navbar-right\">\r\n            <li role=\"presentation\" class=\"dropdown\">\r\n                <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>\r\n                    Dream <span class=\"caret\"></span>\r\n                </a>\r\n                <ul class=\"dropdown-menu\">\r\n                    <li><a href=\"#\">Account</a></li>\r\n                    <li><a href=\"#\">Logout</a></li>\r\n                </ul>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
-define('text!resources/elements/navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n\r\n                        <div class=\"actions\" if.bind=\"powerUser && actions && actions.length > 0\">\r\n                            <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n\r\n                                <div if.bind=\"menu.editMode !== true\" class=\"btn-group\" role=\"group\">\r\n                                    <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                        Actions\r\n                                        <span class=\"caret\"></span>\r\n                                    </button>\r\n                                    <ul class=\"dropdown-menu\">\r\n                                        <li repeat.for=\"action of actions\"><a click.delegate=\"publishEvent(action.channel, action.params)\">${action.name}</a></li>\r\n                                    </ul>\r\n                                </div>\r\n                            </div>\r\n\r\n                        </div>\r\n\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
+define('text!resources/elements/navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

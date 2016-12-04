@@ -33,7 +33,7 @@ export function configure(aurelia) {
                         .plugin('aurelia-validation');
 
                     if (environment.debug) {
-                        //aurelia.use.developmentLogging();
+                        aurelia.use.developmentLogging();
                     }
 
                     if (environment.testing) {

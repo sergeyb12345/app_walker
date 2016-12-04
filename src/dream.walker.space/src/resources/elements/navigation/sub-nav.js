@@ -4,7 +4,6 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 @inject("User", EventAggregator)
 export class SubNav {
     @bindable router;
-    @bindable actions;
 
     constructor (userContext, eventAggregator) {
         this.powerUser = userContext.user.isAuthenticated;

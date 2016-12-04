@@ -30,28 +30,14 @@ export class Category {
         this.loadCategory(params.category);
     }
 
-    sort() {
-        if (this.article.blocks) {
-            this.article.sortedBlocks = this.article.blocks
-                .filter(function(item) {
-                    return item.deleted !== true;
-                })
-                .slice(0)
-                .sort((a, b) => {
-                    return (a['orderId'] - b['orderId']);
-                });
-        }
-    }
-
-
     loadArticle(categoryId, articleUrl) {
 
         this.articleService.getArticleByUrl(categoryId, articleUrl)
         .then(result => {
             this.article = result;
             this.setEditMode(false);
-            this.sort();
-         });
+            this.subscribe();
+        });
     }
 
     loadArticles(categoryId) {
@@ -85,15 +71,6 @@ export class Category {
     setEditMode (editMode) {
         this.editMode = editMode;
         this.navigation.menu.editMode = editMode;
-
-        if (this.article &&  this.article != null &&  this.article.blocks &&  this.article.blocks != null) {
-            this.article.blocks.forEach(function(block) {
-                block.editMode = editMode;
-                if (editMode !== true) {
-                    block.isEditing = false;
-                }
-            });
-        }
     }
 
     getUrl(menuItem) {
@@ -102,85 +79,43 @@ export class Category {
 
     
     startEdit(flag) {
-        this.originalArticle = Object.assign({}, this.article);
+        if (this.article && this.article.articleId) {
+            this.eventAggregator.publish('start-edit-article-' + this.article.articleId, true);
+        }
+
         this.setEditMode(true);
     }
 
     cancelEdit(flag) {
-        this.article = this.originalArticle;
+        if (this.article && this.article.articleId) {
+            this.eventAggregator.publish('cancel-edit-article-' + this.article.articleId, true);
+        }
+ 
         this.setEditMode(false);
     }
 
     saveArticle(flag) {
 
-        let isEditing = false;
-        let self = this;
-
-
-        this.article.blocks.forEach(function(block) {
-            if (block.isEditing === true) {
-                isEditing = true;
-            }
-        });
-
-        if (isEditing !== true) {
-            this.articleService.saveArticle(this.article)
-                .then(response => {
-                    this.setEditMode(false);
-                });
-        } else {
-            alert("Some block are in edit mode. Apply changes to those blocks first.");
+        if (this.article && this.article.articleId) {
+            this.eventAggregator.publish('save-article-' + this.article.articleId, true);
         }
+    }
 
-        if (this.articles) {
-            this.articles.forEach(function(article) {
-                if (article.changed === true) {
-                    if (article.IsDeleted) {
-                        self.removeArticle(article.articleId);
-                    } else {
-                        self.updateArticleOrder(article.articleId, article.orderId);
+    onArticleSaved(flag) {
+        if (flag) {
+            this.setEditMode(false);
+
+            if (this.articles) {
+                this.articles.forEach(function(article) {
+                    if (article.changed === true) {
+                        if (article.IsDeleted) {
+                            self.removeArticle(article.articleId);
+                        } else {
+                            self.updateArticleOrder(article.articleId, article.orderId);
+                        }
                     }
-                }
-            });
-        }
-    }
-
-    addBlock() {
-        if (!this.article.blocks) {
-            this.article.blocks = [];
-        }
-        
-        let block = {
-            isNew: true,
-            BlockId: this.maxBlockId(this.article.blocks) + 1,
-            OrderId: this.maxOrderId(this.article.blocks) + 1,
-
-            Text: ''
-        };
-
-        this.article.blocks.push(block);
-        this.sort();
-    }
-
-    moveBlockUp(block) {
-        let order = block.orderId - 1;
-        let up = this.article.blocks.find(x => x.orderId === order);
-        if(up && up.orderId === order) {
-            up.orderId = block.orderId;
-            block.orderId = order;
-
-            this.sort();
-        }
-    }
-
-    moveBlockDown(block) {
-        let order = block.orderId + 1;
-        let down = this.article.blocks.find(x => x.orderId === order);
-        if(down && down.orderId === order) {
-            down.orderId = block.orderId;
-            block.orderId = order;
-
-            this.sort();
+                });
+            }
         }
     }
 
@@ -197,25 +132,6 @@ export class Category {
         };
     }
 
-    maxOrderId(list) {
-        let max = 0;
-        list.forEach(function(item) {
-            if (max < item.orderId) {
-                max = item.orderId;
-            }
-        });
-        return max;
-    }
-
-    maxBlockId(list) {
-        let max = 0;
-        list.forEach(function(item) {
-            if (max < item.blockId) {
-                max = item.blockId;
-            }
-        });
-        return max;
-    }
 
     deleteArticle(article) {
         article.isDeleting = true;
@@ -283,33 +199,28 @@ export class Category {
     }
 
 
-    attached() {
-        let moveBlockUpChannel = 'move-block-up';
-        let moveBlockDownChannel = 'move-block-down';
-        let blockDeletedChannel = 'delete-block';
+    subscribe() {
 
-        this.subscriptions.push(
-            this.eventAggregator.subscribe(this.navigation.section.url+'-start-edit', flag => this.startEdit(flag)));
+        if (this.article && this.article.articleId) {
+            this.unsubscribe();
 
-        this.subscriptions.push(
-            this.eventAggregator.subscribe(this.navigation.section.url+'-cancel-edit', flag => this.cancelEdit(flag)));
+            this.subscriptions.push(
+                    this.eventAggregator.subscribe('article-saved-' + this.article.articleId, flag => this.onArticleSaved(flag)));
+            
+        }
 
-        this.subscriptions.push(
-            this.eventAggregator.subscribe(this.navigation.section.url+'-save-article', flag => this.saveArticle(flag)));
+    }
 
-        this.subscriptions.push(
-            this.eventAggregator.subscribe(moveBlockUpChannel, block => this.moveBlockUp(block)));
+    unsubscribe() {
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach(function(subscription) {
+                subscription.dispose();
+            });
+        }
 
-        this.subscriptions.push(
-            this.eventAggregator.subscribe(moveBlockDownChannel, block => this.moveBlockDown(block)));
-
-        this.subscriptions.push(
-            this.eventAggregator.subscribe(blockDeletedChannel, block => this.sort()));
     }
 
     detached() {
-        this.subscriptions.forEach(function (subscription) {
-            subscription.dispose();
-        });
+        this.unsubscribe();
     }
 }

@@ -515,6 +515,8 @@
     <Content Include="src\strategies\rules\navigation.html" />
     <Content Include="src\strategies\rules\navigation.js" />
     <Content Include="src\strategies\rules\strategy-rules.js" />
+    <Content Include="src\resources\elements\article\article.html" />
+    <Content Include="src\resources\elements\article\article.js" />
     <Content Include="src\studies\category.html" />
     <Content Include="src\studies\category.js" />
     <Content Include="src\studies\navigation.html" />

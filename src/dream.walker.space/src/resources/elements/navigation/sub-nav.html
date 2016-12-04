@@ -9,23 +9,6 @@
                             <a href.bind="row.href">${row.title}</a>
                         </li>
                     </ul>
-
-                        <div class="actions" if.bind="powerUser && actions && actions.length > 0">
-                            <div class="btn-group" role="group" aria-label="...">
-
-                                <div if.bind="menu.editMode !== true" class="btn-group" role="group">
-                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Actions
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li repeat.for="action of actions"><a click.delegate="publishEvent(action.channel, action.params)">${action.name}</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </div>
-
                 </nav>
             </div>
         </nav>
