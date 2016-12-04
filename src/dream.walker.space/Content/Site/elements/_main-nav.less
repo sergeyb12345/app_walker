@@ -1,7 +1,15 @@
 ﻿/// <reference path="../base/_variables" />
 
-main-nav {
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #e22004;
+}
 
+main-nav {
+    .main-nav {
+        background-color: #EFEFEF;
+    }
     ul.nav {
         position: relative;
         float: right;
@@ -29,14 +37,12 @@ main-nav {
             &:hover {
                 a {
                     background: rgba(226, 32, 4, 0.38);
-                    border-radius: 4px 4px 0 0;
                 }
             }
             &.active {
                 a {
                     color: #ffffff;
                     background: @link-color;
-                    border-radius: 4px 4px 0 0;
                 }
             }            
 
@@ -46,38 +52,6 @@ main-nav {
     .container {
         width: 1024px;
 
-        .navbar-brand {
-            margin: 0;
-            padding: 0;
-            float: left;
-            font-size: 26px;
-            line-height: 58px;
-            cursor: pointer;
-
-            img.logo {
-                margin-right: -2px;
-                top: -2px;
-                position: relative;
-                display: inline-block;
-                width: 47px;
-                opacity: 0.96;
-            }
-
-            a, a:hover {
-                span {
-                    color: @font-color;
-                }
-            }
-
-            span.pound {
-                color: @link-color;
-                font-weight: bold;
-                font-size: 46px;
-                line-height: 25px;
-                position: relative;
-                top: 6px;
-            }
-        }
     }
 
     nav.navbar {

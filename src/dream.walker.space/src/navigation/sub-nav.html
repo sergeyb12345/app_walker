@@ -1,5 +1,5 @@
 ﻿<template>
-    <div class="sub-menu">
+    <div class="sub-nav">
         <nav class="navbar navbar">
             <div class="container">
                 <nav class="navbar">
@@ -9,23 +9,22 @@
                         </li>
                     </ul>
                     <div class="actions" if.bind="powerUser">
+
+                        <div if.bind="menu.editMode !== true" class="btn-group" role="group">
+                            <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Configure
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a click.delegate="startEdit()">Edit Page</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/categories">Manage Categories</a></li>
+                            </ul>
+                        </div>
+
                         <div class="btn-group" role="group" aria-label="...">
-
-                            <div if.bind="menu.editMode !== true" class="btn-group" role="group">
-                                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Configure
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a click.delegate="startEdit()">Edit Page</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="/categories">Manage Categories</a></li>
-                                </ul>
-                            </div>
-
                             <button type="button" if.bind="menu.editMode === true" click.delegate="applyChanges()" class="btn btn-success">Apply Changes</button>
                             <button type="button" if.bind="menu.editMode === true" click.delegate="cancelEdit()" class="btn btn-default">Cancel</button>
-
                         </div>
 
                     </div>

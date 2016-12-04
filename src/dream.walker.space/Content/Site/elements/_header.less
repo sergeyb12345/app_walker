@@ -34,15 +34,56 @@ ul.dropdown-menu {
     border-color: #4cae4c;
 }
 
-header {
-    position: fixed;
+nav-header {
     top: 0px;
     z-index: 999;
     left: 0px;
     right: 0px;
     margin: 0px auto;
     background: #ffffff;
-    background-color: @main-menu-bg-color;
     padding: 0;
+
+    .nav > li > a:hover, .nav > li > a:focus {
+        text-decoration: none;
+        background-color: transparent;
+        color: #e22004;
+    }
+    
+    .nav > li > a:hover {
+        text-decoration: underline;
+    }
+
+    .navbar-brand {
+            margin: 0;
+            padding: 0;
+            float: left;
+            font-size: 26px;
+            line-height: 58px;
+            cursor: pointer;
+
+            img.logo {
+                margin-right: -2px;
+                top: -2px;
+                position: relative;
+                display: inline-block;
+                width: 47px;
+                opacity: 0.96;
+            }
+
+            a, a:hover {
+                span {
+                    color: @font-color;
+                }
+            }
+
+            span.pound {
+                color: @link-color;
+                font-weight: bold;
+                font-size: 46px;
+                line-height: 25px;
+                position: relative;
+                top: 6px;
+            }
+        }
 
 }

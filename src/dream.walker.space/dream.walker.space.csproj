@@ -465,10 +465,6 @@
     <Content Include="src\account\navigation.js" />
     <Content Include="src\main.js" />
     <Content Include="src\navigation\index.js" />
-    <Content Include="src\navigation\main-menu.html" />
-    <Content Include="src\navigation\main-menu.js" />
-    <Content Include="src\navigation\sub-menu-level2.js" />
-    <Content Include="src\navigation\sub-menu-level2.html" />
     <Content Include="src\navigation\sub-menu.html" />
     <Content Include="src\navigation\sub-menu.js" />
     <Content Include="src\navigation\sub-nav.html" />
@@ -490,8 +486,8 @@
     <Content Include="src\resources\elements\article\paragraph-block.js" />
     <Content Include="src\resources\elements\chart\any-chart.html" />
     <Content Include="src\resources\elements\chart\any-chart.js" />
-    <Content Include="src\resources\elements\header\header.html" />
-    <Content Include="src\resources\elements\header\header.js" />
+    <Content Include="src\resources\elements\navigation\nav-header.html" />
+    <Content Include="src\resources\elements\navigation\nav-header.js" />
     <Content Include="src\resources\elements\navigation\main-nav.html" />
     <Content Include="src\resources\elements\navigation\main-nav.js" />
     <Content Include="src\resources\elements\navigation\sub-nav.html" />

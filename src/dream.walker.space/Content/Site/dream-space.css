@@ -57,31 +57,75 @@ ul.dropdown-menu li {
   outline: none;
   border-color: #4cae4c;
 }
-header {
-  position: fixed;
+nav-header {
   top: 0px;
   z-index: 999;
   left: 0px;
   right: 0px;
   margin: 0px auto;
   background: #ffffff;
-  background-color: #F2F2F2;
   padding: 0;
 }
-.main-menu ul.nav {
+nav-header .nav > li > a:hover,
+nav-header .nav > li > a:focus {
+  text-decoration: none;
+  background-color: transparent;
+  color: #e22004;
+}
+nav-header .nav > li > a:hover {
+  text-decoration: underline;
+}
+nav-header .navbar-brand {
+  margin: 0;
+  padding: 0;
+  float: left;
+  font-size: 26px;
+  line-height: 58px;
+  cursor: pointer;
+}
+nav-header .navbar-brand img.logo {
+  margin-right: -2px;
+  top: -2px;
+  position: relative;
+  display: inline-block;
+  width: 47px;
+  opacity: 0.96;
+}
+nav-header .navbar-brand a span,
+nav-header .navbar-brand a:hover span {
+  color: #252d2c;
+}
+nav-header .navbar-brand span.pound {
+  color: #e22004;
+  font-weight: bold;
+  font-size: 46px;
+  line-height: 25px;
+  position: relative;
+  top: 6px;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e22004;
+}
+main-nav .main-nav {
+  background-color: #EFEFEF;
+}
+main-nav ul.nav {
   position: relative;
   float: right;
 }
-.main-menu ul.nav li {
+main-nav ul.nav li {
   float: left;
   padding: 0;
   position: relative;
   margin-left: 1px;
 }
-.main-menu ul.nav li:first-child {
+main-nav ul.nav li:first-child {
   margin-left: 0;
 }
-.main-menu ul.nav li a {
+main-nav ul.nav li a {
   position: relative;
   padding: 0 20px;
   text-align: center;
@@ -92,47 +136,17 @@ header {
   -webkit-transition: all 0.35s ease;
   transition: all 0.35s ease;
 }
-.main-menu ul.nav li:hover a {
+main-nav ul.nav li:hover a {
   background: rgba(226, 32, 4, 0.38);
-  border-radius: 4px 4px 0 0;
 }
-.main-menu ul.nav li.active a {
+main-nav ul.nav li.active a {
   color: #ffffff;
   background: #e22004;
-  border-radius: 4px 4px 0 0;
 }
-.main-menu .container {
+main-nav .container {
   width: 1024px;
 }
-.main-menu .container .navbar-brand {
-  margin: 0;
-  padding: 0;
-  float: left;
-  font-size: 26px;
-  line-height: 58px;
-  cursor: pointer;
-}
-.main-menu .container .navbar-brand img.logo {
-  margin-right: -2px;
-  top: -2px;
-  position: relative;
-  display: inline-block;
-  width: 47px;
-  opacity: 0.96;
-}
-.main-menu .container .navbar-brand a span,
-.main-menu .container .navbar-brand a:hover span {
-  color: #252d2c;
-}
-.main-menu .container .navbar-brand span.pound {
-  color: #e22004;
-  font-weight: bold;
-  font-size: 46px;
-  line-height: 25px;
-  position: relative;
-  top: 6px;
-}
-.main-menu nav.navbar {
+main-nav nav.navbar {
   background: none;
   border: none;
   padding: 0;
@@ -140,49 +154,48 @@ header {
   min-height: 0;
   border-color: #e7e7e7;
 }
-.main-menu nav.navbar ul.navbar-nav {
+main-nav nav.navbar ul.navbar-nav {
   top: 5px;
 }
-.sub-menu .navbar-fixed-top {
-  top: 59px;
+.sub-nav {
   box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.sub-nav .navbar {
   background-color: white;
-}
-.sub-menu .navbar {
   margin-bottom: 0;
-  min-height: 33px;
-  height: 33px;
+  min-height: 32px;
+  height: 32px;
+  z-index: 900;
 }
-.sub-menu .navbar .actions {
+.sub-nav .navbar .actions {
   margin-top: 3px;
   float: right;
-  margin-right: 20px;
 }
-.sub-menu .navbar .actions .btn {
+.sub-nav .navbar .actions .btn {
   padding: 4px 10px;
   border-radius: 4px 4px 0 0;
 }
-.sub-menu .navbar-nav {
+.sub-nav .navbar-nav {
   margin-bottom: -2px;
 }
-.sub-menu .navbar-nav > li {
+.sub-nav .navbar-nav > li {
   margin-right: 20px;
   padding: 0;
 }
-.sub-menu .navbar-nav > li a {
-  padding: 10px 0 3px 0;
+.sub-nav .navbar-nav > li a {
+  padding: 8px 0 3px 0;
   color: #252d2c;
   font: 13px/20px 'Istok Web';
   text-transform: uppercase;
 }
-.sub-menu .navbar-nav > li:hover {
+.sub-nav .navbar-nav > li:hover {
   border-bottom: 3px solid rgba(226, 32, 4, 0.38);
 }
-.sub-menu .navbar-nav > li.active {
+.sub-nav .navbar-nav > li.active {
   border-bottom: 3px solid #e22004;
 }
-.sub-menu .nav > li > a:hover,
-.sub-menu .nav > li > a:focus {
+.sub-nav .nav > li > a:hover,
+.sub-nav .nav > li > a:focus {
   text-decoration: none;
   background-color: transparent;
 }
@@ -312,7 +325,7 @@ form .validation-summary-error ul li {
   top: -20px;
 }
 .page-content {
-  margin-top: 105px;
+  margin-top: 20px;
 }
 .page-content header {
   margin-bottom: 15px;
