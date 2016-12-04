@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import environment from './environment';
 import {Settings} from './settings';
 import {ErrorParser} from './common/error-parser';

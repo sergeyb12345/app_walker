@@ -3,11 +3,11 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 import {ArticleService} from '../services/article-service';
 import {Navigation} from './navigation'
 
-@inject(EventAggregator, ArticleService, Navigation)
+@inject(EventAggregator, ArticleService, Navigation, "User")
 export class Category {
 
-    constructor (eventAggregator, articleService, navigation) {
-
+    constructor (eventAggregator, articleService, navigation, userContext) {
+        this.powerUser = userContext.user.isAuthenticated;
         this.eventAggregator = eventAggregator;
         this.articleService = articleService;
         this.subscriptions = [];
@@ -96,6 +96,11 @@ export class Category {
         }
     }
 
+    getUrl(menuItem) {
+        return '' + this.menu.section.url + '/' + menuItem.url;
+    }
+
+    
     startEdit(flag) {
         this.originalArticle = Object.assign({}, this.article);
         this.setEditMode(true);

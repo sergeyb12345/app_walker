@@ -34,7 +34,25 @@ ul.dropdown-menu {
     border-color: #4cae4c;
 }
 
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #e22004;
+}
+
 nav-header {
+
+    .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+        background-color: transparent;
+    }
+
+    .navbar-nav > li > a.dropdown-toggle  {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        margin-top: 24px;
+    }
+
     top: 0px;
     z-index: 999;
     left: 0px;

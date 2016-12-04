@@ -1,19 +1,19 @@
 ﻿/// <reference path="../base/_variables" />
 
-.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-    color: #ffffff;
-    text-decoration: none;
-    background-color: #e22004;
-}
+
 
 main-nav {
-    .main-nav {
+
+    @media (min-width: 768px) {
+        .navbar-nav {
+            float:none;
+        }
+    }
+    .main-nav-items {
+
         background-color: #EFEFEF;
     }
     ul.nav {
-        position: relative;
-        float: right;
-
         li {
             float: left;
             padding: 0;
@@ -47,11 +47,6 @@ main-nav {
             }            
 
         }
-    }
-
-    .container {
-        width: 1024px;
-
     }
 
     nav.navbar {
