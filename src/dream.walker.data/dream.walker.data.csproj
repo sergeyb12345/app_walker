@@ -168,6 +168,10 @@
     <Compile Include="Migrations\201612051210065_AlterTableRule.Designer.cs">
       <DependentUpon>201612051210065_AlterTableRule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612051213378_CreateRuleSet.cs" />
+    <Compile Include="Migrations\201612051213378_CreateRuleSet.Designer.cs">
+      <DependentUpon>201612051213378_CreateRuleSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\ValueLocation.cs" />
@@ -292,6 +296,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612051210065_AlterTableRule.resx">
       <DependentUpon>201612051210065_AlterTableRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612051213378_CreateRuleSet.resx">
+      <DependentUpon>201612051213378_CreateRuleSet.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
