@@ -6,6 +6,7 @@
         GreaterOrEqual,
         Equal,
         Less,
-        LessOrEqual
+        LessOrEqual,
+        NotEqual
     }
 }

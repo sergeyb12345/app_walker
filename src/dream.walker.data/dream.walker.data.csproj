@@ -95,8 +95,9 @@
     <Compile Include="Entities\Companies\CompanyIndicatorRule.cs" />
     <Compile Include="Entities\Companies\CompanyNHNL.cs" />
     <Compile Include="Entities\Companies\CompanyRule.cs" />
-    <Compile Include="Entities\Indicators\IndicatorRule.cs" />
     <Compile Include="Entities\Indicators\MarketNHNL.cs" />
+    <Compile Include="Entities\Strategies\RuleSet.cs" />
+    <Compile Include="Entities\Strategies\RuleSetDetails.cs" />
     <Compile Include="Enums\ChartType.cs" />
     <Compile Include="Enums\NHNLPeriod.cs" />
     <Compile Include="Entities\Strategies\Strategy.cs" />
@@ -162,6 +163,10 @@
     <Compile Include="Migrations\201611282052436_AlterStrategy_AddUrl.cs" />
     <Compile Include="Migrations\201611282052436_AlterStrategy_AddUrl.Designer.cs">
       <DependentUpon>201611282052436_AlterStrategy_AddUrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612051210065_AlterTableRule.cs" />
+    <Compile Include="Migrations\201612051210065_AlterTableRule.Designer.cs">
+      <DependentUpon>201612051210065_AlterTableRule.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
@@ -284,6 +289,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611282052436_AlterStrategy_AddUrl.resx">
       <DependentUpon>201611282052436_AlterStrategy_AddUrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612051210065_AlterTableRule.resx">
+      <DependentUpon>201612051210065_AlterTableRule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

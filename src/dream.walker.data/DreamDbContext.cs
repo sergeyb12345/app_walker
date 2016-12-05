@@ -63,15 +63,6 @@ namespace dream.walker.data
             modelBuilder.Entity<Strategy>().HasKey(e => e.StrategyId);
             modelBuilder.Entity<Strategy>().Property(e => e.Name).IsRequired().HasColumnType("varchar").HasMaxLength(255);
 
-            //IndicatorRule
-            modelBuilder.Entity<IndicatorRule>().HasKey(e => e.Id);
-            modelBuilder.Entity<IndicatorRule>().Property(e => e.JsonCompareWhat).IsRequired().HasColumnType("varchar").HasMaxLength(255);
-            modelBuilder.Entity<IndicatorRule>().Property(e => e.JsonCompareWith).IsRequired().HasColumnType("varchar").HasMaxLength(255);
-            modelBuilder.Entity<IndicatorRule>().Property(t => t.RuleId).IsRequired().HasColumnAnnotation(
-                IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IX_RuleIdIndicatorId", 1) { IsUnique = true }));
-            modelBuilder.Entity<IndicatorRule>().Property(t => t.IndicatorId).IsRequired().HasColumnAnnotation(
-                IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IX_RuleIdIndicatorId", 2) { IsUnique = true }));
-
             //MarketNHNL
             modelBuilder.Entity<MarketNHNL>().HasKey(e => new { e.Market, e.Period });
             modelBuilder.Entity<MarketNHNL>().Property(e => e.Market).IsRequired().HasColumnType("varchar").HasMaxLength(50);
@@ -108,7 +99,6 @@ namespace dream.walker.data
         public DbSet<CompanyIndicator> CompanyIndicators { get; set; }
         public DbSet<CompanyIndicatorRule> CompanyIndicatorRules { get; set; }
         public DbSet<CompanyRule> CompanyRules { get; set; }
-        public DbSet<IndicatorRule> IndicatorRules { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Strategy> Strategies { get; set; }
         public DbSet<StrategyRule> StrategyRules { get; set; }
