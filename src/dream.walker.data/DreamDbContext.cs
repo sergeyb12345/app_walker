@@ -52,7 +52,7 @@ namespace dream.walker.data
             modelBuilder.Entity<CompanyRule>().Property(e => e.Ticker).IsRequired().HasColumnType("varchar").HasMaxLength(50);
 
             //StrategyRule
-            modelBuilder.Entity<StrategyRule>().HasKey(e => new { e.StrategyId, e.RuleId });
+            modelBuilder.Entity<StrategyRuleSet>().HasKey(e => new { e.StrategyId, e.RuleSetId });
 
             //Rule
             modelBuilder.Entity<Rule>().HasKey(e => e.RuleId);
@@ -106,7 +106,7 @@ namespace dream.walker.data
         public DbSet<Rule> Rules { get; set; }
         public DbSet<RuleSet> RuleSets { get; set; }
         public DbSet<Strategy> Strategies { get; set; }
-        public DbSet<StrategyRule> StrategyRules { get; set; }
+        public DbSet<StrategyRuleSet> StrategyRuleSets { get; set; }
         public DbSet<MarketNHNL> MarketNHNLs { get; set; }
         public DbSet<CompanyNHNL> CompanyNHNLs { get; set; }
         public DbSet<Article> Articles { get; set; }

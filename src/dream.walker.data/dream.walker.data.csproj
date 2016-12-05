@@ -98,10 +98,10 @@
     <Compile Include="Entities\Indicators\MarketNHNL.cs" />
     <Compile Include="Entities\Strategies\RuleSet.cs" />
     <Compile Include="Entities\Strategies\RuleSetDetails.cs" />
+    <Compile Include="Entities\Strategies\StrategyRuleSet.cs" />
     <Compile Include="Enums\ChartType.cs" />
     <Compile Include="Enums\NHNLPeriod.cs" />
     <Compile Include="Entities\Strategies\Strategy.cs" />
-    <Compile Include="Entities\Strategies\StrategyRule.cs" />
     <Compile Include="Enums\RuleFunction.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Entities\Indicators\Indicator.cs" />
@@ -172,6 +172,10 @@
     <Compile Include="Migrations\201612051213378_CreateRuleSet.Designer.cs">
       <DependentUpon>201612051213378_CreateRuleSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612051220194_CreateStrategyRuleSet.cs" />
+    <Compile Include="Migrations\201612051220194_CreateStrategyRuleSet.Designer.cs">
+      <DependentUpon>201612051220194_CreateStrategyRuleSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\ValueLocation.cs" />
@@ -200,7 +204,7 @@
     <Compile Include="Repositories\IndicatorRepository.cs" />
     <Compile Include="Repositories\ArticleRepository.cs" />
     <Compile Include="Repositories\StrategyRepository.cs" />
-    <Compile Include="Repositories\StrategyRuleRepository.cs" />
+    <Compile Include="Repositories\StrategyRuleSetRepository.cs" />
     <Compile Include="Requests\FindCompaniesForUpdateRequest.cs" />
     <Compile Include="Migrations\201604291700223_CompanyTable.cs" />
     <Compile Include="Migrations\201604291700223_CompanyTable.Designer.cs">
@@ -299,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612051213378_CreateRuleSet.resx">
       <DependentUpon>201612051213378_CreateRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612051220194_CreateStrategyRuleSet.resx">
+      <DependentUpon>201612051220194_CreateStrategyRuleSet.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
