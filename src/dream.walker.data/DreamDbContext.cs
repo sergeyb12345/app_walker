@@ -43,13 +43,10 @@ namespace dream.walker.data
             modelBuilder.Entity<CompanyIndicator>().HasKey(e => new { e.Ticker, e.IndicatorId });
             modelBuilder.Entity<CompanyIndicator>().Property(e => e.Ticker).IsRequired().HasColumnType("varchar").HasMaxLength(50);
 
-            //CompanyIndicatorRule
-            modelBuilder.Entity<CompanyIndicatorRule>().HasKey(e => new { e.Ticker, e.IndicatorRuleId });
-            modelBuilder.Entity<CompanyIndicatorRule>().Property(e => e.Ticker).IsRequired().HasColumnType("varchar").HasMaxLength(50);
 
-            //CompanyRule
-            modelBuilder.Entity<CompanyRule>().HasKey(e => new { e.Ticker, e.RuleId });
-            modelBuilder.Entity<CompanyRule>().Property(e => e.Ticker).IsRequired().HasColumnType("varchar").HasMaxLength(50);
+            //CompanyRuleSet
+            modelBuilder.Entity<CompanyRuleSet>().HasKey(e => new { e.Ticker, e.RuleSetId });
+            modelBuilder.Entity<CompanyRuleSet>().Property(e => e.Ticker).IsRequired().HasColumnType("varchar").HasMaxLength(50);
 
             //StrategyRule
             modelBuilder.Entity<StrategyRuleSet>().HasKey(e => new { e.StrategyId, e.RuleSetId });
@@ -101,8 +98,7 @@ namespace dream.walker.data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Indicator> Indicators { get; set; }
         public DbSet<CompanyIndicator> CompanyIndicators { get; set; }
-        public DbSet<CompanyIndicatorRule> CompanyIndicatorRules { get; set; }
-        public DbSet<CompanyRule> CompanyRules { get; set; }
+        public DbSet<CompanyRuleSet> CompanyRuleSets { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<RuleSet> RuleSets { get; set; }
         public DbSet<Strategy> Strategies { get; set; }

@@ -92,13 +92,14 @@
     <Compile Include="Entities\Articles\Section.cs" />
     <Compile Include="Entities\Companies\Company.cs" />
     <Compile Include="Entities\Companies\CompanyIndicator.cs" />
-    <Compile Include="Entities\Companies\CompanyIndicatorRule.cs" />
     <Compile Include="Entities\Companies\CompanyNHNL.cs" />
-    <Compile Include="Entities\Companies\CompanyRule.cs" />
+    <Compile Include="Entities\Companies\CompanyRuleSet.cs" />
     <Compile Include="Entities\Indicators\MarketNHNL.cs" />
+    <Compile Include="Enums\DataSourceType.cs" />
     <Compile Include="Entities\Strategies\RuleSet.cs" />
     <Compile Include="Entities\Strategies\RuleSetDetails.cs" />
     <Compile Include="Entities\Strategies\StrategyRuleSet.cs" />
+    <Compile Include="Enums\TransformFuction.cs" />
     <Compile Include="Enums\ChartType.cs" />
     <Compile Include="Enums\NHNLPeriod.cs" />
     <Compile Include="Entities\Strategies\Strategy.cs" />
@@ -175,6 +176,10 @@
     <Compile Include="Migrations\201612051220194_CreateStrategyRuleSet.cs" />
     <Compile Include="Migrations\201612051220194_CreateStrategyRuleSet.Designer.cs">
       <DependentUpon>201612051220194_CreateStrategyRuleSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612071351102_CreateCompanyRuleSet.cs" />
+    <Compile Include="Migrations\201612071351102_CreateCompanyRuleSet.Designer.cs">
+      <DependentUpon>201612071351102_CreateCompanyRuleSet.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
@@ -306,6 +311,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612051220194_CreateStrategyRuleSet.resx">
       <DependentUpon>201612051220194_CreateStrategyRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612071351102_CreateCompanyRuleSet.resx">
+      <DependentUpon>201612071351102_CreateCompanyRuleSet.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

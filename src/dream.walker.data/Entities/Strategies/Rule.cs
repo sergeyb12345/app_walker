@@ -25,19 +25,4 @@ namespace dream.walker.data.Entities.Strategies
         public CompareOperator Condition { get; set; }
 
     }
-
-    public enum TransformFuction
-    {
-        First = 0,
-        Max,
-        Sum,
-        Avg
-    }
-
-    public enum DataSourceType
-    {
-        Indicator=0,
-        HistoricalData,
-        Constant
-    }
 }
