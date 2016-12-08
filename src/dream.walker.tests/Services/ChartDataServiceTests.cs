@@ -26,5 +26,8 @@ namespace dream.walker.tests.Services
                 Ticker = "A"
             });
         }
+
+
+       
     }
 }
