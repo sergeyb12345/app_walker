@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
-using dream.walker.data.Entities.Articles;
 using dream.walker.data.Entities.Strategies;
 using dream.walker.data.Repositories;
 

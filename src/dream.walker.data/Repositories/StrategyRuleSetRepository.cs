@@ -1,20 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using dream.walker.data.Entities;
+using System.Threading.Tasks;
 using dream.walker.data.Entities.Strategies;
+using dream.walker.data.Enums;
 
 namespace dream.walker.data.Repositories
 {
     public interface IStrategyRuleSetRepository
     {
         StrategyRuleSet Get(int strategyId, int ruleId);
-        List<StrategyRuleSet> Get(int strategyId);
+        Task<List<StrategyRuleSet>> GetAsync(int strategyId, QuotePeriod period);
     }
 
 
-    public class StrategyRuleRepository : DreamDbRepository<StrategyRuleSet>, IStrategyRuleSetRepository
+    public class StrategyRuleSetRepository : DreamDbRepository<StrategyRuleSet>, IStrategyRuleSetRepository
     {
-        public StrategyRuleRepository(DreamDbContext dbContext) : base(dbContext)
+        public StrategyRuleSetRepository(DreamDbContext dbContext) : base(dbContext)
         {
         }
 
@@ -23,10 +25,18 @@ namespace dream.walker.data.Repositories
             var record = Dbset.FirstOrDefault(r => r.StrategyId == strategyId && r.RuleSetId == ruleSetId);
             return record;
         }
-        public List<StrategyRuleSet> Get(int strategyId)
+        public async Task<List<StrategyRuleSet>> GetAsync(int strategyId, QuotePeriod period)
         {
-            var record = Dbset.Where(r => r.StrategyId == strategyId).ToList();
-            return record;
+            var query = @"
+                SELECT S.*, R.[Name] 
+                FROM [dbo].[RuleSet] R
+                INNER JOIN [dbo].[StrategyRuleSet] S
+                ON R.[RuleSetId] = S.[RuleSetId]
+                WHERE S.[StrategyId] = @strategyId AND R.[Period] = @period
+                ORDER BY S.OrderId";
+
+            var records = await Dbset.SqlQuery(query, strategyId, (int) period).ToListAsync();
+            return records;
         }
     }
 }

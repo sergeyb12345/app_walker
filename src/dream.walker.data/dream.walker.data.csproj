@@ -181,6 +181,10 @@
     <Compile Include="Migrations\201612071351102_CreateCompanyRuleSet.Designer.cs">
       <DependentUpon>201612071351102_CreateCompanyRuleSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612081436501_AlterStrategyRuleSet.cs" />
+    <Compile Include="Migrations\201612081436501_AlterStrategyRuleSet.Designer.cs">
+      <DependentUpon>201612081436501_AlterStrategyRuleSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\ValueLocation.cs" />
@@ -203,11 +207,14 @@
     <Compile Include="Models\CompanyToUpdate.cs" />
     <Compile Include="MsSqlDbMigrator.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />
+    <Compile Include="Repositories\CompanyRuleSetRepository.cs" />
+    <Compile Include="Repositories\RuleSetRepository.cs" />
     <Compile Include="Repositories\SectionRepository.cs" />
     <Compile Include="Repositories\CompanyIndicatorRepository.cs" />
     <Compile Include="Repositories\ICompanyIndicatorRepository.cs" />
     <Compile Include="Repositories\IndicatorRepository.cs" />
     <Compile Include="Repositories\ArticleRepository.cs" />
+    <Compile Include="Repositories\RuleRepository.cs" />
     <Compile Include="Repositories\StrategyRepository.cs" />
     <Compile Include="Repositories\StrategyRuleSetRepository.cs" />
     <Compile Include="Requests\FindCompaniesForUpdateRequest.cs" />
@@ -232,6 +239,7 @@
     <Compile Include="Services\IArticleStorageService.cs" />
     <Compile Include="Services\ICompanyIndicatorService.cs" />
     <Compile Include="Services\ICompanyService.cs" />
+    <Compile Include="Services\IRuleService.cs" />
     <Compile Include="Services\IStrategyService.cs" />
     <Compile Include="Requests\UpdateQuotesRequest.cs" />
     <Compile Include="Services\StrategyService.cs" />
@@ -314,6 +322,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612071351102_CreateCompanyRuleSet.resx">
       <DependentUpon>201612071351102_CreateCompanyRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612081436501_AlterStrategyRuleSet.resx">
+      <DependentUpon>201612081436501_AlterStrategyRuleSet.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

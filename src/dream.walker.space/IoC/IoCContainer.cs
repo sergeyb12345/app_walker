@@ -61,10 +61,15 @@ namespace dream.walker.space.IoC
             builder.RegisterType<IndicatorRepository>().As<IIndicatorRepository>().InstancePerDependency();
             builder.RegisterType<StrategyRepository>().As<IStrategyRepository>().InstancePerDependency();
             builder.RegisterType<CompanyIndicatorRepository>().As<ICompanyIndicatorRepository>().InstancePerDependency();
+            builder.RegisterType<RuleRepository>().As<IRuleRepository>().InstancePerDependency();
+            builder.RegisterType<RuleSetRepository>().As<IRuleSetRepository>().InstancePerDependency();
+            builder.RegisterType<StrategyRuleSetRepository>().As<IStrategyRuleSetRepository>().InstancePerDependency();
+            builder.RegisterType<CompanyRuleSetRepository>().As<ICompanyRuleSetRepository>().InstancePerDependency();
 
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
 
             builder.RegisterType<ArticleService>().As<IArticleService>();
+            builder.RegisterType<RuleService>().As<IRuleService>();
             builder.RegisterType<StrategyService>().As<IStrategyService>();
             builder.Register(c => new StorageAccountConfiguration
             {

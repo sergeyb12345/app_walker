@@ -201,6 +201,291 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aure
         return Settings;
     }()) || _class);
 });
+define('account/edit',["exports", "aurelia-framework", "aurelia-event-aggregator", "aurelia-validation", "../common/bootstrap-form-renderer"], function (exports, _aureliaFramework, _aureliaEventAggregator, _aureliaValidation, _bootstrapFormRenderer) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Edit = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var Edit = exports.Edit = (_dec = (0, _aureliaFramework.inject)("User", _aureliaEventAggregator.EventAggregator, _aureliaValidation.ValidationController), _dec(_class = function () {
+        function Edit(userContext, eventAggregator, validation) {
+            _classCallCheck(this, Edit);
+
+            this.userContext = userContext;
+            this.eventAggregator = eventAggregator;
+            this.user = this.userContext.user;
+
+            this.validation = validation;
+            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
+            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
+
+            _aureliaValidation.ValidationRules.ensure(function (u) {
+                return u.firstName;
+            }).required().minLength(3).on(this.user);
+        }
+
+        Edit.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
+            this.router = navigationInstruction.router;
+        };
+
+        Edit.prototype.update = function update() {
+            var _this = this;
+
+            if (this.validation.errors && this.validation.errors.length > 0) {
+                return;
+            }
+
+            this.userContext.update(this.user).then(function (result) {
+                if (result === 0) {
+                    _this.router.navigate("view");
+                }
+            }).catch(function (error) {
+                return _this.handleError(error, "update");
+            });
+        };
+
+        Edit.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "Account.Edit->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return Edit;
+    }()) || _class);
+});
+define('account/login',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Login = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)("User", _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function Login(userContext, eventAggregator) {
+            _classCallCheck(this, Login);
+
+            this.userContext = userContext;
+            this.eventAggregator = eventAggregator;
+
+            this.username = '';
+            this.password = '';
+        }
+
+        Login.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
+            this.router = navigationInstruction.router;
+        };
+
+        Login.prototype.login = function login() {
+            var _this = this;
+
+            this.userContext.login(this.username, this.password).then(function (result) {
+                if (result === 0) {
+                    var url = _this.router.generate("strategies");
+                    window.location.href = url;
+                }
+            }).catch(function (error) {
+                return _this.handleError(error, "login");
+            });
+        };
+
+        Login.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "Account.Login->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return Login;
+    }()) || _class);
+});
+define('account/navigation',['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var Navigation = exports.Navigation = function () {
+        function Navigation() {
+            _classCallCheck(this, Navigation);
+        }
+
+        Navigation.prototype.configureRouter = function configureRouter(config, router) {
+            config.title = 'Login';
+
+            config.map([{ route: ['', 'login'], moduleId: "./login", name: "account-login", title: "Login", nav: false }, { route: ['edit'], moduleId: "./edit", name: "account-edit", title: "Edit Profile", nav: true, auth: true }, { route: ['view'], moduleId: "./view", name: "account-view", title: "View Profile", nav: true, auth: true }]);
+
+            this.router = router;
+            this.section = config.title;
+        };
+
+        return Navigation;
+    }();
+});
+define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.UserContext = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var UserContext = exports.UserContext = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function UserContext(httpClient, eventAggregator) {
+            _classCallCheck(this, UserContext);
+
+            httpClient.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.http = httpClient;
+            this.eventAggregator = eventAggregator;
+            this.user = {};
+        }
+
+        UserContext.prototype.initialize = function initialize() {
+            var _this = this;
+
+            return this.http.fetch("account/user").then(function (response) {
+                return response.json().then(function (user) {
+                    _this.user = user;
+                });
+            }).catch(function (error) {
+                _this.handleError(error, "initialize");
+            });
+        };
+
+        UserContext.prototype.login = function login(username, password) {
+            var _this2 = this;
+
+            var loginRequest = {
+                Email: username,
+                Password: password,
+                RememberMe: true
+            };
+
+            return this.http.fetch("account/login", {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(loginRequest)
+            }).then(function (response) {
+                return response.json().then(function (result) {
+                    if (result.status === 0) {
+                        _this2.user = result.user;
+                    }
+                    return result.status;
+                });
+            }).catch(function (error) {
+                return _this2.handleError(error, "login");
+            });
+        };
+
+        UserContext.prototype.update = function update(user) {
+            var _this3 = this;
+
+            var updateRequest = {
+                Username: user.username,
+                FirstName: user.firstName
+            };
+
+            return this.http.fetch("account/update", {
+                method: 'put',
+                body: (0, _aureliaFetchClient.json)(updateRequest)
+            }).then(function (response) {
+                return response.json().then(function (result) {
+                    if (result.status === 0) {
+                        _this3.user = result.user;
+                    }
+                    return result.status;
+                });
+            }).catch(function (error) {
+                return _this3.handleError(error, "update");
+            });
+        };
+
+        UserContext.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "UserContext->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return UserContext;
+    }()) || _class);
+});
+define('account/view',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
+    "use strict";
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.View = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var View = exports.View = (_dec = (0, _aureliaFramework.inject)("User"), _dec(_class = function () {
+        function View(userContext) {
+            _classCallCheck(this, View);
+
+            this.user = userContext.user;
+        }
+
+        View.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
+            this.router = navigationInstruction.router;
+        };
+
+        View.prototype.edit = function edit() {
+            this.router.navigate("edit");
+        };
+
+        return View;
+    }()) || _class);
+});
 define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], function (exports, _aureliaValidation) {
     'use strict';
 
@@ -676,6 +961,346 @@ define('resources/index',['exports'], function (exports) {
 
         config.globalResources('./elements/article/article', './elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
     }
+});
+define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.ArticleService = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var ArticleService = exports.ArticleService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function ArticleService(httpClient, eventAggregator) {
+            _classCallCheck(this, ArticleService);
+
+            httpClient.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.http = httpClient;
+            this.eventAggregator = eventAggregator;
+        }
+
+        ArticleService.prototype.getArticle = function getArticle(id) {
+            var _this = this;
+
+            return this.http.fetch("article/" + id).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error, "getArticle");
+            });
+        };
+
+        ArticleService.prototype.deleteArticle = function deleteArticle(id) {
+            var _this2 = this;
+
+            return this.http.fetch("article/" + id, { method: 'delete' }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this2.handleError(error, "deleteArticle");
+            });
+        };
+
+        ArticleService.prototype.updateArticleOrder = function updateArticleOrder(articleId, orderId) {
+            var _this3 = this;
+
+            var article = {
+                ArticleId: articleId,
+                OrderId: orderId
+            };
+
+            return this.http.fetch("article/" + articleId + "/order", { method: 'put', body: (0, _aureliaFetchClient.json)(article) }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this3.handleError(error, "updateArticleOrder");
+            });
+        };
+
+        ArticleService.prototype.getArticleByUrl = function getArticleByUrl(categotyId, articleUrl) {
+            var _this4 = this;
+
+            return this.http.fetch("article/url/" + categotyId + "/" + articleUrl).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this4.handleError(error, "getArticleByUrl");
+            });
+        };
+
+        ArticleService.prototype.getSection = function getSection(url) {
+            var _this5 = this;
+
+            return this.http.fetch("article/section/" + url).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this5.handleError(error, "getSection");
+            });
+        };
+
+        ArticleService.prototype.getCategories = function getCategories(sectionId) {
+            var _this6 = this;
+
+            return this.http.fetch("article/categories/" + sectionId).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this6.handleError(error, "getCategories");
+            });
+        };
+
+        ArticleService.prototype.getCategory = function getCategory(categoryUrl) {
+            var _this7 = this;
+
+            return this.http.fetch("article/category/" + categoryUrl).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this7.handleError(error);
+            });
+        };
+
+        ArticleService.prototype.getFeatured = function getFeatured(categoryId) {
+            var _this8 = this;
+
+            return this.http.fetch("article/" + categoryId + "/featured").then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this8.handleError(error, "getFeatured");
+            });
+        };
+
+        ArticleService.prototype.getArticles = function getArticles(categoryId) {
+            var _this9 = this;
+
+            return this.http.fetch("article/" + categoryId + "/all").then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this9.handleError(error, "getArticles");
+            });
+        };
+
+        ArticleService.prototype.saveArticle = function saveArticle(article) {
+            var _this10 = this;
+
+            return this.http.fetch('article', {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(article)
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                _this10.handleError(error, "saveArticle");
+            });
+        };
+
+        ArticleService.prototype.saveCategory = function saveCategory(category) {
+            var _this11 = this;
+
+            return this.http.fetch('article/category', {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(category)
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                _this11.handleError(error, "saveCategory");
+            });
+        };
+
+        ArticleService.prototype.deleteCategory = function deleteCategory(categoryId) {
+            var _this12 = this;
+
+            return this.http.fetch('article/category/' + categoryId, {
+                method: 'delete'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                _this12.handleError(error, "deleteCategory");
+            });
+        };
+
+        ArticleService.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "ArticleService->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return ArticleService;
+    }()) || _class);
+});
+define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.BlobServices = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var BlobServices = exports.BlobServices = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function BlobServices(http, eventAggregator) {
+            _classCallCheck(this, BlobServices);
+
+            http.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.eventAggregator = eventAggregator;
+            this.http = http;
+        }
+
+        BlobServices.prototype.post = function post(fileName, fileBody) {
+            var _this = this;
+
+            var payload = {
+                fileName: fileName,
+                fileBody: fileBody
+            };
+
+            return this.http.fetch('blob/upload', {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(payload)
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error, "post");
+            });
+        };
+
+        BlobServices.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "BlobServices->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return BlobServices;
+    }()) || _class);
+});
+define('services/strategy-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.StrategyService = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var StrategyService = exports.StrategyService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function StrategyService(http, eventAggregator) {
+            _classCallCheck(this, StrategyService);
+
+            http.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.eventAggregator = eventAggregator;
+            this.http = http;
+        }
+
+        StrategyService.prototype.getAll = function getAll() {
+            var _this = this;
+
+            return this.http.fetch('strategy/getAll', {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error, "getAll");
+            });
+        };
+
+        StrategyService.prototype.getByUrl = function getByUrl(url) {
+            var _this2 = this;
+
+            return this.http.fetch('strategy/getByUrl/' + url, {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this2.handleError(error, "getByUrl");
+            });
+        };
+
+        StrategyService.prototype.getById = function getById(id) {
+            var _this3 = this;
+
+            return this.http.fetch('strategy/get/' + id, {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this3.handleError(error, "getById");
+            });
+        };
+
+        StrategyService.prototype.update = function update(strategy) {
+            var _this4 = this;
+
+            return this.http.fetch('strategy', {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(strategy)
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                _this4.handleError(error, "update");
+            });
+        };
+
+        StrategyService.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "StrategyServices->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return exception;
+        };
+
+        StrategyService.prototype.enable = function enable(strategyId) {
+            var self = this;
+            return this.getById(strategyId).then(function (strategy) {
+                if (strategy && strategy.deleted) {
+                    strategy.deleted = false;
+                    return self.update(strategy);
+                }
+            });
+        };
+
+        StrategyService.prototype.disable = function disable(strategyId) {
+            var self = this;
+            return this.getById(strategyId).then(function (strategy) {
+                if (strategy && !strategy.deleted) {
+                    strategy.deleted = true;
+                    return self.update(strategy);
+                }
+            });
+        };
+
+        return StrategyService;
+    }()) || _class);
 });
 define('strategies/create',["exports"], function (exports) {
   "use strict";
@@ -1215,346 +1840,6 @@ define('studies/navigation',["exports", "aurelia-framework", "../services/articl
         };
 
         return Navigation;
-    }()) || _class);
-});
-define('services/article-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.ArticleService = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var ArticleService = exports.ArticleService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function ArticleService(httpClient, eventAggregator) {
-            _classCallCheck(this, ArticleService);
-
-            httpClient.configure(function (config) {
-                config.useStandardConfiguration().withBaseUrl('api/');
-            });
-
-            this.http = httpClient;
-            this.eventAggregator = eventAggregator;
-        }
-
-        ArticleService.prototype.getArticle = function getArticle(id) {
-            var _this = this;
-
-            return this.http.fetch("article/" + id).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this.handleError(error, "getArticle");
-            });
-        };
-
-        ArticleService.prototype.deleteArticle = function deleteArticle(id) {
-            var _this2 = this;
-
-            return this.http.fetch("article/" + id, { method: 'delete' }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this2.handleError(error, "deleteArticle");
-            });
-        };
-
-        ArticleService.prototype.updateArticleOrder = function updateArticleOrder(articleId, orderId) {
-            var _this3 = this;
-
-            var article = {
-                ArticleId: articleId,
-                OrderId: orderId
-            };
-
-            return this.http.fetch("article/" + articleId + "/order", { method: 'put', body: (0, _aureliaFetchClient.json)(article) }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this3.handleError(error, "updateArticleOrder");
-            });
-        };
-
-        ArticleService.prototype.getArticleByUrl = function getArticleByUrl(categotyId, articleUrl) {
-            var _this4 = this;
-
-            return this.http.fetch("article/url/" + categotyId + "/" + articleUrl).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this4.handleError(error, "getArticleByUrl");
-            });
-        };
-
-        ArticleService.prototype.getSection = function getSection(url) {
-            var _this5 = this;
-
-            return this.http.fetch("article/section/" + url).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this5.handleError(error, "getSection");
-            });
-        };
-
-        ArticleService.prototype.getCategories = function getCategories(sectionId) {
-            var _this6 = this;
-
-            return this.http.fetch("article/categories/" + sectionId).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this6.handleError(error, "getCategories");
-            });
-        };
-
-        ArticleService.prototype.getCategory = function getCategory(categoryUrl) {
-            var _this7 = this;
-
-            return this.http.fetch("article/category/" + categoryUrl).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this7.handleError(error);
-            });
-        };
-
-        ArticleService.prototype.getFeatured = function getFeatured(categoryId) {
-            var _this8 = this;
-
-            return this.http.fetch("article/" + categoryId + "/featured").then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this8.handleError(error, "getFeatured");
-            });
-        };
-
-        ArticleService.prototype.getArticles = function getArticles(categoryId) {
-            var _this9 = this;
-
-            return this.http.fetch("article/" + categoryId + "/all").then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this9.handleError(error, "getArticles");
-            });
-        };
-
-        ArticleService.prototype.saveArticle = function saveArticle(article) {
-            var _this10 = this;
-
-            return this.http.fetch('article', {
-                method: 'post',
-                body: (0, _aureliaFetchClient.json)(article)
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                _this10.handleError(error, "saveArticle");
-            });
-        };
-
-        ArticleService.prototype.saveCategory = function saveCategory(category) {
-            var _this11 = this;
-
-            return this.http.fetch('article/category', {
-                method: 'post',
-                body: (0, _aureliaFetchClient.json)(category)
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                _this11.handleError(error, "saveCategory");
-            });
-        };
-
-        ArticleService.prototype.deleteCategory = function deleteCategory(categoryId) {
-            var _this12 = this;
-
-            return this.http.fetch('article/category/' + categoryId, {
-                method: 'delete'
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                _this12.handleError(error, "deleteCategory");
-            });
-        };
-
-        ArticleService.prototype.handleError = function handleError(error, source) {
-            var exception = {
-                source: "ArticleService->" + source,
-                exception: error
-            };
-            this.eventAggregator.publish('GeneralExceptions', exception);
-            return error;
-        };
-
-        return ArticleService;
-    }()) || _class);
-});
-define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.BlobServices = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var BlobServices = exports.BlobServices = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function BlobServices(http, eventAggregator) {
-            _classCallCheck(this, BlobServices);
-
-            http.configure(function (config) {
-                config.useStandardConfiguration().withBaseUrl('api/');
-            });
-
-            this.eventAggregator = eventAggregator;
-            this.http = http;
-        }
-
-        BlobServices.prototype.post = function post(fileName, fileBody) {
-            var _this = this;
-
-            var payload = {
-                fileName: fileName,
-                fileBody: fileBody
-            };
-
-            return this.http.fetch('blob/upload', {
-                method: 'post',
-                body: (0, _aureliaFetchClient.json)(payload)
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this.handleError(error, "post");
-            });
-        };
-
-        BlobServices.prototype.handleError = function handleError(error, source) {
-            var exception = {
-                source: "BlobServices->" + source,
-                exception: error
-            };
-            this.eventAggregator.publish('GeneralExceptions', exception);
-            return error;
-        };
-
-        return BlobServices;
-    }()) || _class);
-});
-define('services/strategy-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.StrategyService = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var StrategyService = exports.StrategyService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function StrategyService(http, eventAggregator) {
-            _classCallCheck(this, StrategyService);
-
-            http.configure(function (config) {
-                config.useStandardConfiguration().withBaseUrl('api/');
-            });
-
-            this.eventAggregator = eventAggregator;
-            this.http = http;
-        }
-
-        StrategyService.prototype.getAll = function getAll() {
-            var _this = this;
-
-            return this.http.fetch('strategy/getAll', {
-                method: 'get'
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this.handleError(error, "getAll");
-            });
-        };
-
-        StrategyService.prototype.getByUrl = function getByUrl(url) {
-            var _this2 = this;
-
-            return this.http.fetch('strategy/getByUrl/' + url, {
-                method: 'get'
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this2.handleError(error, "getByUrl");
-            });
-        };
-
-        StrategyService.prototype.getById = function getById(id) {
-            var _this3 = this;
-
-            return this.http.fetch('strategy/get/' + id, {
-                method: 'get'
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                return _this3.handleError(error, "getById");
-            });
-        };
-
-        StrategyService.prototype.update = function update(strategy) {
-            var _this4 = this;
-
-            return this.http.fetch('strategy', {
-                method: 'post',
-                body: (0, _aureliaFetchClient.json)(strategy)
-            }).then(function (response) {
-                return response.json();
-            }).catch(function (error) {
-                _this4.handleError(error, "update");
-            });
-        };
-
-        StrategyService.prototype.handleError = function handleError(error, source) {
-            var exception = {
-                source: "StrategyServices->" + source,
-                exception: error
-            };
-            this.eventAggregator.publish('GeneralExceptions', exception);
-            return exception;
-        };
-
-        StrategyService.prototype.enable = function enable(strategyId) {
-            var self = this;
-            return this.getById(strategyId).then(function (strategy) {
-                if (strategy && strategy.deleted) {
-                    strategy.deleted = false;
-                    return self.update(strategy);
-                }
-            });
-        };
-
-        StrategyService.prototype.disable = function disable(strategyId) {
-            var self = this;
-            return this.getById(strategyId).then(function (strategy) {
-                if (strategy && !strategy.deleted) {
-                    strategy.deleted = true;
-                    return self.update(strategy);
-                }
-            });
-        };
-
-        return StrategyService;
     }()) || _class);
 });
 define('strategies/rules/create',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
@@ -2987,291 +3272,6 @@ define('resources/elements/navigation/sub-nav',["exports", "aurelia-framework", 
         enumerable: true,
         initializer: null
     })), _class2)) || _class);
-});
-define('account/edit',["exports", "aurelia-framework", "aurelia-event-aggregator", "aurelia-validation", "../common/bootstrap-form-renderer"], function (exports, _aureliaFramework, _aureliaEventAggregator, _aureliaValidation, _bootstrapFormRenderer) {
-    "use strict";
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.Edit = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var Edit = exports.Edit = (_dec = (0, _aureliaFramework.inject)("User", _aureliaEventAggregator.EventAggregator, _aureliaValidation.ValidationController), _dec(_class = function () {
-        function Edit(userContext, eventAggregator, validation) {
-            _classCallCheck(this, Edit);
-
-            this.userContext = userContext;
-            this.eventAggregator = eventAggregator;
-            this.user = this.userContext.user;
-
-            this.validation = validation;
-            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
-            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
-
-            _aureliaValidation.ValidationRules.ensure(function (u) {
-                return u.firstName;
-            }).required().minLength(3).on(this.user);
-        }
-
-        Edit.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
-            this.router = navigationInstruction.router;
-        };
-
-        Edit.prototype.update = function update() {
-            var _this = this;
-
-            if (this.validation.errors && this.validation.errors.length > 0) {
-                return;
-            }
-
-            this.userContext.update(this.user).then(function (result) {
-                if (result === 0) {
-                    _this.router.navigate("view");
-                }
-            }).catch(function (error) {
-                return _this.handleError(error, "update");
-            });
-        };
-
-        Edit.prototype.handleError = function handleError(error, source) {
-            var exception = {
-                source: "Account.Edit->" + source,
-                exception: error
-            };
-            this.eventAggregator.publish('GeneralExceptions', exception);
-            return error;
-        };
-
-        return Edit;
-    }()) || _class);
-});
-define('account/login',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
-    "use strict";
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.Login = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var Login = exports.Login = (_dec = (0, _aureliaFramework.inject)("User", _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function Login(userContext, eventAggregator) {
-            _classCallCheck(this, Login);
-
-            this.userContext = userContext;
-            this.eventAggregator = eventAggregator;
-
-            this.username = '';
-            this.password = '';
-        }
-
-        Login.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
-            this.router = navigationInstruction.router;
-        };
-
-        Login.prototype.login = function login() {
-            var _this = this;
-
-            this.userContext.login(this.username, this.password).then(function (result) {
-                if (result === 0) {
-                    var url = _this.router.generate("strategies");
-                    window.location.href = url;
-                }
-            }).catch(function (error) {
-                return _this.handleError(error, "login");
-            });
-        };
-
-        Login.prototype.handleError = function handleError(error, source) {
-            var exception = {
-                source: "Account.Login->" + source,
-                exception: error
-            };
-            this.eventAggregator.publish('GeneralExceptions', exception);
-            return error;
-        };
-
-        return Login;
-    }()) || _class);
-});
-define('account/navigation',['exports'], function (exports) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var Navigation = exports.Navigation = function () {
-        function Navigation() {
-            _classCallCheck(this, Navigation);
-        }
-
-        Navigation.prototype.configureRouter = function configureRouter(config, router) {
-            config.title = 'Login';
-
-            config.map([{ route: ['', 'login'], moduleId: "./login", name: "account-login", title: "Login", nav: false }, { route: ['edit'], moduleId: "./edit", name: "account-edit", title: "Edit Profile", nav: true, auth: true }, { route: ['view'], moduleId: "./view", name: "account-view", title: "View Profile", nav: true, auth: true }]);
-
-            this.router = router;
-            this.section = config.title;
-        };
-
-        return Navigation;
-    }();
-});
-define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.UserContext = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var UserContext = exports.UserContext = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function UserContext(httpClient, eventAggregator) {
-            _classCallCheck(this, UserContext);
-
-            httpClient.configure(function (config) {
-                config.useStandardConfiguration().withBaseUrl('api/');
-            });
-
-            this.http = httpClient;
-            this.eventAggregator = eventAggregator;
-            this.user = {};
-        }
-
-        UserContext.prototype.initialize = function initialize() {
-            var _this = this;
-
-            return this.http.fetch("account/user").then(function (response) {
-                return response.json().then(function (user) {
-                    _this.user = user;
-                });
-            }).catch(function (error) {
-                _this.handleError(error, "initialize");
-            });
-        };
-
-        UserContext.prototype.login = function login(username, password) {
-            var _this2 = this;
-
-            var loginRequest = {
-                Email: username,
-                Password: password,
-                RememberMe: true
-            };
-
-            return this.http.fetch("account/login", {
-                method: 'post',
-                body: (0, _aureliaFetchClient.json)(loginRequest)
-            }).then(function (response) {
-                return response.json().then(function (result) {
-                    if (result.status === 0) {
-                        _this2.user = result.user;
-                    }
-                    return result.status;
-                });
-            }).catch(function (error) {
-                return _this2.handleError(error, "login");
-            });
-        };
-
-        UserContext.prototype.update = function update(user) {
-            var _this3 = this;
-
-            var updateRequest = {
-                Username: user.username,
-                FirstName: user.firstName
-            };
-
-            return this.http.fetch("account/update", {
-                method: 'put',
-                body: (0, _aureliaFetchClient.json)(updateRequest)
-            }).then(function (response) {
-                return response.json().then(function (result) {
-                    if (result.status === 0) {
-                        _this3.user = result.user;
-                    }
-                    return result.status;
-                });
-            }).catch(function (error) {
-                return _this3.handleError(error, "update");
-            });
-        };
-
-        UserContext.prototype.handleError = function handleError(error, source) {
-            var exception = {
-                source: "UserContext->" + source,
-                exception: error
-            };
-            this.eventAggregator.publish('GeneralExceptions', exception);
-            return error;
-        };
-
-        return UserContext;
-    }()) || _class);
-});
-define('account/view',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
-    "use strict";
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.View = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var View = exports.View = (_dec = (0, _aureliaFramework.inject)("User"), _dec(_class = function () {
-        function View(userContext) {
-            _classCallCheck(this, View);
-
-            this.user = userContext.user;
-        }
-
-        View.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
-            this.router = navigationInstruction.router;
-        };
-
-        View.prototype.edit = function edit() {
-            this.router.navigate("edit");
-        };
-
-        return View;
-    }()) || _class);
 });
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -4792,8 +4792,8 @@ define('text!resources/elements/article/image-block.html', ['module'], function(
 define('text!resources/elements/article/new-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.isNew === true\">\r\n        <edit-mode>\r\n\r\n            <div class=\"form-horizontal\">\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Block Type</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <select class=\"form-control\" value.bind=\"block.BlockType\">\r\n                            <option>Select</option>\r\n                            <option repeat.for=\"blockType of blockTypes\" value.bind=\"blockType\">${blockType}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n        </edit-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/ordered-list-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'OrderedList'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.items\" class=\"row\">\r\n                        <div class=\"col-xs-10\">\r\n                            <textarea rows=\"3\" id=\"${$parent.block.BlockId}-${$index}\"\r\n                                      value.bind=\"item\"></textarea>\r\n                        </div>\r\n                        <div class=\"col-xs-2\" style=\"text-align: left;\">\r\n                            <button type=\"button\"\r\n                                    click.delegate=\"$parent.deleteItem($index)\"\r\n                                    class=\"btn btn-danger btn-xs\">\r\n                                Delete\r\n                            </button>\r\n                        </div>\r\n                </li>\r\n            </ol>\r\n            <button type=\"button\" \r\n                    click.delegate=\"appendItem()\" \r\n                    class=\"btn btn-primary btn-xs\">\r\n                Add List Item\r\n            </button>\r\n\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.Items\">${item}</li>\r\n            </ol>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/paragraph-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Paragraph'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <textarea rows=\"4\" value.bind=\"block.Text\">\r\n            </textarea>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <p>${block.Text}</p>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
+define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
 define('text!resources/elements/navigation/main-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-nav\">\r\n        <div class=\"container\">\r\n            <div class=\"main-nav-items\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!resources/elements/navigation/nav-header.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"container\">\r\n        <div class=\"navbar-brand\">\r\n\r\n            <img class=\"logo\" src=\"/content/images/logo.png\"/>\r\n            <a href=\"/\">O<span>rder</span> V<span>iew</span></a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav navbar-right\">\r\n            <li role=\"presentation\" class=\"dropdown\">\r\n                <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>\r\n                    Dream <span class=\"caret\"></span>\r\n                </a>\r\n                <ul class=\"dropdown-menu\">\r\n                    <li><a href=\"#\">Account</a></li>\r\n                    <li><a href=\"#\">Logout</a></li>\r\n                </ul>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
-define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map
