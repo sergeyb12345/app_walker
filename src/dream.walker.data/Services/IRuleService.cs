@@ -13,6 +13,7 @@ namespace dream.walker.data.Services
         Task<List<RuleSet>> GetRuleSetsAsync(QuotePeriod period, bool includeDeleted);
         Task<List<StrategyRuleSet>> GetStrategyRuleSetsAsync(int strategyId, QuotePeriod period);
         Task<List<Rule>> GetRules(QuotePeriod period);
+        Task<Rule> SaveRuleAsync(Rule model);
     }
 
 
@@ -63,6 +64,38 @@ namespace dream.walker.data.Services
                 var repository = scope.Resolve<IRuleRepository>();
                 var entities = await repository.GetAllAsync(period, false);
                 return entities;
+            }
+        }
+
+        public async Task<Rule> SaveRuleAsync(Rule rule)
+        {
+            if (rule == null) return null;
+
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                Rule record = null;
+                var repository = scope.Resolve<IRuleRepository>();
+
+                if (rule.RuleId == 0)
+                {
+                    record = repository.Add(new Rule());
+                }
+                else
+                {
+                    record = await repository.GetAsync(rule.RuleId);
+                }
+
+                if (record != null)
+                {
+                    //record.CategoryId = article.CategoryId;
+                    //record.Title = article.Title;
+                    //record.Url = article.Url;
+                    //record.JsonArticleBlocks = article.JsonArticleBlocks;
+
+                    await repository.CommitAsync();
+                }
+
+                return record;
             }
         }
     }
