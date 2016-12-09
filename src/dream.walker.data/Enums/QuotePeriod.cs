@@ -2,7 +2,7 @@
 {
     public enum QuotePeriod
     {
-        Daily,
-        Weekly
+        Daily = 0,
+        Weekly = 1
     }
 }

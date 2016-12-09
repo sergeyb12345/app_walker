@@ -20,7 +20,7 @@ namespace dream.walker.tests.Services
         [Test]
         public async Task GetStrategyRuleSetsAsync()
         {
-            var response = await _service.GetStrategyRuleSetsAsync(1, QuotePeriod.Daily);
+            var response = await _service.GetStrategyRuleSetsAsync(3, QuotePeriod.Daily);
         }
     }
 }

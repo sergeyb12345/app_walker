@@ -3,13 +3,13 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using dream.walker.data.Entities.Strategies;
+using dream.walker.data.Enums;
 
 namespace dream.walker.data.Repositories
 {
     public interface IRuleRepository
     {
-        Rule Get(int id);
-        Task<List<Rule>> GetAllAsync(bool includeDeleted);
+        Task<List<Rule>> GetAllAsync(QuotePeriod period, bool includeDeleted);
         Rule Add(Rule rule);
         Task<Rule> GetAsync(int ruleId);
         Task CommitAsync();
@@ -22,15 +22,9 @@ namespace dream.walker.data.Repositories
         {
         }
 
-        public Rule Get(int id)
+        public async Task<List<Rule>> GetAllAsync(QuotePeriod period, bool includeDeleted)
         {
-            var record = Dbset.FirstOrDefault(r => r.RuleId == id);
-            return record;
-        }
-
-        public async Task<List<Rule>> GetAllAsync(bool includeDeleted)
-        {
-            var records = await Dbset.Where(r => !r.Deleted || includeDeleted).OrderBy(r => r.Name).ToListAsync();
+            var records = await Dbset.Where(r => r.Period == period && ( !r.Deleted || includeDeleted )).OrderBy(r => r.Name).ToListAsync();
             return records;
         }
 

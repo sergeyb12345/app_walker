@@ -2,8 +2,8 @@
 {
     public enum DataSourceType
     {
-        Indicator=0,
-        HistoricalData,
-        Constant
+        Indicator = 0,
+        HistoricalData = 1,
+        Constant = 2
     }
 }

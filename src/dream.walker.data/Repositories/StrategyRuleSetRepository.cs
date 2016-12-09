@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using dream.walker.data.Entities.Strategies;
@@ -28,14 +29,18 @@ namespace dream.walker.data.Repositories
         public async Task<List<StrategyRuleSet>> GetAsync(int strategyId, QuotePeriod period)
         {
             var query = @"
-                SELECT S.*, R.[Name] 
+                SELECT S.*, R.[Name]
                 FROM [dbo].[RuleSet] R
                 INNER JOIN [dbo].[StrategyRuleSet] S
                 ON R.[RuleSetId] = S.[RuleSetId]
                 WHERE S.[StrategyId] = @strategyId AND R.[Period] = @period
                 ORDER BY S.OrderId";
 
-            var records = await Dbset.SqlQuery(query, strategyId, (int) period).ToListAsync();
+
+            var records = await DbContext.Database.SqlQuery<StrategyRuleSet>(query,
+                new SqlParameter("@strategyId", strategyId),
+                new SqlParameter("@period", (int)period)).ToListAsync();
+
             return records;
         }
     }

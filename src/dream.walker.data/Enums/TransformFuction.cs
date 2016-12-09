@@ -3,8 +3,8 @@
     public enum TransformFuction
     {
         First = 0,
-        Max,
-        Sum,
-        Avg
+        Max = 1,
+        Sum = 2,
+        Avg = 3
     }
 }
