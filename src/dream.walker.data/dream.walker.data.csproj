@@ -99,7 +99,7 @@
     <Compile Include="Entities\Strategies\RuleSet.cs" />
     <Compile Include="Entities\Strategies\RuleSetDetails.cs" />
     <Compile Include="Entities\Strategies\StrategyRuleSet.cs" />
-    <Compile Include="Enums\TransformFuction.cs" />
+    <Compile Include="Enums\TransformFunction.cs" />
     <Compile Include="Enums\ChartType.cs" />
     <Compile Include="Enums\NHNLPeriod.cs" />
     <Compile Include="Entities\Strategies\Strategy.cs" />

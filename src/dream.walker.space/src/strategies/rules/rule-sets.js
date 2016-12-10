@@ -3,7 +3,7 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 import {StrategyService} from '../../services/strategy-service';
 
 @inject(EventAggregator, StrategyService, "ErrorParser")
-export class Create {
+export class RuleSets {
 
     constructor (eventAggregator, strategyService, errorParser) {
 
@@ -12,6 +12,6 @@ export class Create {
         this.strategyService = strategyService;
         this.subscriptions = [];
         this.errors = [];
-        this.rule = {};
+        this.ruleSets = [];
     }
 }

@@ -958,6 +958,7 @@ define('resources/index',['exports'], function (exports) {
         config.globalResources(['./elements/navigation/main-nav']);
         config.globalResources(['./elements/navigation/sub-nav']);
         config.globalResources(['./elements/chart/any-chart']);
+        config.globalResources(['./elements/rule/rule']);
 
         config.globalResources('./elements/article/article', './elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
     }
@@ -1191,6 +1192,93 @@ define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-
         };
 
         return BlobServices;
+    }()) || _class);
+});
+define('services/rule-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.RuleService = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var RuleService = exports.RuleService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function RuleService(http, eventAggregator) {
+            _classCallCheck(this, RuleService);
+
+            http.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.eventAggregator = eventAggregator;
+            this.http = http;
+        }
+
+        RuleService.prototype.getRule = function getRule(id) {
+            var _this = this;
+
+            return this.http.fetch('rule/' + id, {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error, "getRule");
+            });
+        };
+
+        RuleService.prototype.getRulesForPerios = function getRulesForPerios(period) {
+            var _this2 = this;
+
+            return this.http.fetch('rule/' + period + '/all', {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this2.handleError(error, "getRulesForPerios");
+            });
+        };
+
+        RuleService.prototype.deleteRule = function deleteRule(id) {
+            var _this3 = this;
+
+            return this.http.fetch("rule/" + id, { method: 'delete' }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this3.handleError(error, "deleteRule");
+            });
+        };
+
+        RuleService.prototype.saveRule = function saveRule(rule) {
+            var _this4 = this;
+
+            return this.http.fetch("rule", {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(rule)
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                _this4.handleError(error, "saveRule");
+            });
+        };
+
+        RuleService.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "RuleService->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return RuleService;
     }()) || _class);
 });
 define('services/strategy-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
@@ -1536,7 +1624,7 @@ define('strategies/navigation',['exports'], function (exports) {
         Navigation.prototype.configureRouter = function configureRouter(config, router) {
             config.title = 'Strategies';
 
-            config.map([{ route: ['', 'list'], moduleId: "./list", name: "strategy-list", title: "Strategies", nav: true }, { route: ['create'], moduleId: "./create", name: "strategy-create", title: "Create Strategy", nav: true, auth: true }, { route: ['edit', 'edit/:strategy'], moduleId: "./edit", name: "strategy-edit", title: "Modify Strategy", nav: false, auth: true }, { route: ['rules'], moduleId: "./rules/navigation", name: "strategy-rules", title: "Manage Rules", nav: true, auth: true }]);
+            config.map([{ route: ['', 'list'], moduleId: "./list", name: "strategy-list", title: "Strategies", nav: true }, { route: ['create'], moduleId: "./create", name: "strategy-create", title: "Create Strategy", nav: true, auth: true }, { route: ['edit', 'edit/:strategy'], moduleId: "./edit", name: "strategy-edit", title: "Modify Strategy", nav: false, auth: true }, { route: ['rules'], moduleId: "./rules/rules", name: "manage-rules", title: "Manage Rules", nav: true, auth: true }, { route: ['rule-sets'], moduleId: "./rules/rule-sets", name: "manage-rule-sets", title: "Manage Rule Sets", nav: true, auth: true }]);
 
             this.router = router;
             this.section = config.title;
@@ -1842,13 +1930,13 @@ define('studies/navigation',["exports", "aurelia-framework", "../services/articl
         return Navigation;
     }()) || _class);
 });
-define('strategies/rules/create',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
+define('strategies/rules/rule-sets',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.Create = undefined;
+    exports.RuleSets = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -1858,24 +1946,24 @@ define('strategies/rules/create',['exports', 'aurelia-framework', 'aurelia-event
 
     var _dec, _class;
 
-    var Create = exports.Create = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _strategyService.StrategyService, "ErrorParser"), _dec(_class = function Create(eventAggregator, strategyService, errorParser) {
-        _classCallCheck(this, Create);
+    var RuleSets = exports.RuleSets = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _strategyService.StrategyService, "ErrorParser"), _dec(_class = function RuleSets(eventAggregator, strategyService, errorParser) {
+        _classCallCheck(this, RuleSets);
 
         this.errorParser = errorParser;
         this.eventAggregator = eventAggregator;
         this.strategyService = strategyService;
         this.subscriptions = [];
         this.errors = [];
-        this.rule = {};
+        this.ruleSets = [];
     }) || _class);
 });
-define('strategies/rules/edit',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
+define('strategies/rules/rules',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.Edit = undefined;
+    exports.Rules = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -1885,35 +1973,8 @@ define('strategies/rules/edit',['exports', 'aurelia-framework', 'aurelia-event-a
 
     var _dec, _class;
 
-    var Edit = exports.Edit = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _strategyService.StrategyService, "ErrorParser"), _dec(_class = function Edit(eventAggregator, strategyService, errorParser) {
-        _classCallCheck(this, Edit);
-
-        this.errorParser = errorParser;
-        this.eventAggregator = eventAggregator;
-        this.strategyService = strategyService;
-        this.subscriptions = [];
-        this.errors = [];
-        this.rule = {};
-    }) || _class);
-});
-define('strategies/rules/list',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.List = undefined;
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var _dec, _class;
-
-    var List = exports.List = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _strategyService.StrategyService, "ErrorParser"), _dec(_class = function List(eventAggregator, strategyService, errorParser) {
-        _classCallCheck(this, List);
+    var Rules = exports.Rules = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _strategyService.StrategyService, "ErrorParser"), _dec(_class = function Rules(eventAggregator, strategyService, errorParser) {
+        _classCallCheck(this, Rules);
 
         this.errorParser = errorParser;
         this.eventAggregator = eventAggregator;
@@ -1922,36 +1983,6 @@ define('strategies/rules/list',['exports', 'aurelia-framework', 'aurelia-event-a
         this.errors = [];
         this.rules = [];
     }) || _class);
-});
-define('strategies/rules/navigation',['exports'], function (exports) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    var Navigation = exports.Navigation = function () {
-        function Navigation() {
-            _classCallCheck(this, Navigation);
-        }
-
-        Navigation.prototype.configureRouter = function configureRouter(config, router) {
-            config.title = 'Strategies';
-
-            config.map([{ route: ['', 'list'], moduleId: "./list", name: "defined-rules", title: "Defined Rules", nav: true }, { route: ['create'], moduleId: "./create", name: "rule-create", title: "Register Rule", nav: true, auth: true }, { route: ['rules', 'rules/:strategy'], moduleId: "./strategy-rules", name: "strategy-rules", title: "Manage Strategy Rules", nav: false, auth: true }]);
-
-            this.router = router;
-            this.section = config.title;
-        };
-
-        return Navigation;
-    }();
 });
 define('strategies/rules/strategy-rules',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
     'use strict';
@@ -3269,6 +3300,137 @@ define('resources/elements/navigation/sub-nav',["exports", "aurelia-framework", 
 
         return SubNav;
     }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "router", [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    })), _class2)) || _class);
+});
+define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/rule-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _ruleService) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Rule = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor;
+
+    var Rule = exports.Rule = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _ruleService.RuleService, "User"), _dec(_class = (_class2 = function () {
+        function Rule(eventAggregator, ruleService, userContext) {
+            _classCallCheck(this, Rule);
+
+            _initDefineProp(this, 'rule', _descriptor, this);
+
+            this.powerUser = userContext.user.isAuthenticated;
+            this.eventAggregator = eventAggregator;
+            this.ruleService = ruleService;
+            this.subscriptions = [];
+            this.rule = { editMode: false, deleteMode: false };
+
+            this.periods = [{ id: 0, name: 'Daily' }, { id: 1, name: 'Weekly' }];
+
+            this.compareTypes = [{ id: 0, name: 'Greater' }, { id: 1, name: 'Greater or Equal' }, { id: 2, name: 'Equal' }, { id: 3, name: 'Less' }, { id: 4, name: 'Less or Equal' }, { id: 4, name: 'Not Equal' }];
+
+            this.dataSources = [{ id: 0, name: 'Indicator' }, { id: 1, name: 'Historical Data' }, { id: 2, name: 'Constant' }];
+
+            this.priceDataSeries = [{ id: 0, name: 'Close' }, { id: 1, name: 'Open' }, { id: 2, name: 'High' }, { id: 3, name: 'Low' }];
+
+            this.indicatorDataSeries = [{ id: 0, name: 'EMA (13) Daily' }, { id: 1, name: 'EMA (26) Daily' }];
+
+            this.transformFunctions = [{ id: 0, name: 'First' }, { id: 1, name: 'Max' }, { id: 2, name: 'Average' }, { id: 3, name: 'Summarize' }];
+        }
+
+        Rule.prototype.ruleChanged = function ruleChanged(rule) {
+            if (rule) {
+                rule.editMode = false;
+                rule.deleteMode = false;
+
+                this.rule = rule;
+            }
+        };
+
+        Rule.prototype.startEdit = function startEdit() {
+            this.originalRule = Object.assign({}, this.rule);
+            this.rule.editMode = true;
+            this.rule.deleteMode = false;
+            this.rule.viewModel = false;
+        };
+
+        Rule.prototype.cancelEdit = function cancelEdit() {
+            this.rule = this.originalRule;
+            this.rule.editMode = false;
+            this.rule.deleteMode = false;
+            this.rule.viewModel = false;
+        };
+
+        Rule.prototype.tryDelete = function tryDelete() {
+            this.rule.editMode = false;
+            this.rule.deleteMode = true;
+            this.rule.viewModel = false;
+        };
+
+        Rule.prototype.cancelDelete = function cancelDelete() {
+            this.rule.editMode = false;
+            this.rule.deleteMode = false;
+            this.rule.viewModel = false;
+        };
+
+        Rule.prototype.showDetails = function showDetails() {
+            this.rule.viewModel = !this.rule.viewModel;
+            this.rule.editMode = false;
+            this.rule.deleteMode = false;
+        };
+
+        return Rule;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'rule', [_aureliaFramework.bindable], {
         enumerable: true,
         initializer: null
     })), _class2)) || _class);
@@ -4779,10 +4941,8 @@ define('text!strategies/list.html', ['module'], function(module) { module.export
 define('text!strategies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-nav router.bind=\"router\" ></sub-nav>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!studies/category.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"actions\" if.bind=\"powerUser\">\r\n\r\n        <div if.bind=\"editMode !== true\" class=\"btn-group\" role=\"group\">\r\n            <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                Configure\r\n                <span class=\"caret\"></span>\r\n            </button>\r\n            <ul class=\"dropdown-menu\">\r\n                <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                <li role=\"separator\" class=\"divider\"></li>\r\n                <li><a href=\"/categories\">Manage Categories</a></li>\r\n            </ul>\r\n        </div>\r\n\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"saveArticle()\" class=\"btn btn-success\">Apply Changes</button>\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n\r\n        <div class=\"col-md-8 article\">\r\n            <article article.bind=\"article\"></article> \r\n        </div>\r\n\r\n        <div class=\"col-md-4 side-navigation\">\r\n            <h3>${category.title}</h3>\r\n            <ul>\r\n                <li repeat.for=\"item of sortedArticles\" class=\"${$parent.editMode === true ? 'edit-mode': ''}\" if.bind=\"item.isDeleted !== true\">\r\n                    <div if.bind=\"editMode\" class=\"block-actions\">\r\n                        <div if.bind=\"item.isDeleting !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.deleteArticle(item)\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveUpArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveDownArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                        </div>\r\n\r\n                        <div if.bind=\"item.isDeleting === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.confirmDeleteArticle(item)\" class=\"btn btn-danger btn-xs\">Confirm Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.cancelDeleteArticle(item)\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                    <a href.bind=\"$parent.getArticleUrl(item)\" class=\"${item.articleId === article.articleId ? 'active' : ''}\">${item.title}</a>\r\n                </li>\r\n            </ul>\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addArticle()\" class=\"btn btn-primary btn-xs\">Add New Article</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
-define('text!strategies/rules/create.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Register Rule</h3>\r\n    </header>\r\n</template>"; });
-define('text!strategies/rules/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Modify Rule</h3>\r\n    </header>\r\n</template>"; });
-define('text!strategies/rules/list.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Rules</h3>\r\n    </header>\r\n</template>"; });
-define('text!strategies/rules/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-nav router.bind=\"router\"></sub-nav>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
+define('text!strategies/rules/rule-sets.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Rule Sets</h3>\r\n    </header>\r\n</template>"; });
+define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Rules</h3>\r\n    </header>\r\n</template>"; });
 define('text!strategies/rules/strategy-rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Strategy Rules</h3>\r\n    </header>\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
 define('text!resources/elements/article/article.html', ['module'], function(module) { module.exports = "<template>\r\n    <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Title</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Url</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n            </div>\r\n        </div>\r\n\r\n    </edit-mode>\r\n    <read-mode if.bind=\"editMode !== true\">\r\n        <h2>${article.title}</h2>\r\n    </read-mode>\r\n\r\n    <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                  repeat.for=\"block of article.blocks\">\r\n        <block-actions block.bind=\"block\"></block-actions>\r\n        <article-block block.bind=\"block\"></article-block>\r\n    </article-part>\r\n\r\n    <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
@@ -4796,4 +4956,5 @@ define('text!resources/elements/chart/any-chart.html', ['module'], function(modu
 define('text!resources/elements/navigation/main-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-nav\">\r\n        <div class=\"container\">\r\n            <div class=\"main-nav-items\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!resources/elements/navigation/nav-header.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"container\">\r\n        <div class=\"navbar-brand\">\r\n\r\n            <img class=\"logo\" src=\"/content/images/logo.png\"/>\r\n            <a href=\"/\">O<span>rder</span> V<span>iew</span></a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav navbar-right\">\r\n            <li role=\"presentation\" class=\"dropdown\">\r\n                <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>\r\n                    Dream <span class=\"caret\"></span>\r\n                </a>\r\n                <ul class=\"dropdown-menu\">\r\n                    <li><a href=\"#\">Account</a></li>\r\n                    <li><a href=\"#\">Logout</a></li>\r\n                </ul>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
+define('text!resources/elements/rule/rule.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rule\" if.bind=\"rule.Name\">\r\n\r\n\r\n        <div class=\"row\">\r\n            <div class=\"col-md-12 c_rule-header\">\r\n                <span>${rule.Name}</span>\r\n                <div class=\"btn-group\">\r\n                    <button type=\"button\" class=\"btn btn-default\">${rule.viewMode === true ? 'Hide' : 'Show'}</button>\r\n                    <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                        <span class=\"caret\"></span>\r\n                        <span class=\"sr-only\">Toggle Dropdown</span>\r\n                    </button>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li if.bind=\"rule.viewMode !== true\"><a click.delegate=\"showDetails()\">Show Details</a></li>\r\n                        <li if.bind=\"rule.editMode !== true\"><a click.delegate=\"startEdit()\">Edit Rule</a></li>\r\n                        <li if.bind=\"rule.deleteMode !== true\"><a click.delegate=\"tryDelete()\">Delete Rule</a></li>\r\n                    </ul>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"row\" if.bind=\"rule.viewMode === true || rule.editMode === true\">\r\n            <form submit.delegate=\"applyChanges()\">\r\n                <fieldset disabled.bind=\"rule.editMode !== false\"></fieldset>\r\n\r\n                <div class=\"form-group\">\r\n                    <label for=\"txtName\" class=\"col-sm-3 control-label\">Rule Name</label>\r\n                    <div class=\"col-md-7 col-xs-12\">\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"rule.Name & validate\">\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"form-group\">\r\n                    <label for=\"txtDescription\" class=\"control-label\">Description</label>\r\n                    <div class=\"col-xs-12\">\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription\" value.bind=\"rule.Description & validate\"></textarea>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"form-inline col-xs-12\">\r\n                    <div class=\"form-group\">\r\n                        <label for=\"ddlPeriod\">Period: </label>\r\n                        <select id=\"ddlPeriod\" class=\"form-control\" value.bind=\"rule.Period\">\r\n                            <option repeat.for=\"period of periods\" value.bind=\"period.id\">${period.name}</option>\r\n                        </select>\r\n                    </div>\r\n                    <div class=\"form-group\">\r\n                        <label for=\"ddlCondition\">Compare operator: </label>\r\n                        <select id=\"ddlCondition\" class=\"form-control\" value.bind=\"rule.Condition\">\r\n                            <option repeat.for=\"compareType of compareTypes\" value.bind=\"compareType.id\">${compareType.name}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n\r\n                <!--Compare What-->\r\n                <div class=\"col-md-6\">\r\n                    <div class=\"row c_rule-details\">\r\n                        <h3>Compare What</h3>\r\n\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtName1\" class=\"col-sm-3 control-label\">Strategy Name</label>\r\n                            <div class=\"col-sm-7\">\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtName1\" value.bind=\"strategy.name & validate\">\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <!--Compare With-->\r\n                <div class=\"col-md-6\">\r\n                    <div class=\"row c_rule-details\">\r\n                        <h3>Compare With</h3>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtName2\" class=\"col-sm-3 control-label\">Strategy Name</label>\r\n                            <div class=\"col-sm-7\">\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtName2\" value.bind=\"strategy.name & validate\">\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"col-md-12\" if.bind=\"rule.editMode === true\">\r\n                    <button type=\"submit\" class=\"btn btn-primary btn-xs\">Apply Changes</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                </div>\r\n            </form>\r\n\r\n        </div>\r\n    </div>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

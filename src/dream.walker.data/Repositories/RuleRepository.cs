@@ -13,6 +13,7 @@ namespace dream.walker.data.Repositories
         Rule Add(Rule rule);
         Task<Rule> GetAsync(int ruleId);
         Task CommitAsync();
+        void Delete(Rule record);
     }
 
 

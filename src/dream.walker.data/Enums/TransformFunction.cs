@@ -1,6 +1,6 @@
 ﻿namespace dream.walker.data.Enums
 {
-    public enum TransformFuction
+    public enum TransformFunction
     {
         First = 0,
         Max = 1,

@@ -46,12 +46,20 @@ namespace dream.walker.space.Controllers
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(Rule))]
-        public async Task<IHttpActionResult> SaveArticle([FromBody] Rule model)
+        public async Task<IHttpActionResult> SaveRule([FromBody] Rule model)
         {
 
             var rule = await _ruleService.SaveRuleAsync(model);
 
             return Ok(rule);
+        }
+
+        [HttpDelete]
+        [Route("{id:int:min(1)}")]
+        public async Task<IHttpActionResult> DeleteRule(int id)
+        {
+            await _ruleService.DeleteRuleAsync(id);
+            return Ok();
         }
     }
 }

@@ -20,8 +20,8 @@ namespace dream.walker.data.Entities.Strategies
         public int SkipItemsV2 { get; set; }
         public int TakeItemsV1 { get; set; }
         public int TakeItemsV2 { get; set; }
-        public TransformFuction TransformItemsV1 { get; set; }
-        public TransformFuction TransformItemsV2 { get; set; }
+        public TransformFunction TransformItemsV1 { get; set; }
+        public TransformFunction TransformItemsV2 { get; set; }
         public CompareOperator Condition { get; set; }
 
     }
