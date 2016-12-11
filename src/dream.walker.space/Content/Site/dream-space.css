@@ -39,8 +39,12 @@ h3,
 .h3,
 .H3 {
   color: #C11800;
-  text-transform: uppercase;
   font-size: 13px;
+}
+h3 span,
+.h3 span,
+.H3 span {
+  color: #252d2c;
 }
 ul li,
 ol li {
@@ -111,6 +115,10 @@ nav-header .navbar-brand img.logo {
   display: inline-block;
   width: 47px;
   opacity: 0.96;
+}
+nav-header .navbar-brand a,
+nav-header .navbar-brand a:hover {
+  text-decoration: none;
 }
 nav-header .navbar-brand a span,
 nav-header .navbar-brand a:hover span {

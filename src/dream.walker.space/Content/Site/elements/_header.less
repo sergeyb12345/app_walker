@@ -8,8 +8,11 @@ h2, .h2 {
 
 h3, .h3, .H3 {
     color: @h3-color;
-    text-transform: uppercase;
+    //text-transform: capitalize;
     font-size: 13px;
+    span {
+        color: @font-color;
+    }
 }
 
 ul, ol {
@@ -89,6 +92,8 @@ nav-header {
             }
 
             a, a:hover {
+                text-decoration: none;
+
                 span {
                     color: @font-color;
                 }

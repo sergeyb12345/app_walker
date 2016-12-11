@@ -497,6 +497,7 @@
     <Content Include="src\resources\elements\navigation\sub-nav.js" />
     <Content Include="src\resources\elements\rule\rule.html" />
     <Content Include="src\resources\elements\rule\rule.js" />
+    <Content Include="src\resources\elements\styling\first-letter.html" />
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
     <Content Include="src\services\rule-service.js" />
