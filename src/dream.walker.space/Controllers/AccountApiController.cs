@@ -5,6 +5,8 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity.Owin;
 using dream.walker.space.Models;
+using Microsoft.Owin.Security;
+using Microsoft.AspNet.Identity;
 
 namespace dream.walker.space.Controllers
 {
@@ -38,6 +40,14 @@ namespace dream.walker.space.Controllers
             private set
             {
                 _signInManager = value;
+            }
+        }
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.Current.GetOwinContext().Authentication;
             }
         }
 
@@ -104,6 +114,15 @@ namespace dream.walker.space.Controllers
             }
            
             return Ok(result);
+        }
+
+
+        [HttpPost]
+        [Route("api/account/logout")]
+        public IHttpActionResult Logout()
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return Ok();
         }
 
         [HttpGet]

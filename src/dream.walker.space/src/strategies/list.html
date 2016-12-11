@@ -1,37 +1,39 @@
 ﻿<template>
+    <div class="c_strategy">
 
-    <header>
-        <h3>Defined Strategies</h3>
-    </header>
-    
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Active</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr repeat.for="strategy of strategies"
-            class="${strategy.deleted === true ? 'danger': ''}">
-            <td>
-                <a href.bind="$parent.generateUrl(strategy)">${strategy.name}</a>
-            </td>
-            <td>${strategy.deleted !== true}</td>
-            <td>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Action <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li if.bind="strategy.deleted === true"><a click.trigger="$parent.enable(strategy)">Activate</a></li>
-                        <li if.bind="strategy.deleted !== true"><a click.trigger="$parent.disable(strategy)">Deactivate</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Manage Rules</a></li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <header>
+            <h3 first-letter-span>Defined Strategies</h3>
+        </header>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr repeat.for="strategy of strategies"
+                    class="${strategy.deleted === true ? 'danger': ''}">
+                    <td>
+                        <a href.bind="$parent.generateUrl(strategy)">${strategy.name}</a>
+                    </td>
+                    <td>${strategy.deleted !== true}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li if.bind="strategy.deleted === true"><a click.trigger="$parent.enable(strategy)">Activate</a></li>
+                                <li if.bind="strategy.deleted !== true"><a click.trigger="$parent.disable(strategy)">Deactivate</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Manage Rules</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>

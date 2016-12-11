@@ -1,11 +1,13 @@
 import {inject} from "aurelia-framework";
 import {RedirectToRoute } from 'aurelia-router';
 
-@inject("Settings")
+@inject("User", "Settings")
 export class App {
 
-    constructor(settings) {
+    constructor(userContext, settings) {
+        this.isAuthenticated = userContext.user.isAuthenticated;
         this.homePage = settings.homePage;
+        this.router = null;
     }
 
     configureRouter(config, router) {
@@ -17,7 +19,7 @@ export class App {
         config.addPipelineStep('authorize', AuthorizeStep);
         config.map([
             { route: ["account"], moduleId: "account/navigation", name:"account", title: "Login", nav: false },
-            { route: ["strategies"], moduleId: "strategies/navigation", name:"strategies", title: "Strategies", auth: true , nav:true },
+            { route: ["strategies"], moduleId: "strategies/navigation", name:"strategies", title: "Strategies", auth: true , nav:this.isAuthenticated },
             { route: ["studies"], moduleId: "studies/navigation", name:"studies", title: "Studies", nav:true },
             { route: '', redirect: this.homePage }
 

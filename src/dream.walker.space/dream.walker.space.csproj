@@ -423,6 +423,7 @@
     <Content Include="Content\Site\components\_category.less" />
     <Content Include="Content\Site\elements\_container.less" />
     <Content Include="Content\Site\elements\_main-nav.less" />
+    <Content Include="Content\Site\components\_strategy.less" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />
@@ -497,7 +498,7 @@
     <Content Include="src\resources\elements\navigation\sub-nav.js" />
     <Content Include="src\resources\elements\rule\rule.html" />
     <Content Include="src\resources\elements\rule\rule.js" />
-    <Content Include="src\resources\elements\styling\first-letter.html" />
+    <Content Include="src\resources\attributes\first-letter-span.js" />
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
     <Content Include="src\services\rule-service.js" />
@@ -569,7 +570,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="src\resources\attributes\" />
     <Folder Include="src\resources\binding-behaviors\" />
     <Folder Include="src\resources\value-converters\" />
     <Folder Include="Views\Chart\" />

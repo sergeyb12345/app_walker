@@ -5,7 +5,7 @@ export function configure(config) {
     config.globalResources(['./elements/navigation/sub-nav']);
     config.globalResources(['./elements/chart/any-chart']);
     config.globalResources(['./elements/rule/rule']);
-    //config.feature('./elements/article');
+    config.globalResources(['./attributes/first-letter-span']);
     config.globalResources(
         './elements/article/article',
         './elements/article/article-block',

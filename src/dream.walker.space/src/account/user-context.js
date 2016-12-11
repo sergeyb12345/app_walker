@@ -58,6 +58,19 @@ export class UserContext {
             });
     }
 
+    logout() {
+        return this.http.fetch("account/logout",
+            {
+                method: 'post'
+            })
+            .then(response => {
+                return response.json();
+            })
+            .catch(error => {
+                return this.handleError(error, "logout");
+            });
+    }
+
     update(user) {
         let updateRequest = {
             Username : user.username,

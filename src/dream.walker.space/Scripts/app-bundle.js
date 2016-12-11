@@ -14,11 +14,13 @@ define('app',["exports", "aurelia-framework", "aurelia-router"], function (expor
 
     var _dec, _class, _dec2, _class2;
 
-    var App = exports.App = (_dec = (0, _aureliaFramework.inject)("Settings"), _dec(_class = function () {
-        function App(settings) {
+    var App = exports.App = (_dec = (0, _aureliaFramework.inject)("User", "Settings"), _dec(_class = function () {
+        function App(userContext, settings) {
             _classCallCheck(this, App);
 
+            this.isAuthenticated = userContext.user.isAuthenticated;
             this.homePage = settings.homePage;
+            this.router = null;
         }
 
         App.prototype.configureRouter = function configureRouter(config, router) {
@@ -28,7 +30,7 @@ define('app',["exports", "aurelia-framework", "aurelia-router"], function (expor
 
             this.router = router;
             config.addPipelineStep('authorize', AuthorizeStep);
-            config.map([{ route: ["account"], moduleId: "account/navigation", name: "account", title: "Login", nav: false }, { route: ["strategies"], moduleId: "strategies/navigation", name: "strategies", title: "Strategies", auth: true, nav: true }, { route: ["studies"], moduleId: "studies/navigation", name: "studies", title: "Studies", nav: true }, { route: '', redirect: this.homePage }]);
+            config.map([{ route: ["account"], moduleId: "account/navigation", name: "account", title: "Login", nav: false }, { route: ["strategies"], moduleId: "strategies/navigation", name: "strategies", title: "Strategies", auth: true, nav: this.isAuthenticated }, { route: ["studies"], moduleId: "studies/navigation", name: "studies", title: "Studies", nav: true }, { route: '', redirect: this.homePage }]);
         };
 
         return App;
@@ -417,8 +419,20 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
             });
         };
 
-        UserContext.prototype.update = function update(user) {
+        UserContext.prototype.logout = function logout() {
             var _this3 = this;
+
+            return this.http.fetch("account/logout", {
+                method: 'post'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this3.handleError(error, "logout");
+            });
+        };
+
+        UserContext.prototype.update = function update(user) {
+            var _this4 = this;
 
             var updateRequest = {
                 Username: user.username,
@@ -431,12 +445,12 @@ define('account/user-context',['exports', 'aurelia-framework', 'aurelia-fetch-cl
             }).then(function (response) {
                 return response.json().then(function (result) {
                     if (result.status === 0) {
-                        _this3.user = result.user;
+                        _this4.user = result.user;
                     }
                     return result.status;
                 });
             }).catch(function (error) {
-                return _this3.handleError(error, "update");
+                return _this4.handleError(error, "update");
             });
         };
 
@@ -959,7 +973,7 @@ define('resources/index',['exports'], function (exports) {
         config.globalResources(['./elements/navigation/sub-nav']);
         config.globalResources(['./elements/chart/any-chart']);
         config.globalResources(['./elements/rule/rule']);
-
+        config.globalResources(['./attributes/first-letter-span']);
         config.globalResources('./elements/article/article', './elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
     }
 });
@@ -1929,6 +1943,44 @@ define('studies/navigation',["exports", "aurelia-framework", "../services/articl
 
         return Navigation;
     }()) || _class);
+});
+define('resources/attributes/first-letter-span',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.FirstLetterSpan = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _dec2, _class;
+
+    var FirstLetterSpan = exports.FirstLetterSpan = (_dec = (0, _aureliaFramework.inject)(Element), _dec2 = (0, _aureliaFramework.customAttribute)('first-letter-span'), _dec(_class = _dec2(_class = function () {
+        function FirstLetterSpan(element) {
+            _classCallCheck(this, FirstLetterSpan);
+
+            this.element = element;
+            if (this.element.childElementCount === 0) {
+                this.wrapFirstLetterInSpan();
+            }
+        }
+
+        FirstLetterSpan.prototype.wrapFirstLetterInSpan = function wrapFirstLetterInSpan() {
+            var text = this.element.innerText;
+            var transformed = text.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+            transformed = transformed.replace(/\b([a-z])/gi, '<span>$1</span>');
+            this.element.innerHTML = transformed;
+        };
+
+        return FirstLetterSpan;
+    }()) || _class) || _class);
 });
 define('strategies/rules/rule-sets',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/strategy-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _strategyService) {
     'use strict';
@@ -3189,7 +3241,7 @@ define('resources/elements/navigation/main-nav',["exports", "aurelia-framework"]
         }
     })), _class);
 });
-define('resources/elements/navigation/nav-header',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
+define('resources/elements/navigation/nav-header',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
     "use strict";
 
     Object.defineProperty(exports, "__esModule", {
@@ -3197,20 +3249,103 @@ define('resources/elements/navigation/nav-header',["exports", "aurelia-framework
     });
     exports.NavHeader = undefined;
 
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
             throw new TypeError("Cannot call a class as a function");
         }
     }
 
-    var _dec, _class;
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
 
-    var NavHeader = exports.NavHeader = (_dec = (0, _aureliaFramework.inject)("User", "Settings"), _dec(_class = function NavHeader(userContext, settings) {
-        _classCallCheck(this, NavHeader);
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
 
-        this.userContext = userContext;
-        this.settings = settings;
-    }) || _class);
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor;
+
+    var NavHeader = exports.NavHeader = (_dec = (0, _aureliaFramework.inject)("User", "Settings", _aureliaEventAggregator.EventAggregator), _dec(_class = (_class2 = function () {
+        function NavHeader(userContext, settings, eventAggregator) {
+            _classCallCheck(this, NavHeader);
+
+            _initDefineProp(this, "router", _descriptor, this);
+
+            this.userContext = userContext;
+            this.eventAggregator = eventAggregator;
+            this.settings = settings;
+        }
+
+        NavHeader.prototype.routerChanged = function routerChanged(newValue, oldVlalue) {
+            this.router = newValue;
+        };
+
+        NavHeader.prototype.attached = function attached() {
+            this.isAuthenticated = this.userContext.user.isAuthenticated;
+            this.loginUrl = this.router.generate("account") + '/view';
+        };
+
+        NavHeader.prototype.logout = function logout() {
+            var _this = this;
+
+            this.userContext.logout().then(function (result) {
+                window.location.href = '/';
+            }).catch(function (error) {
+                return _this.handleError(error, "logout");
+            });
+        };
+
+        NavHeader.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "NavHeader->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return NavHeader;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "router", [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: function initializer() {
+            return null;
+        }
+    })), _class2)) || _class);
 });
 define('resources/elements/navigation/sub-nav',["exports", "aurelia-framework", "aurelia-event-aggregator"], function (exports, _aureliaFramework, _aureliaEventAggregator) {
     "use strict";
@@ -4928,21 +5063,21 @@ define('aurelia-validation/implementation/validation-rules',["require", "exports
     exports.ValidationRules = ValidationRules;
 });
 
-define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n    <nav-header></nav-header>\r\n    <main-nav router.bind=\"router\"></main-nav>\r\n\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
+define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n    <nav-header router.bind=\"router\"></nav-header>\r\n    <main-nav router.bind=\"router\"></main-nav>\r\n\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
 define('text!account/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>User Profile</h3>\r\n    </header>\r\n    \r\n    <form submit.delegate='update()'>\r\n        <div class=\"form-group\">\r\n            <label for=\"firstName\">First name</label>\r\n            <input type=\"text\" class=\"form-control\" \r\n                   value.bind=\"user.firstName & validate\" \r\n                   id=\"firstName\" placeholder=\"First name\" />\r\n        </div>\r\n\r\n        <button type=\"submit\" class=\"btn btn-primary\">Update</button>\r\n        \r\n        <!--<ul if.bind=\"validation.errors\">\r\n            <li repeat.for=\"error of validation.errors\">\r\n                ${error}\r\n            </li>\r\n        </ul>-->\r\n    </form>\r\n\r\n</template>"; });
 define('text!account/login.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Login</h3>\r\n    </header>\r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Username</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"username\" />\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Password</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"password\" />\r\n        </div>\r\n    </div>    \r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"login()\" class=\"btn btn-primary\">Login</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!account/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!account/view.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>User Profile</h3>\r\n    </header>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">First name</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.firstName}</span>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Email</div>\r\n        <div class=\"col-xs-10\">\r\n            <span>${user.username}</span>\r\n        </div>\r\n    </div>\r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"edit()\" class=\"btn btn-primary\">Edit</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!navigation/sub-menu.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-menu\">\r\n        <nav class=\"navbar navbar-fixed-top\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n\r\n                    <div class=\"actions\">\r\n                        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" if.bind=\"editMode !== true\" click.delegate=\"startEdit()\" class=\"btn btn-success\">Switch to Edit Mode</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"applyChanges()\" class=\"btn btn-success\">Apply Changes</button>\r\n                            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 define('text!navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"item of menu.items\" class=\"${item.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"$parent.getUrl(item)\">${item.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
-define('text!strategies/create.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Create new strategy</h3>\r\n    </header>\r\n    \r\n</template>"; });
+define('text!strategies/create.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3 first-letter-span>Create new strategy</h3>\r\n    </header>\r\n    \r\n</template>"; });
 define('text!strategies/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Modify strategy</h3>\r\n    </header>\r\n\r\n    <form class=\"form-horizontal\" submit.delegate='update()'>\r\n        <div class=\"form-group\">\r\n            <label for=\"txtName\" class=\"col-sm-3 control-label\">Strategy Name</label>\r\n            <div class=\"col-sm-7\">\r\n                <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"strategy.name & validate\" >\r\n            </div>\r\n        </div>\r\n        <div class=\"form-group\">\r\n            <label for=\"txtUrl\" class=\"col-sm-3 control-label\">Url (alpha-numeric only)</label>\r\n            <div class=\"col-sm-7\">\r\n                <input type=\"text\" class=\"form-control\" id=\"txtUrl\" value.bind=\"strategy.url & validate\" >\r\n            </div>\r\n        </div>\r\n        <div class=\"form-group\">\r\n            <label for=\"txtDescription\" class=\"col-sm-3 control-label\">Description</label>\r\n            <div class=\"col-sm-9\">\r\n                <textarea rows=\"5\" class=\"form-control\" id=\"txtDescription\" value.bind=\"strategy.description\">\r\n                    \r\n                </textarea>\r\n            </div>\r\n        </div>\r\n        <div class=\"form-group\">\r\n            <div class=\"col-sm-offset-3 col-sm-9\">\r\n                <button type=\"submit\" class=\"btn btn-primary\">Update</button>\r\n            </div>\r\n        </div>\r\n    </form>\r\n</template>"; });
-define('text!strategies/list.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <header>\r\n        <h3>Defined Strategies</h3>\r\n    </header>\r\n    \r\n    <table class=\"table table-hover\">\r\n        <thead>\r\n        <tr>\r\n            <th>Name</th>\r\n            <th>Active</th>\r\n        </tr>\r\n        </thead>\r\n        <tbody>\r\n        <tr repeat.for=\"strategy of strategies\"\r\n            class=\"${strategy.deleted === true ? 'danger': ''}\">\r\n            <td>\r\n                <a href.bind=\"$parent.generateUrl(strategy)\">${strategy.name}</a>\r\n            </td>\r\n            <td>${strategy.deleted !== true}</td>\r\n            <td>\r\n                <div class=\"btn-group\">\r\n                    <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                        Action <span class=\"caret\"></span>\r\n                    </button>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li if.bind=\"strategy.deleted === true\"><a click.trigger=\"$parent.enable(strategy)\">Activate</a></li>\r\n                        <li if.bind=\"strategy.deleted !== true\"><a click.trigger=\"$parent.disable(strategy)\">Deactivate</a></li>\r\n                        <li role=\"separator\" class=\"divider\"></li>\r\n                        <li><a href=\"#\">Manage Rules</a></li>\r\n                    </ul>\r\n                </div>\r\n            </td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n</template>"; });
+define('text!strategies/list.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_strategy\">\r\n\r\n        <header>\r\n            <h3 first-letter-span>Defined Strategies</h3>\r\n        </header>\r\n\r\n        <table class=\"table table-hover\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Name</th>\r\n                    <th>Active</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr repeat.for=\"strategy of strategies\"\r\n                    class=\"${strategy.deleted === true ? 'danger': ''}\">\r\n                    <td>\r\n                        <a href.bind=\"$parent.generateUrl(strategy)\">${strategy.name}</a>\r\n                    </td>\r\n                    <td>${strategy.deleted !== true}</td>\r\n                    <td>\r\n                        <div class=\"btn-group\">\r\n                            <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                Action <span class=\"caret\"></span>\r\n                            </button>\r\n                            <ul class=\"dropdown-menu\">\r\n                                <li if.bind=\"strategy.deleted === true\"><a click.trigger=\"$parent.enable(strategy)\">Activate</a></li>\r\n                                <li if.bind=\"strategy.deleted !== true\"><a click.trigger=\"$parent.disable(strategy)\">Deactivate</a></li>\r\n                                <li role=\"separator\" class=\"divider\"></li>\r\n                                <li><a href=\"#\">Manage Rules</a></li>\r\n                            </ul>\r\n                        </div>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</template>"; });
 define('text!strategies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-nav router.bind=\"router\" ></sub-nav>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!studies/category.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"actions\" if.bind=\"powerUser\">\r\n\r\n        <div if.bind=\"editMode !== true\" class=\"btn-group\" role=\"group\">\r\n            <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                Configure\r\n                <span class=\"caret\"></span>\r\n            </button>\r\n            <ul class=\"dropdown-menu\">\r\n                <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                <li role=\"separator\" class=\"divider\"></li>\r\n                <li><a href=\"/categories\">Manage Categories</a></li>\r\n            </ul>\r\n        </div>\r\n\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"saveArticle()\" class=\"btn btn-success\">Apply Changes</button>\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n\r\n        <div class=\"col-md-8 article\">\r\n            <article article.bind=\"article\"></article> \r\n        </div>\r\n\r\n        <div class=\"col-md-4 side-navigation\">\r\n            <h3>${category.title}</h3>\r\n            <ul>\r\n                <li repeat.for=\"item of sortedArticles\" class=\"${$parent.editMode === true ? 'edit-mode': ''}\" if.bind=\"item.isDeleted !== true\">\r\n                    <div if.bind=\"editMode\" class=\"block-actions\">\r\n                        <div if.bind=\"item.isDeleting !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.deleteArticle(item)\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveUpArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveDownArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                        </div>\r\n\r\n                        <div if.bind=\"item.isDeleting === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.confirmDeleteArticle(item)\" class=\"btn btn-danger btn-xs\">Confirm Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.cancelDeleteArticle(item)\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                    <a href.bind=\"$parent.getArticleUrl(item)\" class=\"${item.articleId === article.articleId ? 'active' : ''}\">${item.title}</a>\r\n                </li>\r\n            </ul>\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addArticle()\" class=\"btn btn-primary btn-xs\">Add New Article</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
-define('text!strategies/rules/rule-sets.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Rule Sets</h3>\r\n    </header>\r\n</template>"; });
-define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>M<span>anage</span> R<span>ules</span></h3>\r\n    </header>\r\n</template>"; });
+define('text!strategies/rules/rule-sets.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3 first-letter-span>Manage Rule Sets</h3>\r\n    </header>\r\n</template>"; });
+define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3 first-letter-span>Manage Rules</h3>\r\n    </header>\r\n</template>"; });
 define('text!strategies/rules/strategy-rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Strategy Rules</h3>\r\n    </header>\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
 define('text!resources/elements/article/article.html', ['module'], function(module) { module.exports = "<template>\r\n    <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Title</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Url</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n            </div>\r\n        </div>\r\n\r\n    </edit-mode>\r\n    <read-mode if.bind=\"editMode !== true\">\r\n        <h2>${article.title}</h2>\r\n    </read-mode>\r\n\r\n    <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                  repeat.for=\"block of article.blocks\">\r\n        <block-actions block.bind=\"block\"></block-actions>\r\n        <article-block block.bind=\"block\"></article-block>\r\n    </article-part>\r\n\r\n    <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
@@ -4954,7 +5089,7 @@ define('text!resources/elements/article/ordered-list-block.html', ['module'], fu
 define('text!resources/elements/article/paragraph-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Paragraph'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <textarea rows=\"4\" value.bind=\"block.Text\">\r\n            </textarea>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <p>${block.Text}</p>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
 define('text!resources/elements/navigation/main-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-nav\">\r\n        <div class=\"container\">\r\n            <div class=\"main-nav-items\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n     </div>\r\n</template>"; });
-define('text!resources/elements/navigation/nav-header.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"container\">\r\n        <div class=\"navbar-brand\">\r\n\r\n            <img class=\"logo\" src=\"/content/images/logo.png\"/>\r\n            <a href=\"/\">D<span>ream</span> S<span>pace</span></a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav navbar-right\">\r\n            <li role=\"presentation\" class=\"dropdown\">\r\n                <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>\r\n                    Dream <span class=\"caret\"></span>\r\n                </a>\r\n                <ul class=\"dropdown-menu\">\r\n                    <li><a href=\"#\">Account</a></li>\r\n                    <li><a href=\"#\">Logout</a></li>\r\n                </ul>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
+define('text!resources/elements/navigation/nav-header.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"container\">\r\n        <div class=\"navbar-brand\">\r\n\r\n            <img class=\"logo\" src=\"/content/images/logo.png\"/>\r\n            <a first-letter-span href=\"/\">Dream Space</a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav navbar-right\">\r\n            <li role=\"presentation\" class=\"dropdown\" if.bind=\"isAuthenticated === true\">\r\n                <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>\r\n                    ${userContext.user.firstName} <span class=\"caret\"></span>\r\n                </a>\r\n                <ul class=\"dropdown-menu\">\r\n                    <li><a href.bind=\"loginUrl\">Account</a></li>\r\n                    <li><a click.delegate=\"logout()\">Logout</a></li>\r\n                </ul>\r\n            </li>\r\n            <li if.bind=\"isAuthenticated !== true\">\r\n                <a href.bind=\"loginUrl\">Login</a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/rule/rule.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rule\" if.bind=\"rule.Name\">\r\n\r\n\r\n        <div class=\"row\">\r\n            <div class=\"col-md-12 c_rule-header\">\r\n                <span>${rule.Name}</span>\r\n                <div class=\"btn-group\">\r\n                    <button type=\"button\" class=\"btn btn-default\">${rule.viewMode === true ? 'Hide' : 'Show'}</button>\r\n                    <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                        <span class=\"caret\"></span>\r\n                        <span class=\"sr-only\">Toggle Dropdown</span>\r\n                    </button>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li if.bind=\"rule.viewMode !== true\"><a click.delegate=\"showDetails()\">Show Details</a></li>\r\n                        <li if.bind=\"rule.editMode !== true\"><a click.delegate=\"startEdit()\">Edit Rule</a></li>\r\n                        <li if.bind=\"rule.deleteMode !== true\"><a click.delegate=\"tryDelete()\">Delete Rule</a></li>\r\n                    </ul>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"row\" if.bind=\"rule.viewMode === true || rule.editMode === true\">\r\n            <form submit.delegate=\"applyChanges()\">\r\n                <fieldset disabled.bind=\"rule.editMode !== false\"></fieldset>\r\n\r\n                <div class=\"form-group\">\r\n                    <label for=\"txtName\" class=\"col-sm-3 control-label\">Rule Name</label>\r\n                    <div class=\"col-md-7 col-xs-12\">\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"rule.Name & validate\">\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"form-group\">\r\n                    <label for=\"txtDescription\" class=\"control-label\">Description</label>\r\n                    <div class=\"col-xs-12\">\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription\" value.bind=\"rule.Description & validate\"></textarea>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"form-inline col-xs-12\">\r\n                    <div class=\"form-group\">\r\n                        <label for=\"ddlPeriod\">Period: </label>\r\n                        <select id=\"ddlPeriod\" class=\"form-control\" value.bind=\"rule.Period\">\r\n                            <option repeat.for=\"period of periods\" value.bind=\"period.id\">${period.name}</option>\r\n                        </select>\r\n                    </div>\r\n                    <div class=\"form-group\">\r\n                        <label for=\"ddlCondition\">Compare operator: </label>\r\n                        <select id=\"ddlCondition\" class=\"form-control\" value.bind=\"rule.Condition\">\r\n                            <option repeat.for=\"compareType of compareTypes\" value.bind=\"compareType.id\">${compareType.name}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n\r\n                <!--Compare What-->\r\n                <div class=\"col-md-6\">\r\n                    <div class=\"row c_rule-details\">\r\n                        <h3>Compare What</h3>\r\n\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtName1\" class=\"col-sm-3 control-label\">Strategy Name</label>\r\n                            <div class=\"col-sm-7\">\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtName1\" value.bind=\"strategy.name & validate\">\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <!--Compare With-->\r\n                <div class=\"col-md-6\">\r\n                    <div class=\"row c_rule-details\">\r\n                        <h3>Compare With</h3>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtName2\" class=\"col-sm-3 control-label\">Strategy Name</label>\r\n                            <div class=\"col-sm-7\">\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtName2\" value.bind=\"strategy.name & validate\">\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n\r\n                <div class=\"col-md-12\" if.bind=\"rule.editMode === true\">\r\n                    <button type=\"submit\" class=\"btn btn-primary btn-xs\">Apply Changes</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                </div>\r\n            </form>\r\n\r\n        </div>\r\n    </div>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map
