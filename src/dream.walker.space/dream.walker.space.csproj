@@ -424,6 +424,7 @@
     <Content Include="Content\Site\elements\_container.less" />
     <Content Include="Content\Site\elements\_main-nav.less" />
     <Content Include="Content\Site\components\_strategy.less" />
+    <Content Include="Content\Site\components\_rule.less" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />

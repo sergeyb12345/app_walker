@@ -1,6 +1,11 @@
 ﻿/// <reference path="../base/_variables" />
 
 
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    cursor: default;
+    background-color: @input-bg-readonly;
+}
+
 form {
     label {
         font-weight: normal;

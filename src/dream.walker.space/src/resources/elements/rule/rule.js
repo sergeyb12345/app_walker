@@ -56,10 +56,12 @@ export class Rule {
 
     ruleChanged(rule) {
         if (rule) {
-            rule.editMode = false;
-            rule.deleteMode = false;
-
             this.rule = rule;
+
+            this.rule.editMode = false;
+            this.rule.deleteMode = false;
+            this.rule.viewMode = false;
+
         }
     }  
 
@@ -67,30 +69,30 @@ export class Rule {
         this.originalRule = Object.assign({}, this.rule);
         this.rule.editMode = true;
         this.rule.deleteMode = false;
-        this.rule.viewModel = false;
+        this.rule.viewMode = false;
     }
 
     cancelEdit() {
         this.rule = this.originalRule;
         this.rule.editMode = false;
         this.rule.deleteMode = false;
-        this.rule.viewModel = false;
+        this.rule.viewMode = false;
     }
 
     tryDelete() {
         this.rule.editMode = false;
         this.rule.deleteMode = true;
-        this.rule.viewModel = false;
+        this.rule.viewMode = false;
     }
 
     cancelDelete() {
         this.rule.editMode = false;
         this.rule.deleteMode = false;
-        this.rule.viewModel = false;
+        this.rule.viewMode = false;
     }
 
     showDetails() {
-        this.rule.viewModel = !this.rule.viewModel;
+        this.rule.viewMode = !this.rule.viewMode;
         this.rule.editMode = false;
         this.rule.deleteMode = false;
     }

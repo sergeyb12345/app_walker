@@ -1,91 +1,66 @@
 ﻿<template>
-    <div class="c_rule" if.bind="rule.Name">
+    <div class="c_rule" if.bind="rule.name">
 
-
-        <div class="row">
-            <div class="col-md-12 c_rule-header">
-                <span>${rule.Name}</span>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default">${rule.viewMode === true ? 'Hide' : 'Show'}</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li if.bind="rule.viewMode !== true"><a click.delegate="showDetails()">Show Details</a></li>
-                        <li if.bind="rule.editMode !== true"><a click.delegate="startEdit()">Edit Rule</a></li>
-                        <li if.bind="rule.deleteMode !== true"><a click.delegate="tryDelete()">Delete Rule</a></li>
-                    </ul>
-                </div>
+        <div class="c_rule-header">
+            <span>${rule.name}</span>
+            <div class="btn-group">
+                <button type="button" click.delegate="showDetails()" class="btn btn-default">${rule.viewMode === true ? 'Hide' : 'Show'}</button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li if.bind="rule.viewMode !== true"><a click.delegate="showDetails()">Show Details</a></li>
+                    <li if.bind="rule.editMode !== true"><a click.delegate="startEdit()">Edit Rule</a></li>
+                    <li if.bind="rule.deleteMode !== true"><a click.delegate="tryDelete()">Delete Rule</a></li>
+                </ul>
             </div>
-        </div>
 
-        <div class="row" if.bind="rule.viewMode === true || rule.editMode === true">
-            <form submit.delegate="applyChanges()">
-                <fieldset disabled.bind="rule.editMode !== false"></fieldset>
+            <form class="c_rule-details" submit.delegate="applyChanges()" if.bind="rule.viewMode === true || rule.editMode === true">
+                <fieldset disabled.bind="rule.editMode !== true">
 
-                <div class="form-group">
-                    <label for="txtName" class="col-sm-3 control-label">Rule Name</label>
-                    <div class="col-md-7 col-xs-12">
-                        <input type="text" class="form-control" id="txtName" value.bind="rule.Name & validate">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="txtDescription" class="control-label">Description</label>
-                    <div class="col-xs-12">
-                        <textarea rows="4" class="form-control" id="txtDescription" value.bind="rule.Description & validate"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-inline col-xs-12">
                     <div class="form-group">
-                        <label for="ddlPeriod">Period: </label>
-                        <select id="ddlPeriod" class="form-control" value.bind="rule.Period">
-                            <option repeat.for="period of periods" value.bind="period.id">${period.name}</option>
-                        </select>
+                        <label for="txtName">Rule Name</label>
+                        <input type="text" class="form-control" id="txtName" value.bind="rule.name">
                     </div>
-                    <div class="form-group">
-                        <label for="ddlCondition">Compare operator: </label>
-                        <select id="ddlCondition" class="form-control" value.bind="rule.Condition">
-                            <option repeat.for="compareType of compareTypes" value.bind="compareType.id">${compareType.name}</option>
-                        </select>
-                    </div>
-                </div>
 
-                <!--Compare What-->
-                <div class="col-md-6">
-                    <div class="row c_rule-details">
+                    <div class="form-group">
+                        <label for="txtDescription">Description</label>
+                        <textarea rows="4" class="form-control" id="txtDescription" value.bind="rule.description"></textarea>
+                    </div>
+
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="ddlPeriod">Period:</label>
+                            <select id="ddlPeriod" class="form-control" value.bind="rule.period">
+                                <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ddlCondition">Compare operator:</label>
+                            <select id="ddlCondition" class="form-control" value.bind="rule.condition">
+                                <option repeat.for="compareType of compareTypes" model.bind="compareType.id">${compareType.name}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Compare What-->
+                    <div class="col-md-6">
                         <h3>Compare What</h3>
-
-                        <div class="form-group">
-                            <label for="txtName1" class="col-sm-3 control-label">Strategy Name</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" id="txtName1" value.bind="strategy.name & validate">
-                            </div>
-                        </div>
                     </div>
-                </div>
 
-                <!--Compare With-->
-                <div class="col-md-6">
-                    <div class="row c_rule-details">
+                    <!--Compare With-->
+                    <div class="col-md-6">
                         <h3>Compare With</h3>
-                        <div class="form-group">
-                            <label for="txtName2" class="col-sm-3 control-label">Strategy Name</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" id="txtName2" value.bind="strategy.name & validate">
-                            </div>
-                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-12" if.bind="rule.editMode === true">
-                    <button type="submit" class="btn btn-primary btn-xs">Apply Changes</button>
-                    <button type="button" click.delegate="cancelEdit()" class="btn btn-default btn-xs">Cancel</button>
-                </div>
+                    <div class="form-group" if.bind="rule.editMode === true">
+                        <button type="submit" class="btn btn-primary btn-xs">Apply Changes</button>
+                        <button type="button" click.delegate="cancelEdit()" class="btn btn-default btn-xs">Cancel</button>
+                    </div>
+                </fieldset>
             </form>
-
         </div>
+
     </div>
 </template>

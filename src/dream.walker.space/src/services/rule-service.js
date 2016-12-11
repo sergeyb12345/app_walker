@@ -28,7 +28,7 @@ export class RuleService {
         });
     }
 
-    getRulesForPerios(period) {
+    getRulesForPeriod(period) {
 
         return this.http.fetch('rule/'+period + '/all', {
             method: 'get'

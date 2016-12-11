@@ -1,5 +1,23 @@
 ﻿<template>
-    <header>
-        <h3 first-letter-span>Manage Rules</h3>
-    </header>
+    <div class="c_rules-content">
+        <div class="row">
+            <div class="col-md-8 col-xs-12 c_rule-list">
+                <header>
+                    <h3 first-letter-span>Manage Rules</h3>
+                </header>
+
+                <rule repeat.for="rule of rules" rule.bind="rule"></rule>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <h3>Side Navigation</h3>
+            </div>
+        </div>
+
+        <ul if.bind="errors.length > 0">
+            <li repeat.for="error of errors">
+                ${error.client.source}::${error.server.source} => <br />
+                ${error.client.message}(${error.server.message})
+            </li>
+        </ul>
+    </div>
 </template>

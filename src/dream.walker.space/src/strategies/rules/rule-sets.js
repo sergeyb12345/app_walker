@@ -1,8 +1,8 @@
 ﻿import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
-import {StrategyService} from '../../services/strategy-service';
+import {RuleService} from '../../services/rule-service';
 
-@inject(EventAggregator, StrategyService, "ErrorParser")
+@inject(EventAggregator, RuleService, "ErrorParser")
 export class RuleSets {
 
     constructor (eventAggregator, strategyService, errorParser) {

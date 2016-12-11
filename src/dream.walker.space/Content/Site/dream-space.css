@@ -237,6 +237,12 @@ main-nav nav.navbar ul.navbar-nav {
     width: 1024px;
   }
 }
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+  cursor: default;
+  background-color: rgba(223, 223, 223, 0.13);
+}
 form label {
   font-weight: normal;
 }
@@ -439,4 +445,13 @@ form .validation-summary-error ul li {
 }
 .c_strategy {
   background-color: rgba(255, 255, 255, 0.7);
+}
+.c_rules-content .c_rule-list {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.c_rules-content .c_rule .c_rule-details {
+  box-shadow: 0px 1px 3px 0px rgba(116, 116, 116, 0.25);
+  background-color: #ffffff;
+  padding: 10px 10px;
+  margin-bottom: 20px;
 }
