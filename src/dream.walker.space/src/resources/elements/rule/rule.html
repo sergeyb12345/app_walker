@@ -7,18 +7,6 @@
                 <span if.bind="rule.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
                 <span if.bind="rule.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
             </a>
-            <!--<div class="btn-group">
-            <button type="button" click.delegate="showDetails()" class="btn btn-default">${rule.viewMode === true ? 'Hide' : 'Show'}</button>
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-                <li if.bind="rule.viewMode !== true"><a click.delegate="showDetails()">Show Details</a></li>
-                <li if.bind="rule.editMode !== true"><a click.delegate="startEdit()">Edit Rule</a></li>
-                <li if.bind="rule.deleteMode !== true"><a click.delegate="tryDelete()">Delete Rule</a></li>
-            </ul>
-        </div>-->
         </div>
 
         <div class="c_rule-details" if.bind="rule.expanded === true">
@@ -60,7 +48,7 @@
                                 <option repeat.for="dataSource of dataSources" model.bind="dataSource.id">${dataSource.name}</option>
                             </select>
                         </div>
-                    
+
                         <div class="form-group">
                             <label for="ddlDataSeriesV1">Data Series:</label>
                             <select id="ddlDataSeriesV1" class="form-control" value.bind="rule.dataSeriesV1">
@@ -80,7 +68,7 @@
 
                             <div class="form-group">
                                 <label for="txtTakeItemsV1">Take:</label>
-                                <input type="text" class="form-control" id="txtTakeItemsV1" value.bind="rule.skipItemsV1">
+                                <input type="text" class="form-control" id="txtTakeItemsV1" value.bind="rule.takeItemsV1">
                             </div>
 
                             <div class="form-group">
@@ -113,17 +101,17 @@
                         <div class="form-inline-stack">
                             <div class="form-group">
                                 <label for="txtConstV2">Constant:</label>
-                                <input type="text" class="form-control" id="txtConstV2" value.bind="rule.constV1">
+                                <input type="text" class="form-control" id="txtConstV2" value.bind="rule.constV2">
                             </div>
 
                             <div class="form-group">
                                 <label for="txtSkipItemsV2">Skip:</label>
-                                <input type="text" class="form-control" id="txtSkipItemsV2" value.bind="rule.skipItemsV1">
+                                <input type="text" class="form-control" id="txtSkipItemsV2" value.bind="rule.skipItemsV2">
                             </div>
 
                             <div class="form-group">
                                 <label for="txtTakeItemsV2">Take:</label>
-                                <input type="text" class="form-control" id="txtTakeItemsV2" value.bind="rule.skipItemsV1">
+                                <input type="text" class="form-control" id="txtTakeItemsV2" value.bind="rule.skipItemsV2">
                             </div>
                         </div>
 
@@ -136,11 +124,14 @@
 
                     </div>
 
-                    <div class="form-group" if.bind="rule.editMode === true">
-                        <button type="submit" class="btn btn-primary btn-xs">Apply Changes</button>
-                        <button type="button" click.delegate="cancelEdit()" class="btn btn-default btn-xs">Cancel</button>
-                    </div>
                 </fieldset>
+
+                <div class="c_rule-actions">
+                    <button type="submit" class="btn btn-danger" if.bind="rule.editMode === true">Save</button>
+                    <button type="button" click.delegate="cancelEdit()" if.bind="rule.editMode === true" class="btn btn-default">Cancel</button>
+                    <button type="button" click.delegate="startEdit()" if.bind="rule.editMode !== true" class="btn btn-danger">Edit</button>
+                </div>
+
             </form>
         </div>
 

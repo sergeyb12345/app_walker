@@ -46,8 +46,10 @@ body .has-success .form-control:focus {
 }
 .btn {
   font-weight: normal;
-  font-size: 14px;
+  font-size: 13px;
   font-family: 'Open Sans', sans-serif;
+  border-radius: 0;
+  min-width: 70px;
 }
 .btn-default {
   color: #333;
@@ -498,6 +500,12 @@ form .validation-summary-error ul li {
   padding: 10px 10px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.36);
 }
+.c_rules-content .c_rule .c_rule-actions {
+  text-align: right;
+  border-top: 1px solid #C11800;
+  padding-top: 10px;
+  margin-top: 10px;
+}
 .c_rules-content .c_rule .c_rule-header {
   cursor: pointer;
 }
@@ -505,7 +513,8 @@ form .validation-summary-error ul li {
   float: right;
 }
 .c_rules-content .c_rule .c_rule-details {
-  margin-top: 10px;
+  border-top: 1px solid #C11800;
+  padding-top: 10px;
 }
 .c_rules-content .c_rule .c_rule-details h3 {
   visibility: visible;
