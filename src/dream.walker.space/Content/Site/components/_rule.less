@@ -2,6 +2,16 @@
 
 .c_rules-content {
 
+    .c_rule-list {
+        background-color:@page-bg-content;
+        border: 1px solid @solid-border-color;
+        padding:0 10px;
+
+        h3 {
+            visibility:hidden;
+        }
+    }
+
     .c_rule {
         padding:10px 10px;
         border-bottom: 1px solid @solid-border-color;
@@ -15,6 +25,11 @@
 
         .c_rule-details {
             margin-top: 10px;
+
+            h3 {
+                visibility:visible;
+                border-bottom: 1px solid @h3-color;
+            }
         }
     }
 
@@ -24,14 +39,5 @@
         }
     }
 
-    .c_rule-list {
-        background-color:@page-bg-content;
-        border: 1px solid @solid-border-color;
-        padding:0 10px;
-
-        h3 {
-            visibility:hidden;
-        }
-    }
 }
 

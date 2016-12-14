@@ -486,6 +486,14 @@ form .validation-summary-error ul li {
 .c_strategy {
   background-color: rgba(255, 255, 255, 0.7);
 }
+.c_rules-content .c_rule-list {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(204, 204, 204, 0.36);
+  padding: 0 10px;
+}
+.c_rules-content .c_rule-list h3 {
+  visibility: hidden;
+}
 .c_rules-content .c_rule {
   padding: 10px 10px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.36);
@@ -499,14 +507,10 @@ form .validation-summary-error ul li {
 .c_rules-content .c_rule .c_rule-details {
   margin-top: 10px;
 }
+.c_rules-content .c_rule .c_rule-details h3 {
+  visibility: visible;
+  border-bottom: 1px solid #C11800;
+}
 .c_rules-content rule:last-child .c_rule {
   border-bottom: 0px solid rgba(204, 204, 204, 0.36);
-}
-.c_rules-content .c_rule-list {
-  background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(204, 204, 204, 0.36);
-  padding: 0 10px;
-}
-.c_rules-content .c_rule-list h3 {
-  visibility: hidden;
 }
