@@ -1,22 +1,28 @@
 ﻿<template>
     <div class="c_rule" if.bind="rule.name">
 
-        <div class="c_rule-header">
+        <div class="c_rule-header" click.delegate="rule.expanded = !!!rule.expanded">
             <span>${rule.name}</span>
-            <div class="btn-group">
-                <button type="button" click.delegate="showDetails()" class="btn btn-default">${rule.viewMode === true ? 'Hide' : 'Show'}</button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li if.bind="rule.viewMode !== true"><a click.delegate="showDetails()">Show Details</a></li>
-                    <li if.bind="rule.editMode !== true"><a click.delegate="startEdit()">Edit Rule</a></li>
-                    <li if.bind="rule.deleteMode !== true"><a click.delegate="tryDelete()">Delete Rule</a></li>
-                </ul>
-            </div>
+            <a class="chevron">
+                <span if.bind="rule.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                <span if.bind="rule.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+            </a>
+            <!--<div class="btn-group">
+            <button type="button" click.delegate="showDetails()" class="btn btn-default">${rule.viewMode === true ? 'Hide' : 'Show'}</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li if.bind="rule.viewMode !== true"><a click.delegate="showDetails()">Show Details</a></li>
+                <li if.bind="rule.editMode !== true"><a click.delegate="startEdit()">Edit Rule</a></li>
+                <li if.bind="rule.deleteMode !== true"><a click.delegate="tryDelete()">Delete Rule</a></li>
+            </ul>
+        </div>-->
+        </div>
 
-            <form class="c_rule-details" submit.delegate="applyChanges()" if.bind="rule.viewMode === true || rule.editMode === true">
+        <div class="c_rule-details" if.bind="rule.expanded === true">
+            <form submit.delegate="applyChanges()">
                 <fieldset disabled.bind="rule.editMode !== true">
 
                     <div class="form-group">
