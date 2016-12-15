@@ -93,8 +93,8 @@ namespace dream.walker.data.Services
                     record.Description = rule.Description;
                     record.Deleted = rule.Deleted;
                     record.Period = rule.Period;
-                    record.DataSouceV1 = rule.DataSouceV1;
-                    record.DataSouceV2 = rule.DataSouceV2;
+                    record.DataSourceV1 = rule.DataSourceV1;
+                    record.DataSourceV2 = rule.DataSourceV2;
                     record.DataSeriesV1 = rule.DataSeriesV1;
                     record.DataSeriesV2 = rule.DataSeriesV2;
                     record.ConstV1 = rule.ConstV1;

@@ -10,8 +10,8 @@ namespace dream.walker.data.Entities.Strategies
         public bool Deleted { get; set; }
         public QuotePeriod Period { get; set; }
 
-        public DataSourceType DataSouceV1 { get; set; }
-        public DataSourceType DataSouceV2 { get; set; }
+        public DataSourceType DataSourceV1 { get; set; }
+        public DataSourceType DataSourceV2 { get; set; }
         public int DataSeriesV1  { get; set; }
         public int DataSeriesV2  { get; set; }
         public string ConstV1 { get; set; }
