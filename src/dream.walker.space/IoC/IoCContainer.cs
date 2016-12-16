@@ -79,6 +79,7 @@ namespace dream.walker.space.IoC
 
             builder.RegisterType<AzureStorageClient>().As<IStorageClient>();
             builder.RegisterType<ArticleStorageService>().As<IArticleStorageService>();
+            builder.RegisterType<IndicatorService>().As<IIndicatorService>();
 
         }
 

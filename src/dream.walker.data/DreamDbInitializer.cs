@@ -14,10 +14,10 @@ namespace dream.walker.data
         {
             var indicators = new List<Indicator>
             {
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, QuotePeriod = QuotePeriod.Daily},
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, QuotePeriod = QuotePeriod.Daily},
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, QuotePeriod = QuotePeriod.Weekly},
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, QuotePeriod = QuotePeriod.Weekly},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, Period = QuotePeriod.Daily},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, Period = QuotePeriod.Daily},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, Period = QuotePeriod.Weekly},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, Period = QuotePeriod.Weekly},
             };
 
             indicators.ForEach(i => context.Indicators.Add(i));

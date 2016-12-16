@@ -14,25 +14,25 @@
                 <fieldset disabled.bind="rule.editMode !== true">
 
                     <div class="form-group">
-                        <label for="txtName">Rule Name</label>
-                        <input type="text" class="form-control" id="txtName" value.bind="rule.name & validate">
+                        <label for="txtName-${rule.ruleId}">Rule Name</label>
+                        <input type="text" class="form-control" id="txtName-${rule.ruleId}" value.bind="rule.name & validate">
                     </div>
 
                     <div class="form-group">
-                        <label for="txtDescription">Description</label>
-                        <textarea rows="4" class="form-control" id="txtDescription" value.bind="rule.description & validate"></textarea>
+                        <label for="txtDescription-${rule.ruleId}">Description</label>
+                        <textarea rows="4" class="form-control" id="txtDescription-${rule.ruleId}" value.bind="rule.description & validate"></textarea>
                     </div>
 
                     <div class="form-inline">
                         <div class="form-group">
-                            <label for="ddlPeriod">Period:</label>
-                            <select id="ddlPeriod" class="form-control" value.bind="rule.period">
+                            <label for="ddlPeriod-${rule.ruleId}">Period:</label>
+                            <select id="ddlPeriod-${rule.ruleId}" class="form-control" value.bind="rule.period">
                                 <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="ddlCondition">Compare operator:</label>
-                            <select id="ddlCondition" class="form-control" value.bind="rule.condition">
+                            <label for="ddlCondition-${rule.ruleId}">Compare operator:</label>
+                            <select id="ddlCondition-${rule.ruleId}" class="form-control" value.bind="rule.condition">
                                 <option repeat.for="compareType of compareTypes" model.bind="compareType.id">${compareType.name}</option>
                             </select>
                         </div>
@@ -43,37 +43,37 @@
                         <h3>Compare What</h3>
 
                         <div class="form-group">
-                            <label for="ddlDataSourceV1">Data Source:</label>
-                            <select id="ddlDataSourceV1" class="form-control" value.bind="rule.dataSourceV1" change.delegate="onDataSourceV1Change()">
+                            <label for="ddlDataSourceV1-${rule.ruleId}">Data Source:</label>
+                            <select id="ddlDataSourceV1-${rule.ruleId}" class="form-control" value.bind="rule.dataSourceV1" change.delegate="onDataSourceV1Change()">
                                 <option repeat.for="dataSource of dataSources" model.bind="dataSource.id">${dataSource.name}</option>
                             </select>
                         </div>
 
                         <div class="form-group" if.bind="rule.dataSourceV1 !== 2">
-                            <label for="ddlDataSeriesV1">Data Series:</label>
-                            <select id="ddlDataSeriesV1" class="form-control" value.bind="rule.dataSeriesV1">
+                            <label for="ddlDataSeriesV1-${rule.ruleId}">Data Series:</label>
+                            <select id="ddlDataSeriesV1-${rule.ruleId}" class="form-control" value.bind="rule.dataSeriesV1">
                                 <option repeat.for="dataSetries of rule.dataSeriesOptionsV1" model.bind="dataSetries.id">${dataSetries.name}</option>
                             </select>
                         </div>
 
                         <div class="form-inline-stack">
                             <div class="form-group" if.bind="rule.dataSourceV1 === 2">
-                                <label for="txtConstV1">Constant:</label>
-                                <input type="text" class="form-control" id="txtConstV1" value.bind="rule.constV1">
+                                <label for="txtConstV1-${rule.ruleId}">Constant:</label>
+                                <input type="text" class="form-control" id="txtConstV1-${rule.ruleId}" value.bind="rule.constV1">
                             </div>
                             <div class="form-group" if.bind="rule.dataSourceV1 !== 2">
-                                <label for="txtSkipItemsV1">Skip:</label>
-                                <input type="text" class="form-control" id="txtSkipItemsV1" value.bind="rule.skipItemsV1 & validate">
-                            </div>
-
-                            <div class="form-group" if.bind="rule.dataSourceV1 !== 2">
-                                <label for="txtTakeItemsV1">Take:</label>
-                                <input type="text" class="form-control" id="txtTakeItemsV1" value.bind="rule.takeItemsV1 & validate">
+                                <label for="txtSkipItemsV1-${rule.ruleId}">Skip:</label>
+                                <input type="text" class="form-control" id="txtSkipItemsV1-${rule.ruleId}" value.bind="rule.skipItemsV1 & validate">
                             </div>
 
                             <div class="form-group" if.bind="rule.dataSourceV1 !== 2">
-                                <label for="ddlTransformItemsV1">Data Transform:</label>
-                                <select id="ddlTransformItemsV1" class="form-control" value.bind="rule.transformItemsV1">
+                                <label for="txtTakeItemsV1-${rule.ruleId}">Take:</label>
+                                <input type="text" class="form-control" id="txtTakeItemsV1-${rule.ruleId}" value.bind="rule.takeItemsV1 & validate">
+                            </div>
+
+                            <div class="form-group" if.bind="rule.dataSourceV1 !== 2">
+                                <label for="ddlTransformItemsV1-${rule.ruleId}">Data Transform:</label>
+                                <select id="ddlTransformItemsV1-${rule.ruleId}" class="form-control" value.bind="rule.transformItemsV1">
                                     <option repeat.for="transformFunction of transformFunctions" model.bind="transformFunction.id">${transformFunction.name}</option>
                                 </select>
                             </div>
@@ -85,39 +85,39 @@
                     <div class="col-md-6">
                         <h3>Compare With</h3>
                         <div class="form-group">
-                            <label for="ddlDataSourceV2">Data Source:</label>
-                            <select id="ddlDataSourceV2" class="form-control" value.bind="rule.dataSourceV2" change.delegate="onDataSourceV2Change()">
+                            <label for="ddlDataSourceV2-${rule.ruleId}">Data Source:</label>
+                            <select id="ddlDataSourceV2-${rule.ruleId}" class="form-control" value.bind="rule.dataSourceV2" change.delegate="onDataSourceV2Change()">
                                 <option repeat.for="dataSource of dataSources" model.bind="dataSource.id">${dataSource.name}</option>
                             </select>
                         </div>
 
                         <div class="form-group" if.bind="rule.dataSourceV2 !== 2">
-                            <label for="ddlDataSeriesV2">Data Series:</label>
-                            <select id="ddlDataSeriesV2" class="form-control" value.bind="rule.dataSeriesV2">
+                            <label for="ddlDataSeriesV2-${rule.ruleId}">Data Series:</label>
+                            <select id="ddlDataSeriesV2-${rule.ruleId}" class="form-control" value.bind="rule.dataSeriesV2">
                                 <option repeat.for="dataSeries of rule.dataSeriesOptionsV2" model.bind="dataSeries.id">${dataSeries.name}</option>
                             </select>
                         </div>
 
                         <div class="form-inline-stack">
                             <div class="form-group" if.bind="rule.dataSourceV2 === 2">
-                                <label for="txtConstV2">Constant:</label>
-                                <input type="text" class="form-control" id="txtConstV2" value.bind="rule.constV2">
+                                <label for="txtConstV2-${rule.ruleId}">Constant:</label>
+                                <input type="text" class="form-control" id="txtConstV2-${rule.ruleId}" value.bind="rule.constV2">
                             </div>
 
                             <div class="form-group" if.bind="rule.dataSourceV2 !== 2">
-                                <label for="txtSkipItemsV2">Skip:</label>
-                                <input type="text" class="form-control" id="txtSkipItemsV2" value.bind="rule.skipItemsV2 & validate">
+                                <label for="txtSkipItemsV2-${rule.ruleId}">Skip:</label>
+                                <input type="text" class="form-control" id="txtSkipItemsV2-${rule.ruleId}" value.bind="rule.skipItemsV2 & validate">
                             </div>
 
                             <div class="form-group" if.bind="rule.dataSourceV2 !== 2">
-                                <label for="txtTakeItemsV2">Take:</label>
-                                <input type="text" class="form-control" id="txtTakeItemsV2" value.bind="rule.takeItemsV2 & validate">
+                                <label for="txtTakeItemsV2-${rule.ruleId}">Take:</label>
+                                <input type="text" class="form-control" id="txtTakeItemsV2-${rule.ruleId}" value.bind="rule.takeItemsV2 & validate">
                             </div>
                         </div>
 
                         <div class="form-group" if.bind="rule.dataSourceV2 !== 2">
-                            <label for="ddlTransformItemsV2">Data Transform:</label>
-                            <select id="ddlTransformItemsV2" class="form-control" value.bind="rule.transformItemsV2">
+                            <label for="ddlTransformItemsV2-${rule.ruleId}">Data Transform:</label>
+                            <select id="ddlTransformItemsV2-${rule.ruleId}" class="form-control" value.bind="rule.transformItemsV2">
                                 <option repeat.for="transformFunction of transformFunctions" model.bind="transformFunction.id">${transformFunction.name}</option>
                             </select>
                         </div>

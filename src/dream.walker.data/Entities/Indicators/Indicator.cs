@@ -16,7 +16,7 @@ namespace dream.walker.data.Entities.Indicators
         public int IndicatorId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public QuotePeriod QuotePeriod { get; set; }
+        public QuotePeriod Period { get; set; }
         public string JsonParams { get; set; }
         public DateTime LastUpdated { get; set; }
         public bool Deleted { get; set; }

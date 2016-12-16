@@ -69,10 +69,10 @@ namespace dream.walker.data.Services
         {
             var indicators = new List<Indicator>
             {
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, QuotePeriod = QuotePeriod.Daily, LastUpdated = DateTime.Now},
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, QuotePeriod = QuotePeriod.Daily, LastUpdated = DateTime.Now},
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, QuotePeriod = QuotePeriod.Weekly, LastUpdated = DateTime.Now},
-                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, QuotePeriod = QuotePeriod.Weekly, LastUpdated = DateTime.Now},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, Period = QuotePeriod.Daily, LastUpdated = DateTime.Now},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, Period = QuotePeriod.Daily, LastUpdated = DateTime.Now},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 13} }, Period = QuotePeriod.Weekly, LastUpdated = DateTime.Now},
+                new Indicator{ Name = "EMA", Params = new List<IndicatorParam> {new IndicatorParam {ParamName = IndicatorParamName.Period, Value = 26} }, Period = QuotePeriod.Weekly, LastUpdated = DateTime.Now},
             };
 
             using (var scope = _container.BeginLifetimeScope())

@@ -1,0 +1,24 @@
+﻿<template>
+    <div class="c_indicators-content">
+        <div class="row">
+            <div class="col-md-8 col-xs-12">
+                <header>
+                    <h3 first-letter-span>Manage Indicators</h3>
+                </header>
+                <div class="c_indicator-list">
+                    <indicator repeat.for="indicator of indicators" rule.bind="indicator"></indicator>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <h3>Side Navigation</h3>
+            </div>
+        </div>
+
+        <ul if.bind="errors.length > 0">
+            <li repeat.for="error of errors">
+                ${error.client.source}::${error.server.source} => <br />
+                ${error.client.message}(${error.server.message})
+            </li>
+        </ul>
+    </div>
+</template>

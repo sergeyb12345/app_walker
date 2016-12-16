@@ -193,6 +193,10 @@
     <Compile Include="Migrations\201612151248335_AlterRule.Designer.cs">
       <DependentUpon>201612151248335_AlterRule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612161202125_AlterIndicator.cs" />
+    <Compile Include="Migrations\201612161202125_AlterIndicator.Designer.cs">
+      <DependentUpon>201612161202125_AlterIndicator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\ValueLocation.cs" />
@@ -247,6 +251,7 @@
     <Compile Include="Services\IArticleStorageService.cs" />
     <Compile Include="Services\ICompanyIndicatorService.cs" />
     <Compile Include="Services\ICompanyService.cs" />
+    <Compile Include="Services\IIndicatorService.cs" />
     <Compile Include="Services\IRuleService.cs" />
     <Compile Include="Services\IStrategyService.cs" />
     <Compile Include="Requests\UpdateQuotesRequest.cs" />
@@ -339,6 +344,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612151248335_AlterRule.resx">
       <DependentUpon>201612151248335_AlterRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612161202125_AlterIndicator.resx">
+      <DependentUpon>201612161202125_AlterIndicator.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

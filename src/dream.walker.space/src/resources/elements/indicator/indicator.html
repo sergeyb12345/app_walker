@@ -1,0 +1,54 @@
+﻿<template>
+    <div class="c_indicator" if.bind="indicator.deleted !== true">
+
+        <div class="c_indicator-header" click.delegate="indicator.expanded = !!!indicator.expanded">
+            <span>${indicator.name}</span>
+            <a class="chevron">
+                <span if.bind="indicator.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                <span if.bind="indicator.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div class="c_indicator-details" if.bind="indicator.expanded === true">
+            <form submit.delegate="trySaveIndicator()">
+                <fieldset disabled.bind="indicator.editMode !== true">
+
+                    <div class="form-group">
+                        <label for="txtName">Indicator Name</label>
+                        <input type="text" class="form-control" id="txtName" value.bind="indicator.name & validate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtDescription">Description</label>
+                        <textarea rows="4" class="form-control" id="txtDescription" value.bind="indicator.description & validate"></textarea>
+                    </div>
+
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="ddlPeriod-${indicator.indicatorId}">Period:</label>
+                            <select id="ddlPeriod-${indicator.indicatorId}" class="form-control" value.bind="indicator.period">
+                                <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </fieldset>
+                
+                <ul if.bind="errors.length > 0">
+                    <li repeat.for="error of errors">
+                        ${error.client.source}::${error.server.source} => <br />
+                        ${error.client.message}(${error.server.message})
+                    </li>
+                </ul>
+
+                <div class="c_indicator-actions">
+                    <button type="submit" class="btn btn-danger" if.bind="indicator.editMode === true">Save</button>
+                    <button type="button" click.delegate="cancelEdit()" if.bind="indicator.editMode === true" class="btn btn-default">Cancel</button>
+                    <button type="button" click.delegate="startEdit()" if.bind="indicator.editMode !== true" class="btn btn-danger">Edit</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</template>

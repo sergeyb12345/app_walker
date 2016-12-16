@@ -258,6 +258,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="Controllers\IndicatorsApiController.cs" />
     <Compile Include="Controllers\RulesApiController.cs" />
     <Compile Include="Filters\NoStackExceptionFilterAttribute.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -271,7 +272,6 @@
     <Compile Include="Controllers\FileDetails.cs" />
     <Compile Include="Controllers\HealthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IndicatorController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\StrategiesApiController.cs" />
     <Compile Include="Global.asax.cs">
@@ -490,6 +490,8 @@
     <Content Include="src\resources\elements\article\paragraph-block.js" />
     <Content Include="src\resources\elements\chart\any-chart.html" />
     <Content Include="src\resources\elements\chart\any-chart.js" />
+    <Content Include="src\resources\elements\indicator\indicator.html" />
+    <Content Include="src\resources\elements\indicator\indicator.js" />
     <Content Include="src\resources\elements\navigation\nav-header.html" />
     <Content Include="src\resources\elements\navigation\nav-header.js" />
     <Content Include="src\resources\elements\navigation\main-nav.html" />
@@ -501,6 +503,7 @@
     <Content Include="src\resources\attributes\first-letter-span.js" />
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
+    <Content Include="src\services\indicator-service.js" />
     <Content Include="src\services\rule-service.js" />
     <Content Include="src\services\strategy-service.js" />
     <Content Include="src\services\blob-services.js" />
@@ -509,6 +512,8 @@
     <Content Include="src\strategies\create.html" />
     <Content Include="src\strategies\create.js" />
     <Content Include="src\strategies\edit.js" />
+    <Content Include="src\strategies\indicators\indicators.html" />
+    <Content Include="src\strategies\indicators\indicators.js" />
     <Content Include="src\strategies\list.html" />
     <Content Include="src\strategies\list.js" />
     <Content Include="src\strategies\navigation.html" />

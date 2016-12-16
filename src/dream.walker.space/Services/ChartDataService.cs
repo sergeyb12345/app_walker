@@ -55,7 +55,7 @@ namespace dream.walker.space.Services
                 try
                 {
                     var indicators = _indicatorRepository.GetAll();
-                    foreach (var indicator in indicators.Where(i => i.QuotePeriod == request.QuotePeriod && !i.Deleted))
+                    foreach (var indicator in indicators.Where(i => i.Period == request.QuotePeriod && !i.Deleted))
                     {
                         try
                         {
