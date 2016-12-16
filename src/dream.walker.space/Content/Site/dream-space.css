@@ -52,7 +52,19 @@ body .has-success .form-control:focus {
   min-width: 70px;
 }
 .btn-default {
-  color: #333;
+  color: #c9302c;
+  border-color: #c9302c;
+}
+.btn-default:active,
+.btn-default:focus {
+  color: #c9302c;
+  border-color: #c9302c;
+  background-color: white;
+}
+.btn-default:hover {
+  color: #c9302c;
+  background-color: rgba(201, 48, 44, 0.3);
+  border-color: #c9302c;
 }
 .dropdown-menu > li > a {
   font-family: 'Open Sans', sans-serif;

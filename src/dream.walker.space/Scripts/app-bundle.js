@@ -977,6 +977,7 @@ define('resources/index',['exports'], function (exports) {
         config.globalResources(['./elements/navigation/sub-nav']);
         config.globalResources(['./elements/chart/any-chart']);
         config.globalResources(['./elements/rule/rule']);
+        config.globalResources(['./elements/indicator/indicator']);
         config.globalResources(['./attributes/first-letter-span']);
         config.globalResources('./elements/article/article', './elements/article/article-block', './elements/article//heading-block', './elements/article//paragraph-block', './elements/article/image-block', './elements/article/ordered-list-block', './elements/article/block-actions', './elements/article/new-block');
     }
@@ -1210,6 +1211,93 @@ define('services/blob-services',['exports', 'aurelia-framework', 'aurelia-fetch-
         };
 
         return BlobServices;
+    }()) || _class);
+});
+define('services/indicator-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.IndicatorService = undefined;
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _dec, _class;
+
+    var IndicatorService = exports.IndicatorService = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
+        function IndicatorService(http, eventAggregator) {
+            _classCallCheck(this, IndicatorService);
+
+            http.configure(function (config) {
+                config.useStandardConfiguration().withBaseUrl('api/');
+            });
+
+            this.eventAggregator = eventAggregator;
+            this.http = http;
+        }
+
+        IndicatorService.prototype.getIndicator = function getIndicator(id) {
+            var _this = this;
+
+            return this.http.fetch('indicator/' + id, {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this.handleError(error, "getIndicator");
+            });
+        };
+
+        IndicatorService.prototype.getIndicatorsForPeriod = function getIndicatorsForPeriod(period) {
+            var _this2 = this;
+
+            return this.http.fetch('indicator/' + period + '/all', {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this2.handleError(error, "getIndicatorsForPeriod");
+            });
+        };
+
+        IndicatorService.prototype.deleteIndicator = function deleteIndicator(id) {
+            var _this3 = this;
+
+            return this.http.fetch("indicator/" + id, { method: 'delete' }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                return _this3.handleError(error, "deleteIndicator");
+            });
+        };
+
+        IndicatorService.prototype.saveIndicator = function saveIndicator(indicator) {
+            var _this4 = this;
+
+            return this.http.fetch("indicator", {
+                method: 'post',
+                body: (0, _aureliaFetchClient.json)(indicator)
+            }).then(function (response) {
+                return response.json();
+            }).catch(function (error) {
+                _this4.handleError(error, "saveIndicator");
+            });
+        };
+
+        IndicatorService.prototype.handleError = function handleError(error, source) {
+            var exception = {
+                source: "IndicatorService->" + source,
+                exception: error
+            };
+            this.eventAggregator.publish('GeneralExceptions', exception);
+            return error;
+        };
+
+        return IndicatorService;
     }()) || _class);
 });
 define('services/rule-service',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
@@ -1642,7 +1730,7 @@ define('strategies/navigation',['exports'], function (exports) {
         Navigation.prototype.configureRouter = function configureRouter(config, router) {
             config.title = 'Strategies';
 
-            config.map([{ route: ['', 'list'], moduleId: "./list", name: "strategy-list", title: "Strategies", nav: true }, { route: ['create'], moduleId: "./create", name: "strategy-create", title: "Create Strategy", nav: true, auth: true }, { route: ['edit', 'edit/:strategy'], moduleId: "./edit", name: "strategy-edit", title: "Modify Strategy", nav: false, auth: true }, { route: ['rules'], moduleId: "./rules/rules", name: "manage-rules", title: "Manage Rules", nav: true, auth: true }, { route: ['rule-sets'], moduleId: "./rules/rule-sets", name: "manage-rule-sets", title: "Manage Rule Sets", nav: true, auth: true }]);
+            config.map([{ route: ['', 'list'], moduleId: "./list", name: "strategy-list", title: "Strategies", nav: true }, { route: ['create'], moduleId: "./create", name: "strategy-create", title: "Create Strategy", nav: false, auth: true }, { route: ['edit', 'edit/:strategy'], moduleId: "./edit", name: "strategy-edit", title: "Modify Strategy", nav: false, auth: true }, { route: ['rules', 'rules/:period'], moduleId: "./rules/rules", name: "manage-rules", title: "Manage Rules", nav: true, auth: true }, { route: ['rule-sets', 'rule-sets/:period'], moduleId: "./rules/rule-sets", name: "manage-rule-sets", title: "Manage Rule Sets", nav: true, auth: true }, { route: ['indicators', 'indicators/:period'], moduleId: "./indicators/indicators", name: "manage-indicators", title: "Manage Indicators", nav: true, auth: true }]);
 
             this.router = router;
             this.section = config.title;
@@ -1985,6 +2073,26 @@ define('resources/attributes/first-letter-span',['exports', 'aurelia-framework']
 
         return FirstLetterSpan;
     }()) || _class) || _class);
+});
+define('strategies/indicators/indicators',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/indicator-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _indicatorService) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Indicators = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _dec, _class;
+
+  var Indicators = exports.Indicators = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _indicatorService.IndicatorService, "ErrorParser"), _dec(_class = function Indicators() {
+    _classCallCheck(this, Indicators);
+  }) || _class);
 });
 define('strategies/rules/rule-sets',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../services/rule-service'], function (exports, _aureliaFramework, _aureliaEventAggregator, _ruleService) {
     'use strict';
@@ -3208,6 +3316,144 @@ define('resources/elements/chart/any-chart',['exports', 'aurelia-framework', 'np
         }
     })), _class);
 });
+define('resources/elements/indicator/indicator',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/indicator-service', 'aurelia-validation', '../../../common/bootstrap-form-renderer'], function (exports, _aureliaFramework, _aureliaEventAggregator, _indicatorService, _aureliaValidation, _bootstrapFormRenderer) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Indicator = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor;
+
+    var Indicator = exports.Indicator = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _indicatorService.IndicatorService, "User", _aureliaValidation.ValidationController), _dec(_class = (_class2 = function () {
+        function Indicator(eventAggregator, indicatorService, userContext, validation) {
+            _classCallCheck(this, Indicator);
+
+            _initDefineProp(this, 'indicator', _descriptor, this);
+
+            this.powerUser = userContext.user.isAuthenticated;
+            this.eventAggregator = eventAggregator;
+            this.validation = validation;
+            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
+            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
+
+            this.indicatorService = indicatorService;
+            this.subscriptions = [];
+            this.errors = [];
+        }
+
+        Indicator.prototype.indicatorChanged = function indicatorChanged(indicator) {
+            if (indicator) {
+                var newIndicator = Object.assign({}, indicator);
+                this.newIndicator.editMode = false;
+                this.indicator = newIndicator;
+
+                _aureliaValidation.ValidationRules.ensure(function (u) {
+                    return u.name;
+                }).required({ message: "^Indicator name must be set" }).ensure(function (u) {
+                    return u.description;
+                }).required({ message: "^Description must be set" }).on(this.newIndicator);
+            }
+        };
+
+        Indicator.prototype.startEdit = function startEdit() {
+            this.originalIndicator = Object.assign({}, this.indicator);
+            this.indicator.editMode = true;
+        };
+
+        Indicator.prototype.cancelEdit = function cancelEdit() {
+            this.indicator = this.originalIndicator;
+            this.indicator.editMode = false;
+        };
+
+        Indicator.prototype.trySaveIndicator = function trySaveIndicator() {
+            var _this = this;
+
+            this.validation.validate().then(function (response) {
+                var r = response;
+            }).catch(function (error) {
+                _this.handleError(error);
+            });
+        };
+
+        Indicator.prototype.saveIndicator = function saveIndicator() {
+            alert('saved');
+        };
+
+        Indicator.prototype.attached = function attached() {};
+
+        Indicator.prototype.detached = function detached() {
+            if (this.subscriptions.length > 0) {
+                this.subscriptions.forEach(function (subscription) {
+                    subscription.dispose();
+                });
+            }
+        };
+
+        Indicator.prototype.handleError = function handleError(error) {
+            var self = this;
+
+            this.errorParser.parseError(error).then(function (errorInfo) {
+                self.errors.push(errorInfo);
+            });
+        };
+
+        return Indicator;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'indicator', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    })), _class2)) || _class);
+});
 define('resources/elements/navigation/main-nav',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
     "use strict";
 
@@ -3547,9 +3793,9 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
             this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
             this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
 
-            this.ruleService = ruleService;
+            this.ruleInfoService = ruleService;
             this.subscriptions = [];
-            this.rule = { editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
+            this.ruleInfoInfo = { editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
 
             this.periods = [{ id: 0, name: 'Daily' }, { id: 1, name: 'Weekly' }];
 
@@ -3564,13 +3810,13 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
             this.transformFunctions = [{ id: 0, name: 'First' }, { id: 1, name: 'Max' }, { id: 2, name: 'Average' }, { id: 3, name: 'Summarize' }];
         }
 
-        Rule.prototype.ruleChanged = function ruleChanged(rule) {
-            if (rule) {
-                var newRule = Object.assign({}, rule);
+        Rule.prototype.ruleChanged = function ruleChanged(ruleItem) {
+            if (ruleItem) {
+                var newRule = Object.assign({}, ruleItem);
                 this.setDataSeries(newRule);
-                this.rule = newRule;
+                this.ruleInfo = newRule;
 
-                this.rule.editMode = false;
+                this.ruleInfo.editMode = false;
 
                 _aureliaValidation.ValidationRules.ensure(function (u) {
                     return u.name;
@@ -3592,16 +3838,16 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
                     return u.takeItemsV2;
                 }).required().satisfies(function (value) {
                     return value >= 0;
-                }).on(this.rule);
+                }).on(this.ruleInfo);
             }
         };
 
         Rule.prototype.onDataSourceV1Change = function onDataSourceV1Change() {
-            this.setDataSeries(this.rule);
+            this.setDataSeries(this.ruleInfo);
         };
 
         Rule.prototype.onDataSourceV2Change = function onDataSourceV2Change() {
-            this.setDataSeries(this.rule);
+            this.setDataSeries(this.ruleInfo);
         };
 
         Rule.prototype.setDataSeries = function setDataSeries(rule) {
@@ -3630,13 +3876,13 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
         };
 
         Rule.prototype.startEdit = function startEdit() {
-            this.originalRule = Object.assign({}, this.rule);
-            this.rule.editMode = true;
+            this.originalRule = Object.assign({}, this.ruleInfo);
+            this.ruleInfo.editMode = true;
         };
 
         Rule.prototype.cancelEdit = function cancelEdit() {
-            this.rule = this.originalRule;
-            this.rule.editMode = false;
+            this.ruleInfo = this.originalRule;
+            this.ruleInfo.editMode = false;
         };
 
         Rule.prototype.trySaveRule = function trySaveRule() {
@@ -5163,10 +5409,10 @@ define('text!strategies/list.html', ['module'], function(module) { module.export
 define('text!strategies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <sub-nav router.bind=\"router\" ></sub-nav>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!studies/category.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"actions\" if.bind=\"powerUser\">\r\n\r\n        <div if.bind=\"editMode !== true\" class=\"btn-group\" role=\"group\">\r\n            <button type=\"button\" class=\"btn btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                Configure\r\n                <span class=\"caret\"></span>\r\n            </button>\r\n            <ul class=\"dropdown-menu\">\r\n                <li><a click.delegate=\"startEdit()\">Edit Page</a></li>\r\n                <li role=\"separator\" class=\"divider\"></li>\r\n                <li><a href=\"/categories\">Manage Categories</a></li>\r\n            </ul>\r\n        </div>\r\n\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"...\">\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"saveArticle()\" class=\"btn btn-success\">Apply Changes</button>\r\n            <button type=\"button\" if.bind=\"editMode === true\" click.delegate=\"cancelEdit()\" class=\"btn btn-default\">Cancel</button>\r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n\r\n        <div class=\"col-md-8 article\">\r\n            <article article.bind=\"article\"></article> \r\n        </div>\r\n\r\n        <div class=\"col-md-4 side-navigation\">\r\n            <h3>${category.title}</h3>\r\n            <ul>\r\n                <li repeat.for=\"item of sortedArticles\" class=\"${$parent.editMode === true ? 'edit-mode': ''}\" if.bind=\"item.isDeleted !== true\">\r\n                    <div if.bind=\"editMode\" class=\"block-actions\">\r\n                        <div if.bind=\"item.isDeleting !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.deleteArticle(item)\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveUpArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                            <button type=\"button\" click.delegate=\"$parent.moveDownArticle(item)\" class=\"btn btn-default btn-xs\">\r\n                                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n                            </button>\r\n                        </div>\r\n\r\n                        <div if.bind=\"item.isDeleting === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                            <button type=\"button\" click.delegate=\"$parent.confirmDeleteArticle(item)\" class=\"btn btn-danger btn-xs\">Confirm Delete</button>\r\n                            <button type=\"button\" click.delegate=\"$parent.cancelDeleteArticle(item)\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                    <a href.bind=\"$parent.getArticleUrl(item)\" class=\"${item.articleId === article.articleId ? 'active' : ''}\">${item.title}</a>\r\n                </li>\r\n            </ul>\r\n            <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n                <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n                    <button type=\"button\" click.delegate=\"addArticle()\" class=\"btn btn-primary btn-xs\">Add New Article</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
+define('text!strategies/indicators/indicators.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_indicators-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Indicators</h3>\r\n                </header>\r\n                <div class=\"c_indicator-list\">\r\n                    <indicator repeat.for=\"indicator of indicators\" rule.bind=\"indicator\"></indicator>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12\">\r\n                <h3>Side Navigation</h3>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!strategies/rules/rule-sets.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3 first-letter-span>Manage Rule Sets</h3>\r\n    </header>\r\n</template>"; });
 define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rules-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Rules</h3>\r\n                </header>\r\n                <div class=\"c_rule-list\">\r\n                    <rule repeat.for=\"rule of rules\" rule.bind=\"rule\"></rule>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12\">\r\n                <h3>Side Navigation</h3>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!strategies/rules/strategy-rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Strategy Rules</h3>\r\n    </header>\r\n</template>"; });
-define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
 define('text!resources/elements/article/article.html', ['module'], function(module) { module.exports = "<template>\r\n    <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Title</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Url</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n            </div>\r\n        </div>\r\n\r\n    </edit-mode>\r\n    <read-mode if.bind=\"editMode !== true\">\r\n        <h2>${article.title}</h2>\r\n    </read-mode>\r\n\r\n    <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                  repeat.for=\"block of article.blocks\">\r\n        <block-actions block.bind=\"block\"></block-actions>\r\n        <article-block block.bind=\"block\"></article-block>\r\n    </article-part>\r\n\r\n    <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/article/block-actions.html', ['module'], function(module) { module.exports = "<template>\r\n    <div if.bind=\"block.editMode\" class=\"block-actions\">\r\n        <div if.bind=\"block.isEditing !== true && block.isDeleting !== true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"startEditing()\" class=\"btn btn-default btn-xs\">Edit</button>\r\n            <button type=\"button\" click.delegate=\"startDeleting()\" class=\"btn btn-danger btn-xs\">Delete</button>\r\n            <button type=\"button\" click.delegate=\"moveUp()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-up\" aria-hidden=\"true\"></span>\r\n            </button>\r\n            <button type=\"button\" click.delegate=\"moveDown()\" class=\"btn btn-default btn-xs\">\r\n                <span class=\"glyphicon glyphicon-arrow-down\" aria-hidden=\"true\"></span>\r\n            </button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isEditing === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"applyChanges()\" class=\"btn btn-success btn-xs\">Apply Changes</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isDeleting === true && block.isNew !== true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-danger btn-xs\">Delete Block</button>\r\n            <button type=\"button\" click.delegate=\"cancelEditing()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n\r\n        <div if.bind=\"block.isNew === true\" class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-success btn-xs\">Add Block</button>\r\n            <button type=\"button\" click.delegate=\"deleteBlock()\" class=\"btn btn-default btn-xs\">Cancel</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
@@ -5175,8 +5421,10 @@ define('text!resources/elements/article/image-block.html', ['module'], function(
 define('text!resources/elements/article/new-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.isNew === true\">\r\n        <edit-mode>\r\n\r\n            <div class=\"form-horizontal\">\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Block Type</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <select class=\"form-control\" value.bind=\"block.BlockType\">\r\n                            <option>Select</option>\r\n                            <option repeat.for=\"blockType of blockTypes\" value.bind=\"blockType\">${blockType}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n        </edit-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/ordered-list-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'OrderedList'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.items\" class=\"row\">\r\n                        <div class=\"col-xs-10\">\r\n                            <textarea rows=\"3\" id=\"${$parent.block.BlockId}-${$index}\"\r\n                                      value.bind=\"item\"></textarea>\r\n                        </div>\r\n                        <div class=\"col-xs-2\" style=\"text-align: left;\">\r\n                            <button type=\"button\"\r\n                                    click.delegate=\"$parent.deleteItem($index)\"\r\n                                    class=\"btn btn-danger btn-xs\">\r\n                                Delete\r\n                            </button>\r\n                        </div>\r\n                </li>\r\n            </ol>\r\n            <button type=\"button\" \r\n                    click.delegate=\"appendItem()\" \r\n                    class=\"btn btn-primary btn-xs\">\r\n                Add List Item\r\n            </button>\r\n\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.Items\">${item}</li>\r\n            </ol>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/paragraph-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Paragraph'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <textarea rows=\"4\" value.bind=\"block.Text\">\r\n            </textarea>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <p>${block.Text}</p>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
-define('text!resources/elements/rule/rule.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rule\" if.bind=\"rule.deleted !== true\">\r\n\r\n        <div class=\"c_rule-header\" click.delegate=\"rule.expanded = !!!rule.expanded\">\r\n            <span>${rule.name}</span>\r\n            <a class=\"chevron\">\r\n                <span if.bind=\"rule.expanded === true\" class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\r\n                <span if.bind=\"rule.expanded !== true\" class=\"glyphicon glyphicon-menu-left\" aria-hidden=\"true\"></span>\r\n            </a>\r\n        </div>\r\n\r\n        <div class=\"c_rule-details\" if.bind=\"rule.expanded === true\">\r\n            <form submit.delegate=\"trySaveRule()\">\r\n                <fieldset disabled.bind=\"rule.editMode !== true\">\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtName\">Rule Name</label>\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"rule.name & validate\">\r\n                    </div>\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtDescription\">Description</label>\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription\" value.bind=\"rule.description & validate\"></textarea>\r\n                    </div>\r\n\r\n                    <div class=\"form-inline\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlPeriod\">Period:</label>\r\n                            <select id=\"ddlPeriod\" class=\"form-control\" value.bind=\"rule.period\">\r\n                                <option repeat.for=\"period of periods\" model.bind=\"period.id\">${period.name}</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlCondition\">Compare operator:</label>\r\n                            <select id=\"ddlCondition\" class=\"form-control\" value.bind=\"rule.condition\">\r\n                                <option repeat.for=\"compareType of compareTypes\" model.bind=\"compareType.id\">${compareType.name}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare What-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare What</h3>\r\n\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV1\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV1\" class=\"form-control\" value.bind=\"rule.dataSourceV1\" change.delegate=\"onDataSourceV1Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"rule.dataSourceV1 !== 2\">\r\n                            <label for=\"ddlDataSeriesV1\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV1\" class=\"form-control\" value.bind=\"rule.dataSeriesV1\">\r\n                                <option repeat.for=\"dataSetries of rule.dataSeriesOptionsV1\" model.bind=\"dataSetries.id\">${dataSetries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"rule.dataSourceV1 === 2\">\r\n                                <label for=\"txtConstV1\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV1\" value.bind=\"rule.constV1\">\r\n                            </div>\r\n                            <div class=\"form-group\" if.bind=\"rule.dataSourceV1 !== 2\">\r\n                                <label for=\"txtSkipItemsV1\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV1\" value.bind=\"rule.skipItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"rule.dataSourceV1 !== 2\">\r\n                                <label for=\"txtTakeItemsV1\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV1\" value.bind=\"rule.takeItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"rule.dataSourceV1 !== 2\">\r\n                                <label for=\"ddlTransformItemsV1\">Data Transform:</label>\r\n                                <select id=\"ddlTransformItemsV1\" class=\"form-control\" value.bind=\"rule.transformItemsV1\">\r\n                                    <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                                </select>\r\n                            </div>\r\n\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare With-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare With</h3>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV2\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV2\" class=\"form-control\" value.bind=\"rule.dataSourceV2\" change.delegate=\"onDataSourceV2Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"rule.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlDataSeriesV2\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV2\" class=\"form-control\" value.bind=\"rule.dataSeriesV2\">\r\n                                <option repeat.for=\"dataSeries of rule.dataSeriesOptionsV2\" model.bind=\"dataSeries.id\">${dataSeries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"rule.dataSourceV2 === 2\">\r\n                                <label for=\"txtConstV2\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV2\" value.bind=\"rule.constV2\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"rule.dataSourceV2 !== 2\">\r\n                                <label for=\"txtSkipItemsV2\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV2\" value.bind=\"rule.skipItemsV2 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"rule.dataSourceV2 !== 2\">\r\n                                <label for=\"txtTakeItemsV2\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV2\" value.bind=\"rule.takeItemsV2 & validate\">\r\n                            </div>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"rule.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlTransformItemsV2\">Data Transform:</label>\r\n                            <select id=\"ddlTransformItemsV2\" class=\"form-control\" value.bind=\"rule.transformItemsV2\">\r\n                                <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </fieldset>\r\n\r\n                <div class=\"c_rule-actions\">\r\n                    <button type=\"submit\" class=\"btn btn-danger\" if.bind=\"rule.editMode === true\">Save</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" if.bind=\"rule.editMode === true\" class=\"btn btn-default\">Cancel</button>\r\n                    <button type=\"button\" click.delegate=\"startEdit()\" if.bind=\"rule.editMode !== true\" class=\"btn btn-danger\">Edit</button>\r\n                </div>\r\n\r\n            </form>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
+define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
+define('text!resources/elements/indicator/indicator.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_indicator\" if.bind=\"indicator.deleted !== true\">\r\n\r\n        <div class=\"c_indicator-header\" click.delegate=\"indicator.expanded = !!!indicator.expanded\">\r\n            <span>${indicator.name}</span>\r\n            <a class=\"chevron\">\r\n                <span if.bind=\"indicator.expanded === true\" class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\r\n                <span if.bind=\"indicator.expanded !== true\" class=\"glyphicon glyphicon-menu-left\" aria-hidden=\"true\"></span>\r\n            </a>\r\n        </div>\r\n\r\n        <div class=\"c_indicator-details\" if.bind=\"indicator.expanded === true\">\r\n            <form submit.delegate=\"trySaveIndicator()\">\r\n                <fieldset disabled.bind=\"indicator.editMode !== true\">\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtName\">Indicator Name</label>\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"indicator.name & validate\">\r\n                    </div>\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtDescription\">Description</label>\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription\" value.bind=\"indicator.description & validate\"></textarea>\r\n                    </div>\r\n\r\n                    <div class=\"form-inline\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlPeriod-${indicator.indicatorId}\">Period:</label>\r\n                            <select id=\"ddlPeriod-${indicator.indicatorId}\" class=\"form-control\" value.bind=\"indicator.period\">\r\n                                <option repeat.for=\"period of periods\" model.bind=\"period.id\">${period.name}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                </fieldset>\r\n                \r\n                <ul if.bind=\"errors.length > 0\">\r\n                    <li repeat.for=\"error of errors\">\r\n                        ${error.client.source}::${error.server.source} => <br />\r\n                        ${error.client.message}(${error.server.message})\r\n                    </li>\r\n                </ul>\r\n\r\n                <div class=\"c_indicator-actions\">\r\n                    <button type=\"submit\" class=\"btn btn-danger\" if.bind=\"indicator.editMode === true\">Save</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" if.bind=\"indicator.editMode === true\" class=\"btn btn-default\">Cancel</button>\r\n                    <button type=\"button\" click.delegate=\"startEdit()\" if.bind=\"indicator.editMode !== true\" class=\"btn btn-danger\">Edit</button>\r\n                </div>\r\n\r\n            </form>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/navigation/main-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-nav\">\r\n        <div class=\"container\">\r\n            <div class=\"main-nav-items\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!resources/elements/navigation/nav-header.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"container\">\r\n        <div class=\"navbar-brand\">\r\n\r\n            <img class=\"logo\" src=\"/content/images/logo.png\"/>\r\n            <a first-letter-span href=\"/\">Dream Space</a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav navbar-right\">\r\n            <li role=\"presentation\" class=\"dropdown\" if.bind=\"isAuthenticated === true\">\r\n                <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>\r\n                    ${userContext.user.firstName} <span class=\"caret\"></span>\r\n                </a>\r\n                <ul class=\"dropdown-menu\">\r\n                    <li><a href.bind=\"loginUrl\">Account</a></li>\r\n                    <li><a click.delegate=\"logout()\">Logout</a></li>\r\n                </ul>\r\n            </li>\r\n            <li if.bind=\"isAuthenticated !== true\">\r\n                <a href.bind=\"loginUrl\">Login</a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
+define('text!resources/elements/rule/rule.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rule\" if.bind=\"ruleInfo.deleted !== true\">\r\n\r\n        <div class=\"c_rule-header\" click.delegate=\"ruleInfo.expanded = !!!ruleInfo.expanded\">\r\n            <span>${ruleInfo.name}</span>\r\n            <a class=\"chevron\">\r\n                <span if.bind=\"ruleInfo.expanded === true\" class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\r\n                <span if.bind=\"ruleInfo.expanded !== true\" class=\"glyphicon glyphicon-menu-left\" aria-hidden=\"true\"></span>\r\n            </a>\r\n        </div>\r\n\r\n        <div class=\"c_rule-details\" if.bind=\"ruleInfo.expanded === true\">\r\n            <form submit.delegate=\"trySaveRule()\">\r\n                <fieldset disabled.bind=\"ruleInfo.editMode !== true\">\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtName-${ruleInfo.ruleId}\">Rule Name</label>\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.name & validate\">\r\n                    </div>\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtDescription-${ruleInfo.ruleId}\">Description</label>\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.description & validate\"></textarea>\r\n                    </div>\r\n\r\n                    <div class=\"form-inline\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlPeriod-${ruleInfo.ruleId}\">Period:</label>\r\n                            <select id=\"ddlPeriod-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.period\">\r\n                                <option repeat.for=\"period of periods\" model.bind=\"period.id\">${period.name}</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlCondition-${ruleInfo.ruleId}\">Compare operator:</label>\r\n                            <select id=\"ddlCondition-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.condition\">\r\n                                <option repeat.for=\"compareType of compareTypes\" model.bind=\"compareType.id\">${compareType.name}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare What-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare What</h3>\r\n\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV1-${ruleInfo.ruleId}\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSourceV1\" change.delegate=\"onDataSourceV1Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                            <label for=\"ddlDataSeriesV1-${ruleInfo.ruleId}\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSeriesV1\">\r\n                                <option repeat.for=\"dataSetries of ruleInfo.dataSeriesOptionsV1\" model.bind=\"dataSetries.id\">${dataSetries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 === 2\">\r\n                                <label for=\"txtConstV1-${ruleInfo.ruleId}\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.constV1\">\r\n                            </div>\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"txtSkipItemsV1-${ruleInfo.ruleId}\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.skipItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"txtTakeItemsV1-${ruleInfo.ruleId}\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.takeItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"ddlTransformItemsV1-${ruleInfo.ruleId}\">Data Transform:</label>\r\n                                <select id=\"ddlTransformItemsV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.transformItemsV1\">\r\n                                    <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                                </select>\r\n                            </div>\r\n\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare With-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare With</h3>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV2-${ruleInfo.ruleId}\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSourceV2\" change.delegate=\"onDataSourceV2Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlDataSeriesV2-${ruleInfo.ruleId}\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSeriesV2\">\r\n                                <option repeat.for=\"dataSeries of ruleInfo.dataSeriesOptionsV2\" model.bind=\"dataSeries.id\">${dataSeries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 === 2\">\r\n                                <label for=\"txtConstV2-${ruleInfo.ruleId}\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.constV2\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                                <label for=\"txtSkipItemsV2-${ruleInfo.ruleId}\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.skipItemsV2 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                                <label for=\"txtTakeItemsV2-${ruleInfo.ruleId}\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.takeItemsV2 & validate\">\r\n                            </div>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlTransformItemsV2-${ruleInfo.ruleId}\">Data Transform:</label>\r\n                            <select id=\"ddlTransformItemsV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.transformItemsV2\">\r\n                                <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </fieldset>\r\n\r\n                <div class=\"c_rule-actions\">\r\n                    <button type=\"submit\" class=\"btn btn-danger\" if.bind=\"ruleInfo.editMode === true\">Save</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" if.bind=\"ruleInfo.editMode === true\" class=\"btn btn-default\">Cancel</button>\r\n                    <button type=\"button\" click.delegate=\"startEdit()\" if.bind=\"ruleInfo.editMode !== true\" class=\"btn btn-danger\">Edit</button>\r\n                </div>\r\n\r\n            </form>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

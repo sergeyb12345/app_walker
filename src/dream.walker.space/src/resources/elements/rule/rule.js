@@ -15,10 +15,10 @@ export class Rule {
         this.validation = validation;
         this.validation.validateTrigger = validateTrigger.change;
         this.validation.addRenderer(new BootstrapFormRenderer());
-
-        this.ruleService = ruleService;
+        this.errors =[];
+        this.ruleInfoService = ruleService;
         this.subscriptions = [];
-        this.rule = {editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
+        this.ruleInfoInfo = {editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
 
         this.periods = [
             {id:0, name: 'Daily'},
@@ -60,13 +60,13 @@ export class Rule {
         ];
     }
 
-    ruleChanged(rule) {
-        if (rule) {
-            let newRule = Object.assign({}, rule);
+    ruleChanged(ruleItem) {
+        if (ruleItem) {
+            let newRule = Object.assign({}, ruleItem);
             this.setDataSeries(newRule);
-            this.rule = newRule;
+            this.ruleInfo = newRule;
 
-            this.rule.editMode = false;
+            this.ruleInfo.editMode = false;
 
             ValidationRules
                 .ensure(u => u.name).required({message: "^Rule name must be set"})
@@ -75,17 +75,17 @@ export class Rule {
                 .ensure(u => u.skipItemsV2).required().satisfies(value => value >= 0)
                 .ensure(u => u.takeItemsV1).required().satisfies(value => value >= 0)
                 .ensure(u => u.takeItemsV2).required().satisfies(value => value >= 0)
-                .on(this.rule);
+                .on(this.ruleInfo);
 
         }
     }  
 
     onDataSourceV1Change(){
-        this.setDataSeries(this.rule);
+        this.setDataSeries(this.ruleInfo);
     }
 
     onDataSourceV2Change(){
-        this.setDataSeries(this.rule);
+        this.setDataSeries(this.ruleInfo);
     }
 
     setDataSeries(rule){
@@ -114,26 +114,38 @@ export class Rule {
     }
 
     startEdit() {
-        this.originalRule = Object.assign({}, this.rule);
-        this.rule.editMode = true;
+        this.originalRule = Object.assign({}, this.ruleInfo);
+        this.ruleInfo.editMode = true;
     }
 
     cancelEdit() {
-        this.rule = this.originalRule;
-        this.rule.editMode = false;
+        this.ruleInfo = this.originalRule;
+        this.ruleInfo.editMode = false;
     }
 
     trySaveRule() {
         this.validation.validate()
             .then(response => {
-                let r = response;
+                if(response.length === 0){
+                    this.saveRule();
+                }
             })
             .catch(error => {
-                let e = error;
+                this.handleError(error);
             });    
     }
 
     saveRule(){
+        this.ruleInfo.editMode = false;
         alert('saved')
+    }
+
+    handleError(error) {
+        let self = this;
+
+        this.errorParser.parseError(error)
+            .then(errorInfo => {
+                self.errors.push(errorInfo);
+            });
     }
 }
