@@ -455,6 +455,7 @@ form .validation-summary-error ul li {
 }
 .side-navigation h3 {
   margin-bottom: 22px;
+  color: #333333;
 }
 .side-navigation .block-actions {
   text-align: right;

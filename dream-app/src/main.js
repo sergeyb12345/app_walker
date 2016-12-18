@@ -1,25 +1,18 @@
-import environment from './environment';
 
-//Configure Bluebird Promises.
-//Note: You may want to use environment-specific configuration.
-Promise.config({
-  warnings: {
-    wForgottenReturn: false
-  }
-});
+import {LogManager} from 'aurelia-framework';
+import {ConsoleAppender} from 'aurelia-logging-console';
+
+LogManager.addAppender(new ConsoleAppender());
+LogManager.setLevel(LogManager.logLevel.warn);
 
 export function configure(aurelia) {
-  aurelia.use
-    .standardConfiguration()
-    .feature('resources');
+    aurelia.use
+        .standardConfiguration();
 
-  if (environment.debug) {
-    aurelia.use.developmentLogging();
-  }
+        aurelia.use.developmentLogging();
 
-  if (environment.testing) {
-    aurelia.use.plugin('aurelia-testing');
-  }
+        aurelia.start().then(() => {
+            aurelia.setRoot();
+       });
 
-  aurelia.start().then(() => aurelia.setRoot());
 }

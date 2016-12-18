@@ -4,12 +4,12 @@ import {RuleService} from '../../../services/rule-service';
 import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation"
 import {BootstrapFormRenderer} from "../../../common/bootstrap-form-renderer"
 
-@inject(EventAggregator, RuleService, "User", ValidationController)
+@inject(EventAggregator, RuleService, "User", ValidationController, "Settings")
 export class Rule {
 
     @bindable rule;
 
-    constructor (eventAggregator, ruleService, userContext, validation) {
+    constructor (eventAggregator, ruleService, userContext, validation, globalSettings) {
         this.powerUser = userContext.user.isAuthenticated;
         this.eventAggregator = eventAggregator;
         this.validation = validation;
@@ -20,10 +20,7 @@ export class Rule {
         this.subscriptions = [];
         this.ruleInfoInfo = {editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
 
-        this.periods = [
-            {id:0, name: 'Daily'},
-            {id:1, name: 'Weekly'}
-        ];
+        this.periods = globalSettings.periods;
 
         this.compareTypes = [
             {id: 0, name: 'Greater'},

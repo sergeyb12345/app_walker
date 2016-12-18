@@ -7,11 +7,11 @@ import {UserContext} from './account/user-context';
 
 //Configure Bluebird Promises.
 //Note: You may want to use environment-specific configuration.
-Promise.config({
-  warnings: {
-    wForgottenReturn: false
-  }
-});
+//Promise.config({
+//  warnings: {
+//    wForgottenReturn: false
+//  }
+//});
 
 export function configure(aurelia) {
     let errorparser = aurelia.container.get(ErrorParser);

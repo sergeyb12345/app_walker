@@ -1,13 +1,14 @@
 ﻿import {inject} from "aurelia-framework";
 import {HttpClient, json} from 'aurelia-fetch-client';
 import {EventAggregator} from 'aurelia-event-aggregator';
-import {LogManager} from 'aurelia-framework';
+import {RuleService} from './services/rule-service';
 
-@inject(HttpClient, EventAggregator)
+@inject(HttpClient, EventAggregator, RuleService)
 export class Settings {
 
-    constructor (httpClient, eventAggregator) {
+    constructor (httpClient, eventAggregator, ruleService) {
         this.eventAggregator = eventAggregator;
+        this.ruleService = ruleService;
 
         httpClient.configure(config => {
             config
@@ -20,8 +21,23 @@ export class Settings {
         this.http = httpClient;
         this.initialized = false;
         this.homePage = 'studies';
+        this.indicators = [];
+
+        this.periods = [
+            {id:0, name: 'Daily', url: 'daily'},
+            {id:1, name: 'Weekly', url: 'weekly'}
+        ];
+
+        this.defaultPeriod = this.periods[0];
     }
     
+    selectPeriod(periodUrl) {
+        let index = this.periods.findIndex(i => i.url.toLowerCase() === periodUrl.toLowerCase());
+        if(index === -1) {
+            return this.defaultPeriod;
+        }
+        return this.periods[index];
+    }
 
     getStudiesSection() {
         if (this.initialized === true) {
@@ -40,13 +56,14 @@ export class Settings {
     initialize() {
         return this.http.fetch("article/sections")
             .then(response => {
-                response.json()
-                .then(sections => {
+                return response.json()
+                    .then(sections => {
                         this.sections = sections;
-                        this.initialized = true;
-                });
+                        
+                        //return this.ruleService.
 
-                return this;
+                        this.initialized = true;
+                    });
             })
             .catch(error => {
                 return this.handleError(error, "initialize");

@@ -1,5 +1,8 @@
 export class App {
-  constructor() {
-    this.message = 'Hello World!';
-  }
+    constructor() {
+        this.message = "Hello";
+    }
+
+    configureRouter(config, router) {
+    }
 }

@@ -6,7 +6,7 @@
     <title>Dream Space - Chart</title>
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="/Content/Site/dream-space.min.css" rel="stylesheet" />
+    <link href="~/Content/Site/dream-space.min.css" rel="stylesheet" />
 
     @Scripts.Render("~/bundles/anyChart-js")
 
@@ -28,7 +28,16 @@
 <body>
     <div aurelia-app="main">
         @RenderBody()
-        <script src="~/Scripts/vendor-bundle.js" data-main="aurelia-bootstrapper"></script>   
+
+        @*Production setup: uncomment when publish live*@
+        @*<script src="~/Scripts/vendor-bundle.js" data-main="aurelia-bootstrapper"></script>*@   
+    
+        @*Dev setup*@
+        <script src="/jspm_packages/system.js"></script>
+        <script src="/config.js"></script>
+        <script>
+            System.import("aurelia-bootstrapper");
+        </script>
     </div>
 </body>
 </html>

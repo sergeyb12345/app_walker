@@ -328,6 +328,7 @@
     <Content Include="aurelia_project\tasks\run.js" />
     <Content Include="aurelia_project\tasks\run.json" />
     <Content Include="aurelia_project\tasks\transpile.js" />
+    <Content Include="config.js" />
     <Content Include="Content\Images\bg.jpg" />
     <Content Include="Content\Images\ec04f001.jpg" />
     <Content Include="Content\Images\emma_bg.jpg" />
@@ -396,9 +397,9 @@
     </Content>
     <Content Include="deploy.cmd" />
     <Content Include=".deployment" />
-    <Content Include="package.json" />
+    <Content Include="package.prod.json" />
     <Content Include=".babelrc" />
-    <Content Include="jsconfig.json" />
+    <Content Include="jsconfig.prod.json" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -424,6 +425,7 @@
     <Content Include="Content\Site\components\_strategy.less" />
     <Content Include="Content\Site\components\_rule.less" />
     <Content Include="Content\Site\elements\_button.less" />
+    <Content Include="package.json" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />

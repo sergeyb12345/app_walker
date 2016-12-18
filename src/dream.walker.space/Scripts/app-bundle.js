@@ -126,7 +126,7 @@ define('main',['exports', 'jquery', './environment', './settings', './common/err
         });
     }
 });
-define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator) {
+define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator', './services/rule-service'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator, _ruleService) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -142,11 +142,12 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aure
 
     var _dec, _class;
 
-    var Settings = exports.Settings = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator), _dec(_class = function () {
-        function Settings(httpClient, eventAggregator) {
+    var Settings = exports.Settings = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator, _ruleService.RuleService), _dec(_class = function () {
+        function Settings(httpClient, eventAggregator, ruleService) {
             _classCallCheck(this, Settings);
 
             this.eventAggregator = eventAggregator;
+            this.ruleService = ruleService;
 
             httpClient.configure(function (config) {
                 config.useStandardConfiguration().withBaseUrl('api/');
@@ -156,7 +157,22 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aure
             this.http = httpClient;
             this.initialized = false;
             this.homePage = 'studies';
+            this.indicators = [];
+
+            this.periods = [{ id: 0, name: 'Daily', url: 'daily' }, { id: 1, name: 'Weekly', url: 'weekly' }];
+
+            this.defaultPeriod = this.periods[0];
         }
+
+        Settings.prototype.selectPeriod = function selectPeriod(periodUrl) {
+            var index = this.periods.findIndex(function (i) {
+                return i.url.toLowerCase() === periodUrl.toLowerCase();
+            });
+            if (index === -1) {
+                return this.defaultPeriod;
+            }
+            return this.periods[index];
+        };
 
         Settings.prototype.getStudiesSection = function getStudiesSection() {
             if (this.initialized === true) {
@@ -180,12 +196,11 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aure
             var _this = this;
 
             return this.http.fetch("article/sections").then(function (response) {
-                response.json().then(function (sections) {
+                return response.json().then(function (sections) {
                     _this.sections = sections;
+
                     _this.initialized = true;
                 });
-
-                return _this;
             }).catch(function (error) {
                 return _this.handleError(error, "initialize");
             });
@@ -1239,44 +1254,64 @@ define('services/indicator-service',['exports', 'aurelia-framework', 'aurelia-fe
 
             this.eventAggregator = eventAggregator;
             this.http = http;
+            this.indicatorsWeekly = [];
+            this.indicatorsDaily = [];
+            this.initialized = false;
         }
 
-        IndicatorService.prototype.getIndicator = function getIndicator(id) {
+        IndicatorService.prototype.initialize = function initialize() {
             var _this = this;
+
+            var self = this;
+            return this.http.fetch("indicator/all", {
+                method: 'get'
+            }).then(function (response) {
+                return response.json().then(function (indicators) {
+                    self.indicatorsWeekly = self.filterIndicators(indicators, 1);
+                    self.indicatorsDaily = self.filterIndicators(indicators, 0);
+                    self.initialized = true;
+                });
+            }).catch(function (error) {
+                return _this.handleError(error, "initialize");
+            });
+        };
+
+        IndicatorService.prototype.getIndicator = function getIndicator(id) {
+            var _this2 = this;
 
             return this.http.fetch('indicator/' + id, {
                 method: 'get'
             }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this.handleError(error, "getIndicator");
+                return _this2.handleError(error, "getIndicator");
             });
         };
 
         IndicatorService.prototype.getIndicatorsForPeriod = function getIndicatorsForPeriod(period) {
-            var _this2 = this;
+            var _this3 = this;
 
             return this.http.fetch('indicator/' + period + '/all', {
                 method: 'get'
             }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this2.handleError(error, "getIndicatorsForPeriod");
+                return _this3.handleError(error, "getIndicatorsForPeriod");
             });
         };
 
         IndicatorService.prototype.deleteIndicator = function deleteIndicator(id) {
-            var _this3 = this;
+            var _this4 = this;
 
             return this.http.fetch("indicator/" + id, { method: 'delete' }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                return _this3.handleError(error, "deleteIndicator");
+                return _this4.handleError(error, "deleteIndicator");
             });
         };
 
         IndicatorService.prototype.saveIndicator = function saveIndicator(indicator) {
-            var _this4 = this;
+            var _this5 = this;
 
             return this.http.fetch("indicator", {
                 method: 'post',
@@ -1284,7 +1319,7 @@ define('services/indicator-service',['exports', 'aurelia-framework', 'aurelia-fe
             }).then(function (response) {
                 return response.json();
             }).catch(function (error) {
-                _this4.handleError(error, "saveIndicator");
+                _this5.handleError(error, "saveIndicator");
             });
         };
 
@@ -2137,43 +2172,38 @@ define('strategies/rules/rules',['exports', 'aurelia-framework', 'aurelia-event-
 
     var _dec, _class;
 
-    var Rules = exports.Rules = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _ruleService.RuleService, "ErrorParser"), _dec(_class = function () {
-        function Rules(eventAggregator, ruleService, errorParser) {
+    var Rules = exports.Rules = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _ruleService.RuleService, "ErrorParser", "Settings"), _dec(_class = function () {
+        function Rules(eventAggregator, ruleService, errorParser, globalSettings) {
             _classCallCheck(this, Rules);
 
             this.errorParser = errorParser;
             this.eventAggregator = eventAggregator;
             this.ruleService = ruleService;
+            this.globalSettings = globalSettings;
             this.subscriptions = [];
             this.errors = [];
             this.rules = [];
 
-            this.period = 'daily';
+            this.activePeriod = this.globalSettings.defaultPeriod;
+            this.periods = this.globalSettings.periods;
         }
 
         Rules.prototype.activate = function activate(params, routeConfig, navigationInstruction) {
             this.router = navigationInstruction.router;
 
-            this.dailyRulesUrl = '/strategies/rules/daily';
-            this.weeklyRulesUrl = '/strategies/rules/weekly';
-
             if (params.period) {
-                this.period = params.period;
-                this.loadRules(this.period);
+                this.activePeriod = this.globalSettings.selectPeriod(params.period);
+                this.loadRules(this.activePeriod.id);
             } else {
-                this.router.navigate(this.dailyRulesUrl);
+                var defaultUrl = '/strategies/rules/' + this.activePeriod.url;
+                this.router.navigate(defaultUrl);
             }
         };
 
-        Rules.prototype.loadRules = function loadRules(period) {
+        Rules.prototype.loadRules = function loadRules(periodId) {
             var _this = this;
 
-            var nPeriod = 0;
-            if (period && period.toLowerCase() === 'weekly') {
-                nPeriod = 1;
-            }
-
-            this.ruleService.getRulesForPeriod(nPeriod).then(function (result) {
+            this.ruleService.getRulesForPeriod(periodId).then(function (result) {
                 _this.rules = result;
             }).catch(function (error) {
                 return _this.handleError(error, "update");
@@ -2217,6 +2247,248 @@ define('strategies/rules/strategy-rules',['exports', 'aurelia-framework', 'aurel
         this.errors = [];
         this.rules = [];
     }) || _class);
+});
+define('resources/elements/chart/any-chart',['exports', 'aurelia-framework', 'npm-anystock'], function (exports, _aureliaFramework) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.AnyChart = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _desc, _value, _class, _descriptor;
+
+    var AnyChart = exports.AnyChart = (_class = function () {
+        function AnyChart() {
+            _classCallCheck(this, AnyChart);
+
+            _initDefineProp(this, 'container', _descriptor, this);
+        }
+
+        AnyChart.prototype.containerChanged = function containerChanged(newValue, oldValue) {
+            this.draw(newValue);
+        };
+
+        AnyChart.prototype.generateSome = function generateSome(data) {};
+
+        AnyChart.prototype.draw = function draw(container) {
+
+            anychart.onDocumentReady(function () {
+                var chart = anychart.stock();
+
+                var table = anychart.data.table();
+                table.addData([['2015-12-24T12:00:00', '511.53', '514.98', '505.79', '506.40'], ['2015-12-25T12:00:00', '512.53', '514.88', '505.69', '507.34'], ['2015-12-26T12:00:00', '511.83', '514.98', '505.59', '506.23'], ['2015-12-27T12:00:00', '511.22', '515.30', '505.49', '506.47'], ['2015-12-28T12:00:00', '510.35', '515.72', '505.23', '505.80'], ['2015-12-29T12:00:00', '510.53', '515.86', '505.38', '508.25'], ['2015-12-30T12:00:00', '511.43', '515.98', '505.66', '507.45'], ['2015-12-31T12:00:00', '511.50', '515.33', '505.99', '507.98'], ['2016-01-01T12:00:00', '511.32', '514.29', '505.99', '506.37'], ['2016-01-02T12:00:00', '511.70', '514.87', '506.18', '506.75'], ['2016-01-03T12:00:00', '512.30', '514.78', '505.87', '508.67'], ['2016-01-04T12:00:00', '512.50', '514.77', '505.83', '508.35'], ['2016-01-05T12:00:00', '511.53', '516.18', '505.91', '509.42'], ['2016-01-06T12:00:00', '511.13', '516.01', '506.00', '509.26'], ['2016-01-07T12:00:00', '510.93', '516.07', '506.00', '510.99'], ['2016-01-08T12:00:00', '510.88', '515.93', '505.22', '509.95'], ['2016-01-09T12:00:00', '509.12', '515.97', '505.15', '510.12'], ['2016-01-10T12:00:00', '508.53', '516.13', '505.66', '510.42'], ['2016-01-11T12:00:00', '508.90', '516.24', '505.73', '510.40']]);
+
+                var mapping = table.mapAs();
+                mapping.addField('open', 1, 'first');
+                mapping.addField('high', 2, 'max');
+                mapping.addField('low', 3, 'min');
+                mapping.addField('close', 4, 'last');
+                mapping.addField('value', 4, 'last');
+
+                chart.plot(0).ohlc(mapping).name('ACME Corp.');
+
+                chart.title('AnyStock Basic Sample');
+
+                chart.container(container);
+                chart.draw();
+            });
+        };
+
+        return AnyChart;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'container', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: function initializer() {
+            return 'container';
+        }
+    })), _class);
+});
+define('resources/elements/indicator/indicator',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/indicator-service', 'aurelia-validation', '../../../common/bootstrap-form-renderer'], function (exports, _aureliaFramework, _aureliaEventAggregator, _indicatorService, _aureliaValidation, _bootstrapFormRenderer) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Indicator = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor;
+
+    var Indicator = exports.Indicator = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _indicatorService.IndicatorService, "User", _aureliaValidation.ValidationController), _dec(_class = (_class2 = function () {
+        function Indicator(eventAggregator, indicatorService, userContext, validation) {
+            _classCallCheck(this, Indicator);
+
+            _initDefineProp(this, 'indicator', _descriptor, this);
+
+            this.powerUser = userContext.user.isAuthenticated;
+            this.eventAggregator = eventAggregator;
+            this.validation = validation;
+            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
+            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
+
+            this.indicatorService = indicatorService;
+            this.subscriptions = [];
+            this.errors = [];
+        }
+
+        Indicator.prototype.indicatorChanged = function indicatorChanged(indicator) {
+            if (indicator) {
+                var newIndicator = Object.assign({}, indicator);
+                this.newIndicator.editMode = false;
+                this.indicator = newIndicator;
+
+                _aureliaValidation.ValidationRules.ensure(function (u) {
+                    return u.name;
+                }).required({ message: "^Indicator name must be set" }).ensure(function (u) {
+                    return u.description;
+                }).required({ message: "^Description must be set" }).on(this.newIndicator);
+            }
+        };
+
+        Indicator.prototype.startEdit = function startEdit() {
+            this.originalIndicator = Object.assign({}, this.indicator);
+            this.indicator.editMode = true;
+        };
+
+        Indicator.prototype.cancelEdit = function cancelEdit() {
+            this.indicator = this.originalIndicator;
+            this.indicator.editMode = false;
+        };
+
+        Indicator.prototype.trySaveIndicator = function trySaveIndicator() {
+            var _this = this;
+
+            this.validation.validate().then(function (response) {
+                var r = response;
+            }).catch(function (error) {
+                _this.handleError(error);
+            });
+        };
+
+        Indicator.prototype.saveIndicator = function saveIndicator() {
+            alert('saved');
+        };
+
+        Indicator.prototype.attached = function attached() {};
+
+        Indicator.prototype.detached = function detached() {
+            if (this.subscriptions.length > 0) {
+                this.subscriptions.forEach(function (subscription) {
+                    subscription.dispose();
+                });
+            }
+        };
+
+        Indicator.prototype.handleError = function handleError(error) {
+            var self = this;
+
+            this.errorParser.parseError(error).then(function (errorInfo) {
+                self.errors.push(errorInfo);
+            });
+        };
+
+        return Indicator;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'indicator', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    })), _class2)) || _class);
 });
 define('resources/elements/article/article-block',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
     'use strict';
@@ -3222,248 +3494,6 @@ define('resources/elements/article/paragraph-block',['exports', 'aurelia-framewo
         initializer: null
     })), _class);
 });
-define('resources/elements/chart/any-chart',['exports', 'aurelia-framework', 'npm-anystock'], function (exports, _aureliaFramework) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.AnyChart = undefined;
-
-    function _initDefineProp(target, property, descriptor, context) {
-        if (!descriptor) return;
-        Object.defineProperty(target, property, {
-            enumerable: descriptor.enumerable,
-            configurable: descriptor.configurable,
-            writable: descriptor.writable,
-            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
-        });
-    }
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-        var desc = {};
-        Object['ke' + 'ys'](descriptor).forEach(function (key) {
-            desc[key] = descriptor[key];
-        });
-        desc.enumerable = !!desc.enumerable;
-        desc.configurable = !!desc.configurable;
-
-        if ('value' in desc || desc.initializer) {
-            desc.writable = true;
-        }
-
-        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-            return decorator(target, property, desc) || desc;
-        }, desc);
-
-        if (context && desc.initializer !== void 0) {
-            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-            desc.initializer = undefined;
-        }
-
-        if (desc.initializer === void 0) {
-            Object['define' + 'Property'](target, property, desc);
-            desc = null;
-        }
-
-        return desc;
-    }
-
-    function _initializerWarningHelper(descriptor, context) {
-        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
-    }
-
-    var _desc, _value, _class, _descriptor;
-
-    var AnyChart = exports.AnyChart = (_class = function () {
-        function AnyChart() {
-            _classCallCheck(this, AnyChart);
-
-            _initDefineProp(this, 'container', _descriptor, this);
-        }
-
-        AnyChart.prototype.containerChanged = function containerChanged(newValue, oldValue) {
-            this.draw(newValue);
-        };
-
-        AnyChart.prototype.generateSome = function generateSome(data) {};
-
-        AnyChart.prototype.draw = function draw(container) {
-
-            anychart.onDocumentReady(function () {
-                var chart = anychart.stock();
-
-                var table = anychart.data.table();
-                table.addData([['2015-12-24T12:00:00', '511.53', '514.98', '505.79', '506.40'], ['2015-12-25T12:00:00', '512.53', '514.88', '505.69', '507.34'], ['2015-12-26T12:00:00', '511.83', '514.98', '505.59', '506.23'], ['2015-12-27T12:00:00', '511.22', '515.30', '505.49', '506.47'], ['2015-12-28T12:00:00', '510.35', '515.72', '505.23', '505.80'], ['2015-12-29T12:00:00', '510.53', '515.86', '505.38', '508.25'], ['2015-12-30T12:00:00', '511.43', '515.98', '505.66', '507.45'], ['2015-12-31T12:00:00', '511.50', '515.33', '505.99', '507.98'], ['2016-01-01T12:00:00', '511.32', '514.29', '505.99', '506.37'], ['2016-01-02T12:00:00', '511.70', '514.87', '506.18', '506.75'], ['2016-01-03T12:00:00', '512.30', '514.78', '505.87', '508.67'], ['2016-01-04T12:00:00', '512.50', '514.77', '505.83', '508.35'], ['2016-01-05T12:00:00', '511.53', '516.18', '505.91', '509.42'], ['2016-01-06T12:00:00', '511.13', '516.01', '506.00', '509.26'], ['2016-01-07T12:00:00', '510.93', '516.07', '506.00', '510.99'], ['2016-01-08T12:00:00', '510.88', '515.93', '505.22', '509.95'], ['2016-01-09T12:00:00', '509.12', '515.97', '505.15', '510.12'], ['2016-01-10T12:00:00', '508.53', '516.13', '505.66', '510.42'], ['2016-01-11T12:00:00', '508.90', '516.24', '505.73', '510.40']]);
-
-                var mapping = table.mapAs();
-                mapping.addField('open', 1, 'first');
-                mapping.addField('high', 2, 'max');
-                mapping.addField('low', 3, 'min');
-                mapping.addField('close', 4, 'last');
-                mapping.addField('value', 4, 'last');
-
-                chart.plot(0).ohlc(mapping).name('ACME Corp.');
-
-                chart.title('AnyStock Basic Sample');
-
-                chart.container(container);
-                chart.draw();
-            });
-        };
-
-        return AnyChart;
-    }(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'container', [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: function initializer() {
-            return 'container';
-        }
-    })), _class);
-});
-define('resources/elements/indicator/indicator',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/indicator-service', 'aurelia-validation', '../../../common/bootstrap-form-renderer'], function (exports, _aureliaFramework, _aureliaEventAggregator, _indicatorService, _aureliaValidation, _bootstrapFormRenderer) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.Indicator = undefined;
-
-    function _initDefineProp(target, property, descriptor, context) {
-        if (!descriptor) return;
-        Object.defineProperty(target, property, {
-            enumerable: descriptor.enumerable,
-            configurable: descriptor.configurable,
-            writable: descriptor.writable,
-            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
-        });
-    }
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-        var desc = {};
-        Object['ke' + 'ys'](descriptor).forEach(function (key) {
-            desc[key] = descriptor[key];
-        });
-        desc.enumerable = !!desc.enumerable;
-        desc.configurable = !!desc.configurable;
-
-        if ('value' in desc || desc.initializer) {
-            desc.writable = true;
-        }
-
-        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-            return decorator(target, property, desc) || desc;
-        }, desc);
-
-        if (context && desc.initializer !== void 0) {
-            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-            desc.initializer = undefined;
-        }
-
-        if (desc.initializer === void 0) {
-            Object['define' + 'Property'](target, property, desc);
-            desc = null;
-        }
-
-        return desc;
-    }
-
-    function _initializerWarningHelper(descriptor, context) {
-        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
-    }
-
-    var _dec, _class, _desc, _value, _class2, _descriptor;
-
-    var Indicator = exports.Indicator = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _indicatorService.IndicatorService, "User", _aureliaValidation.ValidationController), _dec(_class = (_class2 = function () {
-        function Indicator(eventAggregator, indicatorService, userContext, validation) {
-            _classCallCheck(this, Indicator);
-
-            _initDefineProp(this, 'indicator', _descriptor, this);
-
-            this.powerUser = userContext.user.isAuthenticated;
-            this.eventAggregator = eventAggregator;
-            this.validation = validation;
-            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
-            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
-
-            this.indicatorService = indicatorService;
-            this.subscriptions = [];
-            this.errors = [];
-        }
-
-        Indicator.prototype.indicatorChanged = function indicatorChanged(indicator) {
-            if (indicator) {
-                var newIndicator = Object.assign({}, indicator);
-                this.newIndicator.editMode = false;
-                this.indicator = newIndicator;
-
-                _aureliaValidation.ValidationRules.ensure(function (u) {
-                    return u.name;
-                }).required({ message: "^Indicator name must be set" }).ensure(function (u) {
-                    return u.description;
-                }).required({ message: "^Description must be set" }).on(this.newIndicator);
-            }
-        };
-
-        Indicator.prototype.startEdit = function startEdit() {
-            this.originalIndicator = Object.assign({}, this.indicator);
-            this.indicator.editMode = true;
-        };
-
-        Indicator.prototype.cancelEdit = function cancelEdit() {
-            this.indicator = this.originalIndicator;
-            this.indicator.editMode = false;
-        };
-
-        Indicator.prototype.trySaveIndicator = function trySaveIndicator() {
-            var _this = this;
-
-            this.validation.validate().then(function (response) {
-                var r = response;
-            }).catch(function (error) {
-                _this.handleError(error);
-            });
-        };
-
-        Indicator.prototype.saveIndicator = function saveIndicator() {
-            alert('saved');
-        };
-
-        Indicator.prototype.attached = function attached() {};
-
-        Indicator.prototype.detached = function detached() {
-            if (this.subscriptions.length > 0) {
-                this.subscriptions.forEach(function (subscription) {
-                    subscription.dispose();
-                });
-            }
-        };
-
-        Indicator.prototype.handleError = function handleError(error) {
-            var self = this;
-
-            this.errorParser.parseError(error).then(function (errorInfo) {
-                self.errors.push(errorInfo);
-            });
-        };
-
-        return Indicator;
-    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'indicator', [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: null
-    })), _class2)) || _class);
-});
 define('resources/elements/navigation/main-nav',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
     "use strict";
 
@@ -3791,8 +3821,8 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
 
     var _dec, _class, _desc, _value, _class2, _descriptor;
 
-    var Rule = exports.Rule = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _ruleService.RuleService, "User", _aureliaValidation.ValidationController), _dec(_class = (_class2 = function () {
-        function Rule(eventAggregator, ruleService, userContext, validation) {
+    var Rule = exports.Rule = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _ruleService.RuleService, "User", _aureliaValidation.ValidationController, "Settings"), _dec(_class = (_class2 = function () {
+        function Rule(eventAggregator, ruleService, userContext, validation, globalSettings) {
             _classCallCheck(this, Rule);
 
             _initDefineProp(this, 'rule', _descriptor, this);
@@ -3807,7 +3837,7 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
             this.subscriptions = [];
             this.ruleInfoInfo = { editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
 
-            this.periods = [{ id: 0, name: 'Daily' }, { id: 1, name: 'Weekly' }];
+            this.periods = globalSettings.periods;
 
             this.compareTypes = [{ id: 0, name: 'Greater' }, { id: 1, name: 'Greater or Equal' }, { id: 2, name: 'Equal' }, { id: 3, name: 'Less' }, { id: 4, name: 'Less or Equal' }, { id: 4, name: 'Not Equal' }];
 
@@ -5434,7 +5464,7 @@ define('text!studies/category.html', ['module'], function(module) { module.expor
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!strategies/indicators/indicators.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_indicators-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Indicators</h3>\r\n                </header>\r\n                <div class=\"c_indicator-list\">\r\n                    <indicator repeat.for=\"indicator of indicators\" rule.bind=\"indicator\"></indicator>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12\">\r\n                <h3>Side Navigation</h3>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!strategies/rules/rule-sets.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3 first-letter-span>Manage Rule Sets</h3>\r\n    </header>\r\n</template>"; });
-define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rules-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Rules</h3>\r\n                </header>\r\n                <div class=\"c_rule-list\">\r\n                    <rule repeat.for=\"rule of rules\" rule.bind=\"rule\"></rule>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12 side-navigation\">\r\n                <h3>Time Frame</h3>\r\n                <ul>\r\n                    <li>\r\n                        <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                        <a href.bind=\"dailyRulesUrl\" class=\"${period === 'daily' ? 'active' : ''}\" >Daily Rules</a>\r\n                    </li>                \r\n                    <li>\r\n                        <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                        <a href.bind=\"weeklyRulesUrl\" class=\"${period !== 'daily' ? 'active' : ''}\">Weekly Rules</a>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
+define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rules-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Rules</h3>\r\n                </header>\r\n                <div class=\"c_rule-list\">\r\n                    <rule repeat.for=\"rule of rules\" rule.bind=\"rule\"></rule>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12 side-navigation\">\r\n                <h3>Time Frame</h3>\r\n                <ul>\r\n                    <li repeat.for=\"period in periods\">\r\n                        <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                        <a href.bind=\"/strategies/rules/${period.url}\" \r\n                           >${period.name} Rules</a>\r\n                    </li>                \r\n                </ul>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!strategies/rules/strategy-rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Strategy Rules</h3>\r\n    </header>\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
 define('text!resources/elements/article/article.html', ['module'], function(module) { module.exports = "<template>\r\n    <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Title</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Url</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n            </div>\r\n        </div>\r\n\r\n    </edit-mode>\r\n    <read-mode if.bind=\"editMode !== true\">\r\n        <header>\r\n            <h3>${article.title}</h3>\r\n        </header>\r\n    </read-mode>\r\n\r\n    <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                  repeat.for=\"block of article.blocks\">\r\n        <block-actions block.bind=\"block\"></block-actions>\r\n        <article-block block.bind=\"block\"></article-block>\r\n    </article-part>\r\n\r\n    <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n        </div>\r\n    </div>\r\n</template>"; });

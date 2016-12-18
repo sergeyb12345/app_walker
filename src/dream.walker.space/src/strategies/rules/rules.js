@@ -2,45 +2,40 @@
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {RuleService} from '../../services/rule-service';
 
-@inject(EventAggregator, RuleService, "ErrorParser")
+@inject(EventAggregator, RuleService, "ErrorParser", "Settings")
 export class Rules {
 
-    constructor (eventAggregator, ruleService, errorParser) {
+    constructor (eventAggregator, ruleService, errorParser, globalSettings) {
 
         this.errorParser = errorParser;
         this.eventAggregator = eventAggregator;
         this.ruleService = ruleService;
+        this.globalSettings = globalSettings;
         this.subscriptions = [];
         this.errors = [];
         this.rules = [];
 
-        this.period = 'daily';
+        this.activePeriod = this.globalSettings.defaultPeriod;
+        this.periods = this.globalSettings.periods;
     }
 
     activate(params, routeConfig, navigationInstruction) {
         this.router = navigationInstruction.router;
 
-        this.dailyRulesUrl =  '/strategies/rules/daily';
-        this.weeklyRulesUrl = '/strategies/rules/weekly';
-
-
         if (params.period) {
-            this.period = params.period;
-            this.loadRules(this.period);
+            this.activePeriod = this.globalSettings.selectPeriod(params.period);
+            this.loadRules(this.activePeriod.id);
 
         } else {
-            this.router.navigate(this.dailyRulesUrl);
+            let defaultUrl = '/strategies/rules/' + this.activePeriod.url;
+            this.router.navigate(defaultUrl);
         }
         
     }
 
-    loadRules(period) {
-        let nPeriod = 0;
-        if(period && period.toLowerCase() === 'weekly'){
-            nPeriod = 1;
-        }
+    loadRules(periodId) {
 
-        this.ruleService.getRulesForPeriod(nPeriod)
+        this.ruleService.getRulesForPeriod(periodId)
             .then(result => {
                 this.rules = result;
             })
