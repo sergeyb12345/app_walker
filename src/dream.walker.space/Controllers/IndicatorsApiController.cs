@@ -1,5 +1,6 @@
 ﻿using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Enums;
+using dream.walker.data.Models;
 using dream.walker.data.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,7 +34,17 @@ namespace dream.walker.space.Controllers
         [ResponseType(typeof(List<Indicator>))]
         public async Task<IHttpActionResult> GetIndicators(int period)
         {
-            var indicators = await _indicatorService.GetIndicators((QuotePeriod)period);
+            var indicators = await _indicatorService.GetIndicatorsAsync((QuotePeriod)period);
+
+            return Ok(indicators);
+        }
+
+        [HttpGet]
+        [Route("all")]
+        [ResponseType(typeof(List<IndicatorCore>))]
+        public async Task<IHttpActionResult> GetIndicators()
+        {
+            var indicators = await _indicatorService.GetIndicatorsAsync();
 
             return Ok(indicators);
         }

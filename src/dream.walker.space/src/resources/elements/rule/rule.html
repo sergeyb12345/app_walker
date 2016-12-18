@@ -26,7 +26,7 @@
                     <div class="form-inline">
                         <div class="form-group">
                             <label for="ddlPeriod-${ruleInfo.ruleId}">Period:</label>
-                            <select id="ddlPeriod-${ruleInfo.ruleId}" class="form-control" value.bind="ruleInfo.period">
+                            <select id="ddlPeriod-${ruleInfo.ruleId}" class="form-control" value.bind="ruleInfo.period" change.delegate="onPeriodChange()">
                                 <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
                             </select>
                         </div>

@@ -12,6 +12,7 @@ export class Rule {
     constructor (eventAggregator, ruleService, userContext, validation, globalSettings) {
         this.powerUser = userContext.user.isAuthenticated;
         this.eventAggregator = eventAggregator;
+        this.globalSettings = globalSettings;
         this.validation = validation;
         this.validation.validateTrigger = validateTrigger.change;
         this.validation.addRenderer(new BootstrapFormRenderer());
@@ -19,8 +20,8 @@ export class Rule {
         this.ruleInfoService = ruleService;
         this.subscriptions = [];
         this.ruleInfoInfo = {editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
-
-        this.periods = globalSettings.periods;
+        this.indicatorDataSeries = [];
+        this.periods = this.globalSettings.periods;
 
         this.compareTypes = [
             {id: 0, name: 'Greater'},
@@ -44,11 +45,6 @@ export class Rule {
             {id: 3, name: 'Low'}
         ];
 
-        this.indicatorDataSeries = [
-            {id: 0, name: 'EMA (13) Daily'},
-            {id: 1, name: 'EMA (26) Daily'}
-        ];
-
         this.transformFunctions = [
             {id: 0, name: 'First'},
             {id: 1, name: 'Max'},
@@ -60,6 +56,8 @@ export class Rule {
     ruleChanged(ruleItem) {
         if (ruleItem) {
             let newRule = Object.assign({}, ruleItem);
+            this.indicatorDataSeries = this.globalSettings.getIndicators(newRule.period);
+
             this.setDataSeries(newRule);
             this.ruleInfo = newRule;
 
@@ -76,6 +74,11 @@ export class Rule {
 
         }
     }  
+
+    onPeriodChange() {
+        this.indicatorDataSeries = this.globalSettings.getIndicators(this.ruleInfo.period);
+        this.setDataSeries(this.ruleInfo);
+    }
 
     onDataSourceV1Change(){
         this.setDataSeries(this.ruleInfo);

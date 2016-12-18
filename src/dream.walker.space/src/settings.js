@@ -1,14 +1,14 @@
 ﻿import {inject} from "aurelia-framework";
 import {HttpClient, json} from 'aurelia-fetch-client';
 import {EventAggregator} from 'aurelia-event-aggregator';
-import {RuleService} from './services/rule-service';
+import {IndicatorService} from './services/indicator-service';
 
-@inject(HttpClient, EventAggregator, RuleService)
+@inject(HttpClient, EventAggregator, IndicatorService)
 export class Settings {
 
-    constructor (httpClient, eventAggregator, ruleService) {
+    constructor (httpClient, eventAggregator, indicatorService) {
         this.eventAggregator = eventAggregator;
-        this.ruleService = ruleService;
+        this.indicatorService = indicatorService;
 
         httpClient.configure(config => {
             config
@@ -31,14 +31,6 @@ export class Settings {
         this.defaultPeriod = this.periods[0];
     }
     
-    selectPeriod(periodUrl) {
-        let index = this.periods.findIndex(i => i.url.toLowerCase() === periodUrl.toLowerCase());
-        if(index === -1) {
-            return this.defaultPeriod;
-        }
-        return this.periods[index];
-    }
-
     getStudiesSection() {
         if (this.initialized === true) {
             return this.sections.find(s => s.url === "studies");
@@ -60,9 +52,14 @@ export class Settings {
                     .then(sections => {
                         this.sections = sections;
                         
-                        //return this.ruleService.
+                        return this.indicatorService.getNames()
+                            .then(response => {
+                                this.indicators = response;
+                            })
+                            .catch(error => {
+                                return this.handleError(error, "initialize");
+                            });
 
-                        this.initialized = true;
                     });
             })
             .catch(error => {
@@ -70,7 +67,9 @@ export class Settings {
             });
     }
 
-
+    getIndicators(period) {
+        return this.indicators.filter(indicator => indicator.period === period);
+    }
 
     handleError(error,  source) {
         let exception = {

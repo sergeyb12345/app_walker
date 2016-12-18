@@ -199,6 +199,7 @@
     </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
+    <Compile Include="Models\IndicatorCore.cs" />
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">

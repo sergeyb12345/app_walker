@@ -17,25 +17,17 @@ export class IndicatorService {
         this.http = http;
         this.indicatorsWeekly = [];
         this.indicatorsDaily = [];
-        this.initialized = false;
     }
 
-    initialize(){
-        let self = this;
-        return this.http.fetch("indicator/all", {
-                method: 'get'
-            })
-            .then(response => {
-                return response.json()
-                    .then(indicators => {
-                        self.indicatorsWeekly = self.filterIndicators(indicators, 1);
-                        self.indicatorsDaily = self.filterIndicators(indicators, 0);
-                        self.initialized = true;
-                    });
-            })
-            .catch(error => {
-                return this.handleError(error, "initialize");
-            });
+    getNames() {
+
+        return this.http.fetch('indicator/all', { 
+            method: 'get' 
+        })
+        .then(response => { return response.json()})
+        .catch(error => {
+            return this.handleError(error, "getNames");
+        });
     }
 
     getIndicator(id) {

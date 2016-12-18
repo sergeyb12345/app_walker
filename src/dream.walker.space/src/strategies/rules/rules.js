@@ -23,7 +23,7 @@ export class Rules {
         this.router = navigationInstruction.router;
 
         if (params.period) {
-            this.activePeriod = this.globalSettings.selectPeriod(params.period);
+            this.activePeriod = this.activatePeriod(params.period);
             this.loadRules(this.activePeriod.id);
 
         } else {
@@ -33,6 +33,24 @@ export class Rules {
         
     }
     
+    activatePeriod(periodUrl) {
+
+        this.periods.forEach(function(element) {
+            element.active = false;
+        });
+        
+        let result = {};
+
+        let index = this.periods.findIndex(i => i.url.toLowerCase() === periodUrl.toLowerCase());
+        if(index === -1) {
+            result = this.defaultPeriod;
+        }
+        result = this.periods[index];
+        result.active = true;
+
+        return result;
+    }
+
     loadRulesForPeriod (period){
         let url = `/strategies/rules/${period.url}`;
         this.router.navigate(url);

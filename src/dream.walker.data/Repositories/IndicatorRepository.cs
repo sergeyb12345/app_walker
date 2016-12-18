@@ -19,6 +19,7 @@ namespace dream.walker.data.Repositories
         void Delete(Indicator record);
         Task CommitAsync();
         Task<List<Indicator>> GetAllAsync(QuotePeriod period);
+        Task<List<Indicator>> GetAllAsync();
     }
 
 
@@ -38,6 +39,12 @@ namespace dream.walker.data.Repositories
         {
             var indicators = Dbset.Where(i => !i.Deleted).ToList();
             return indicators;
+        }
+
+        public async Task<List<Indicator>> GetAllAsync()
+        {
+            var records = await Dbset.Where(r => !r.Deleted).OrderBy(r => r.Name).ToListAsync();
+            return records;
         }
 
         public async Task<List<Indicator>> GetAllAsync(QuotePeriod period)

@@ -15,7 +15,7 @@
                     <li repeat.for="period of periods">
                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                         <a click.delegate="$parent.loadRulesForPeriod(period)"
-                            class="${$parent.isPeriodActive(period) ? 'active' : ''}"
+                            class="${period.active ? 'active' : ''}"
                            >${period.name} Rules</a>
                     </li>                
                 </ul>

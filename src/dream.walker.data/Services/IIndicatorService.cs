@@ -5,15 +5,18 @@ using dream.walker.data.Enums;
 using System;
 using Autofac;
 using dream.walker.data.Repositories;
+using dream.walker.data.Models;
+using System.Linq;
 
 namespace dream.walker.data.Services
 {
     public interface IIndicatorService
     {
         Task<Indicator> GetIndicatorAsync(int id);
-        Task<List<Indicator>> GetIndicators(QuotePeriod period);
+        Task<List<Indicator>> GetIndicatorsAsync(QuotePeriod period);
         Task<Indicator> SaveIndicatorAsync(Indicator model);
         Task DeleteIndicatorAsync(int id);
+        Task<List<IndicatorCore>> GetIndicatorsAsync();
     }
 
     public class IndicatorService : IIndicatorService
@@ -50,7 +53,7 @@ namespace dream.walker.data.Services
             }
         }
 
-        public async Task<List<Indicator>> GetIndicators(QuotePeriod period)
+        public async Task<List<Indicator>> GetIndicatorsAsync(QuotePeriod period)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
@@ -94,6 +97,18 @@ namespace dream.walker.data.Services
                 }
 
                 return record;
+            }
+        }
+
+        public async Task<List<IndicatorCore>> GetIndicatorsAsync()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IIndicatorRepository>();
+                var entities = await repository.GetAllAsync();
+                var result = entities.Select(e => new IndicatorCore(e)).OrderBy(e => e.Name).ToList();
+
+                return result;
             }
         }
     }
