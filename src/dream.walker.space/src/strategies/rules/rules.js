@@ -32,6 +32,15 @@ export class Rules {
         }
         
     }
+    
+    loadRulesForPeriod (period){
+        let url = `/strategies/rules/${period.url}`;
+        this.router.navigate(url);
+    }
+
+    isPeriodActive(period) {
+        return period.id === this.activePeriod.id;
+    }
 
     loadRules(periodId) {
 
