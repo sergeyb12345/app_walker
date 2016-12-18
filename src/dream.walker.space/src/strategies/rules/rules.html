@@ -9,8 +9,18 @@
                     <rule repeat.for="rule of rules" rule.bind="rule"></rule>
                 </div>
             </div>
-            <div class="col-md-4 col-xs-12">
-                <h3>Side Navigation</h3>
+            <div class="col-md-4 col-xs-12 side-navigation">
+                <h3>Time Frame</h3>
+                <ul>
+                    <li>
+                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                        <a href.bind="dailyRulesUrl" class="${period === 'daily' ? 'active' : ''}" >Daily Rules</a>
+                    </li>                
+                    <li>
+                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                        <a href.bind="weeklyRulesUrl" class="${period !== 'daily' ? 'active' : ''}">Weekly Rules</a>
+                    </li>
+                </ul>
             </div>
         </div>
 

@@ -14,20 +14,33 @@ export class Rules {
         this.errors = [];
         this.rules = [];
 
-        this.period = 0;
+        this.period = 'daily';
     }
 
-    activate(params, routeconfig) {
+    activate(params, routeConfig, navigationInstruction) {
+        this.router = navigationInstruction.router;
+
+        this.dailyRulesUrl =  '/strategies/rules/daily';
+        this.weeklyRulesUrl = '/strategies/rules/weekly';
+
 
         if (params.period) {
             this.period = params.period;
+            this.loadRules(this.period);
+
+        } else {
+            this.router.navigate(this.dailyRulesUrl);
         }
         
-        this.loadRules(this.period);
     }
 
     loadRules(period) {
-        this.ruleService.getRulesForPeriod(period)
+        let nPeriod = 0;
+        if(period && period.toLowerCase() === 'weekly'){
+            nPeriod = 1;
+        }
+
+        this.ruleService.getRulesForPeriod(nPeriod)
             .then(result => {
                 this.rules = result;
             })

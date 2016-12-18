@@ -17,7 +17,9 @@
 
     </edit-mode>
     <read-mode if.bind="editMode !== true">
-        <h2>${article.title}</h2>
+        <header>
+            <h3>${article.title}</h3>
+        </header>
     </read-mode>
 
     <article-part class="${$parent.editMode === true ? 'edit-mode': ''}"
