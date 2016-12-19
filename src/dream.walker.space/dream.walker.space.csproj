@@ -430,6 +430,7 @@
     <Content Include="package.json" />
     <Content Include="jspm_packages\npm\npm-anystock%401.0.0\package.json" />
     <Content Include="jspm_packages\npm\npm-anystock%401.0.0\README.md" />
+    <Content Include="Content\Site\elements\_validation.less" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />

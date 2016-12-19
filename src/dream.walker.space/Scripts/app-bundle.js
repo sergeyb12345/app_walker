@@ -97,12 +97,6 @@ define('main',['exports', 'jquery', './environment', './settings', './common/err
         };
     }
 
-    Promise.config({
-        warnings: {
-            wForgottenReturn: false
-        }
-    });
-
     function configure(aurelia) {
         var errorparser = aurelia.container.get(_errorParser.ErrorParser);
         var userContext = aurelia.container.get(_userContext.UserContext);
@@ -126,7 +120,7 @@ define('main',['exports', 'jquery', './environment', './settings', './common/err
         });
     }
 });
-define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator', './services/rule-service'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator, _ruleService) {
+define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aurelia-event-aggregator', './services/indicator-service'], function (exports, _aureliaFramework, _aureliaFetchClient, _aureliaEventAggregator, _indicatorService) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -142,12 +136,12 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aure
 
     var _dec, _class;
 
-    var Settings = exports.Settings = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator, _ruleService.RuleService), _dec(_class = function () {
-        function Settings(httpClient, eventAggregator, ruleService) {
+    var Settings = exports.Settings = (_dec = (0, _aureliaFramework.inject)(_aureliaFetchClient.HttpClient, _aureliaEventAggregator.EventAggregator, _indicatorService.IndicatorService), _dec(_class = function () {
+        function Settings(httpClient, eventAggregator, indicatorService) {
             _classCallCheck(this, Settings);
 
             this.eventAggregator = eventAggregator;
-            this.ruleService = ruleService;
+            this.indicatorService = indicatorService;
 
             httpClient.configure(function (config) {
                 config.useStandardConfiguration().withBaseUrl('api/');
@@ -163,16 +157,6 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aure
 
             this.defaultPeriod = this.periods[0];
         }
-
-        Settings.prototype.selectPeriod = function selectPeriod(periodUrl) {
-            var index = this.periods.findIndex(function (i) {
-                return i.url.toLowerCase() === periodUrl.toLowerCase();
-            });
-            if (index === -1) {
-                return this.defaultPeriod;
-            }
-            return this.periods[index];
-        };
 
         Settings.prototype.getStudiesSection = function getStudiesSection() {
             if (this.initialized === true) {
@@ -199,10 +183,22 @@ define('settings',['exports', 'aurelia-framework', 'aurelia-fetch-client', 'aure
                 return response.json().then(function (sections) {
                     _this.sections = sections;
 
-                    _this.initialized = true;
+                    return _this.indicatorService.getNames().then(function (response) {
+                        _this.indicators = response;
+
+                        _this.initialized = true;
+                    }).catch(function (error) {
+                        return _this.handleError(error, "initialize");
+                    });
                 });
             }).catch(function (error) {
                 return _this.handleError(error, "initialize");
+            });
+        };
+
+        Settings.prototype.getIndicators = function getIndicators(period) {
+            return this.indicators.filter(function (indicator) {
+                return indicator.period === period;
             });
         };
 
@@ -536,68 +532,68 @@ define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], funct
 
         BootstrapFormRenderer.prototype.render = function render(instruction) {
             for (var _iterator = instruction.unrender, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-                var _ref;
+                var _ref2;
 
                 if (_isArray) {
                     if (_i >= _iterator.length) break;
-                    _ref = _iterator[_i++];
+                    _ref2 = _iterator[_i++];
                 } else {
                     _i = _iterator.next();
                     if (_i.done) break;
-                    _ref = _i.value;
+                    _ref2 = _i.value;
                 }
 
-                var _ref3 = _ref;
-                var error = _ref3.error;
-                var elements = _ref3.elements;
+                var _ref5 = _ref2;
+                var error = _ref5.error,
+                    elements = _ref5.elements;
 
                 for (var _iterator3 = elements, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
-                    var _ref4;
+                    var _ref6;
 
                     if (_isArray3) {
                         if (_i3 >= _iterator3.length) break;
-                        _ref4 = _iterator3[_i3++];
+                        _ref6 = _iterator3[_i3++];
                     } else {
                         _i3 = _iterator3.next();
                         if (_i3.done) break;
-                        _ref4 = _i3.value;
+                        _ref6 = _i3.value;
                     }
 
-                    var element = _ref4;
+                    var element = _ref6;
 
                     this.remove(element, error);
                 }
             }
 
             for (var _iterator2 = instruction.render, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
-                var _ref2;
+                var _ref4;
 
                 if (_isArray2) {
                     if (_i2 >= _iterator2.length) break;
-                    _ref2 = _iterator2[_i2++];
+                    _ref4 = _iterator2[_i2++];
                 } else {
                     _i2 = _iterator2.next();
                     if (_i2.done) break;
-                    _ref2 = _i2.value;
+                    _ref4 = _i2.value;
                 }
 
-                var _ref5 = _ref2;
-                var error = _ref5.error;
-                var elements = _ref5.elements;
+                var _ref7 = _ref4;
+                var error = _ref7.error,
+                    elements = _ref7.elements;
 
                 for (var _iterator4 = elements, _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
-                    var _ref6;
+                    var _ref8;
 
                     if (_isArray4) {
                         if (_i4 >= _iterator4.length) break;
-                        _ref6 = _iterator4[_i4++];
+                        _ref8 = _iterator4[_i4++];
                     } else {
                         _i4 = _iterator4.next();
                         if (_i4.done) break;
-                        _ref6 = _i4.value;
+                        _ref8 = _i4.value;
                     }
 
-                    var _element = _ref6;
+                    var _element = _ref8;
 
                     this.add(_element, error);
                 }
@@ -605,6 +601,10 @@ define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], funct
         };
 
         BootstrapFormRenderer.prototype.add = function add(element, error) {
+            if (!error) {
+                return;
+            }
+
             var formGroup = element.closest('.form-group');
             if (!formGroup) {
                 return;
@@ -624,6 +624,9 @@ define('common/bootstrap-form-renderer',['exports', 'aurelia-validation'], funct
         };
 
         BootstrapFormRenderer.prototype.remove = function remove(element, error) {
+            if (!error) {
+                return;
+            }
             var formGroup = element.closest('.form-group');
             if (!formGroup) {
                 return;
@@ -1256,23 +1259,17 @@ define('services/indicator-service',['exports', 'aurelia-framework', 'aurelia-fe
             this.http = http;
             this.indicatorsWeekly = [];
             this.indicatorsDaily = [];
-            this.initialized = false;
         }
 
-        IndicatorService.prototype.initialize = function initialize() {
+        IndicatorService.prototype.getNames = function getNames() {
             var _this = this;
 
-            var self = this;
-            return this.http.fetch("indicator/all", {
+            return this.http.fetch('indicator/all', {
                 method: 'get'
             }).then(function (response) {
-                return response.json().then(function (indicators) {
-                    self.indicatorsWeekly = self.filterIndicators(indicators, 1);
-                    self.indicatorsDaily = self.filterIndicators(indicators, 0);
-                    self.initialized = true;
-                });
+                return response.json();
             }).catch(function (error) {
-                return _this.handleError(error, "initialize");
+                return _this.handleError(error, "getNames");
             });
         };
 
@@ -2192,12 +2189,41 @@ define('strategies/rules/rules',['exports', 'aurelia-framework', 'aurelia-event-
             this.router = navigationInstruction.router;
 
             if (params.period) {
-                this.activePeriod = this.globalSettings.selectPeriod(params.period);
+                this.activePeriod = this.activatePeriod(params.period);
                 this.loadRules(this.activePeriod.id);
             } else {
                 var defaultUrl = '/strategies/rules/' + this.activePeriod.url;
                 this.router.navigate(defaultUrl);
             }
+        };
+
+        Rules.prototype.activatePeriod = function activatePeriod(periodUrl) {
+
+            this.periods.forEach(function (element) {
+                element.active = false;
+            });
+
+            var result = {};
+
+            var index = this.periods.findIndex(function (i) {
+                return i.url.toLowerCase() === periodUrl.toLowerCase();
+            });
+            if (index === -1) {
+                result = this.defaultPeriod;
+            }
+            result = this.periods[index];
+            result.active = true;
+
+            return result;
+        };
+
+        Rules.prototype.loadRulesForPeriod = function loadRulesForPeriod(period) {
+            var url = '/strategies/rules/' + period.url;
+            this.router.navigate(url);
+        };
+
+        Rules.prototype.isPeriodActive = function isPeriodActive(period) {
+            return period.id === this.activePeriod.id;
         };
 
         Rules.prototype.loadRules = function loadRules(periodId) {
@@ -2247,248 +2273,6 @@ define('strategies/rules/strategy-rules',['exports', 'aurelia-framework', 'aurel
         this.errors = [];
         this.rules = [];
     }) || _class);
-});
-define('resources/elements/chart/any-chart',['exports', 'aurelia-framework', 'npm-anystock'], function (exports, _aureliaFramework) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.AnyChart = undefined;
-
-    function _initDefineProp(target, property, descriptor, context) {
-        if (!descriptor) return;
-        Object.defineProperty(target, property, {
-            enumerable: descriptor.enumerable,
-            configurable: descriptor.configurable,
-            writable: descriptor.writable,
-            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
-        });
-    }
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-        var desc = {};
-        Object['ke' + 'ys'](descriptor).forEach(function (key) {
-            desc[key] = descriptor[key];
-        });
-        desc.enumerable = !!desc.enumerable;
-        desc.configurable = !!desc.configurable;
-
-        if ('value' in desc || desc.initializer) {
-            desc.writable = true;
-        }
-
-        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-            return decorator(target, property, desc) || desc;
-        }, desc);
-
-        if (context && desc.initializer !== void 0) {
-            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-            desc.initializer = undefined;
-        }
-
-        if (desc.initializer === void 0) {
-            Object['define' + 'Property'](target, property, desc);
-            desc = null;
-        }
-
-        return desc;
-    }
-
-    function _initializerWarningHelper(descriptor, context) {
-        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
-    }
-
-    var _desc, _value, _class, _descriptor;
-
-    var AnyChart = exports.AnyChart = (_class = function () {
-        function AnyChart() {
-            _classCallCheck(this, AnyChart);
-
-            _initDefineProp(this, 'container', _descriptor, this);
-        }
-
-        AnyChart.prototype.containerChanged = function containerChanged(newValue, oldValue) {
-            this.draw(newValue);
-        };
-
-        AnyChart.prototype.generateSome = function generateSome(data) {};
-
-        AnyChart.prototype.draw = function draw(container) {
-
-            anychart.onDocumentReady(function () {
-                var chart = anychart.stock();
-
-                var table = anychart.data.table();
-                table.addData([['2015-12-24T12:00:00', '511.53', '514.98', '505.79', '506.40'], ['2015-12-25T12:00:00', '512.53', '514.88', '505.69', '507.34'], ['2015-12-26T12:00:00', '511.83', '514.98', '505.59', '506.23'], ['2015-12-27T12:00:00', '511.22', '515.30', '505.49', '506.47'], ['2015-12-28T12:00:00', '510.35', '515.72', '505.23', '505.80'], ['2015-12-29T12:00:00', '510.53', '515.86', '505.38', '508.25'], ['2015-12-30T12:00:00', '511.43', '515.98', '505.66', '507.45'], ['2015-12-31T12:00:00', '511.50', '515.33', '505.99', '507.98'], ['2016-01-01T12:00:00', '511.32', '514.29', '505.99', '506.37'], ['2016-01-02T12:00:00', '511.70', '514.87', '506.18', '506.75'], ['2016-01-03T12:00:00', '512.30', '514.78', '505.87', '508.67'], ['2016-01-04T12:00:00', '512.50', '514.77', '505.83', '508.35'], ['2016-01-05T12:00:00', '511.53', '516.18', '505.91', '509.42'], ['2016-01-06T12:00:00', '511.13', '516.01', '506.00', '509.26'], ['2016-01-07T12:00:00', '510.93', '516.07', '506.00', '510.99'], ['2016-01-08T12:00:00', '510.88', '515.93', '505.22', '509.95'], ['2016-01-09T12:00:00', '509.12', '515.97', '505.15', '510.12'], ['2016-01-10T12:00:00', '508.53', '516.13', '505.66', '510.42'], ['2016-01-11T12:00:00', '508.90', '516.24', '505.73', '510.40']]);
-
-                var mapping = table.mapAs();
-                mapping.addField('open', 1, 'first');
-                mapping.addField('high', 2, 'max');
-                mapping.addField('low', 3, 'min');
-                mapping.addField('close', 4, 'last');
-                mapping.addField('value', 4, 'last');
-
-                chart.plot(0).ohlc(mapping).name('ACME Corp.');
-
-                chart.title('AnyStock Basic Sample');
-
-                chart.container(container);
-                chart.draw();
-            });
-        };
-
-        return AnyChart;
-    }(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'container', [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: function initializer() {
-            return 'container';
-        }
-    })), _class);
-});
-define('resources/elements/indicator/indicator',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/indicator-service', 'aurelia-validation', '../../../common/bootstrap-form-renderer'], function (exports, _aureliaFramework, _aureliaEventAggregator, _indicatorService, _aureliaValidation, _bootstrapFormRenderer) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.Indicator = undefined;
-
-    function _initDefineProp(target, property, descriptor, context) {
-        if (!descriptor) return;
-        Object.defineProperty(target, property, {
-            enumerable: descriptor.enumerable,
-            configurable: descriptor.configurable,
-            writable: descriptor.writable,
-            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
-        });
-    }
-
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError("Cannot call a class as a function");
-        }
-    }
-
-    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-        var desc = {};
-        Object['ke' + 'ys'](descriptor).forEach(function (key) {
-            desc[key] = descriptor[key];
-        });
-        desc.enumerable = !!desc.enumerable;
-        desc.configurable = !!desc.configurable;
-
-        if ('value' in desc || desc.initializer) {
-            desc.writable = true;
-        }
-
-        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-            return decorator(target, property, desc) || desc;
-        }, desc);
-
-        if (context && desc.initializer !== void 0) {
-            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-            desc.initializer = undefined;
-        }
-
-        if (desc.initializer === void 0) {
-            Object['define' + 'Property'](target, property, desc);
-            desc = null;
-        }
-
-        return desc;
-    }
-
-    function _initializerWarningHelper(descriptor, context) {
-        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
-    }
-
-    var _dec, _class, _desc, _value, _class2, _descriptor;
-
-    var Indicator = exports.Indicator = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _indicatorService.IndicatorService, "User", _aureliaValidation.ValidationController), _dec(_class = (_class2 = function () {
-        function Indicator(eventAggregator, indicatorService, userContext, validation) {
-            _classCallCheck(this, Indicator);
-
-            _initDefineProp(this, 'indicator', _descriptor, this);
-
-            this.powerUser = userContext.user.isAuthenticated;
-            this.eventAggregator = eventAggregator;
-            this.validation = validation;
-            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
-            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
-
-            this.indicatorService = indicatorService;
-            this.subscriptions = [];
-            this.errors = [];
-        }
-
-        Indicator.prototype.indicatorChanged = function indicatorChanged(indicator) {
-            if (indicator) {
-                var newIndicator = Object.assign({}, indicator);
-                this.newIndicator.editMode = false;
-                this.indicator = newIndicator;
-
-                _aureliaValidation.ValidationRules.ensure(function (u) {
-                    return u.name;
-                }).required({ message: "^Indicator name must be set" }).ensure(function (u) {
-                    return u.description;
-                }).required({ message: "^Description must be set" }).on(this.newIndicator);
-            }
-        };
-
-        Indicator.prototype.startEdit = function startEdit() {
-            this.originalIndicator = Object.assign({}, this.indicator);
-            this.indicator.editMode = true;
-        };
-
-        Indicator.prototype.cancelEdit = function cancelEdit() {
-            this.indicator = this.originalIndicator;
-            this.indicator.editMode = false;
-        };
-
-        Indicator.prototype.trySaveIndicator = function trySaveIndicator() {
-            var _this = this;
-
-            this.validation.validate().then(function (response) {
-                var r = response;
-            }).catch(function (error) {
-                _this.handleError(error);
-            });
-        };
-
-        Indicator.prototype.saveIndicator = function saveIndicator() {
-            alert('saved');
-        };
-
-        Indicator.prototype.attached = function attached() {};
-
-        Indicator.prototype.detached = function detached() {
-            if (this.subscriptions.length > 0) {
-                this.subscriptions.forEach(function (subscription) {
-                    subscription.dispose();
-                });
-            }
-        };
-
-        Indicator.prototype.handleError = function handleError(error) {
-            var self = this;
-
-            this.errorParser.parseError(error).then(function (errorInfo) {
-                self.errors.push(errorInfo);
-            });
-        };
-
-        return Indicator;
-    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'indicator', [_aureliaFramework.bindable], {
-        enumerable: true,
-        initializer: null
-    })), _class2)) || _class);
 });
 define('resources/elements/article/article-block',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
     'use strict';
@@ -3494,6 +3278,248 @@ define('resources/elements/article/paragraph-block',['exports', 'aurelia-framewo
         initializer: null
     })), _class);
 });
+define('resources/elements/chart/any-chart',['exports', 'aurelia-framework', 'npm-anystock'], function (exports, _aureliaFramework) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.AnyChart = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _desc, _value, _class, _descriptor;
+
+    var AnyChart = exports.AnyChart = (_class = function () {
+        function AnyChart() {
+            _classCallCheck(this, AnyChart);
+
+            _initDefineProp(this, 'container', _descriptor, this);
+        }
+
+        AnyChart.prototype.containerChanged = function containerChanged(newValue, oldValue) {
+            this.draw(newValue);
+        };
+
+        AnyChart.prototype.generateSome = function generateSome(data) {};
+
+        AnyChart.prototype.draw = function draw(container) {
+
+            anychart.onDocumentReady(function () {
+                var chart = anychart.stock();
+
+                var table = anychart.data.table();
+                table.addData([['2015-12-24T12:00:00', '511.53', '514.98', '505.79', '506.40'], ['2015-12-25T12:00:00', '512.53', '514.88', '505.69', '507.34'], ['2015-12-26T12:00:00', '511.83', '514.98', '505.59', '506.23'], ['2015-12-27T12:00:00', '511.22', '515.30', '505.49', '506.47'], ['2015-12-28T12:00:00', '510.35', '515.72', '505.23', '505.80'], ['2015-12-29T12:00:00', '510.53', '515.86', '505.38', '508.25'], ['2015-12-30T12:00:00', '511.43', '515.98', '505.66', '507.45'], ['2015-12-31T12:00:00', '511.50', '515.33', '505.99', '507.98'], ['2016-01-01T12:00:00', '511.32', '514.29', '505.99', '506.37'], ['2016-01-02T12:00:00', '511.70', '514.87', '506.18', '506.75'], ['2016-01-03T12:00:00', '512.30', '514.78', '505.87', '508.67'], ['2016-01-04T12:00:00', '512.50', '514.77', '505.83', '508.35'], ['2016-01-05T12:00:00', '511.53', '516.18', '505.91', '509.42'], ['2016-01-06T12:00:00', '511.13', '516.01', '506.00', '509.26'], ['2016-01-07T12:00:00', '510.93', '516.07', '506.00', '510.99'], ['2016-01-08T12:00:00', '510.88', '515.93', '505.22', '509.95'], ['2016-01-09T12:00:00', '509.12', '515.97', '505.15', '510.12'], ['2016-01-10T12:00:00', '508.53', '516.13', '505.66', '510.42'], ['2016-01-11T12:00:00', '508.90', '516.24', '505.73', '510.40']]);
+
+                var mapping = table.mapAs();
+                mapping.addField('open', 1, 'first');
+                mapping.addField('high', 2, 'max');
+                mapping.addField('low', 3, 'min');
+                mapping.addField('close', 4, 'last');
+                mapping.addField('value', 4, 'last');
+
+                chart.plot(0).ohlc(mapping).name('ACME Corp.');
+
+                chart.title('AnyStock Basic Sample');
+
+                chart.container(container);
+                chart.draw();
+            });
+        };
+
+        return AnyChart;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'container', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: function initializer() {
+            return 'container';
+        }
+    })), _class);
+});
+define('resources/elements/indicator/indicator',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/indicator-service', 'aurelia-validation', '../../../common/bootstrap-form-renderer'], function (exports, _aureliaFramework, _aureliaEventAggregator, _indicatorService, _aureliaValidation, _bootstrapFormRenderer) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.Indicator = undefined;
+
+    function _initDefineProp(target, property, descriptor, context) {
+        if (!descriptor) return;
+        Object.defineProperty(target, property, {
+            enumerable: descriptor.enumerable,
+            configurable: descriptor.configurable,
+            writable: descriptor.writable,
+            value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+        });
+    }
+
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+        var desc = {};
+        Object['ke' + 'ys'](descriptor).forEach(function (key) {
+            desc[key] = descriptor[key];
+        });
+        desc.enumerable = !!desc.enumerable;
+        desc.configurable = !!desc.configurable;
+
+        if ('value' in desc || desc.initializer) {
+            desc.writable = true;
+        }
+
+        desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+            return decorator(target, property, desc) || desc;
+        }, desc);
+
+        if (context && desc.initializer !== void 0) {
+            desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+            desc.initializer = undefined;
+        }
+
+        if (desc.initializer === void 0) {
+            Object['define' + 'Property'](target, property, desc);
+            desc = null;
+        }
+
+        return desc;
+    }
+
+    function _initializerWarningHelper(descriptor, context) {
+        throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+    }
+
+    var _dec, _class, _desc, _value, _class2, _descriptor;
+
+    var Indicator = exports.Indicator = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _indicatorService.IndicatorService, "User", _aureliaValidation.ValidationController), _dec(_class = (_class2 = function () {
+        function Indicator(eventAggregator, indicatorService, userContext, validation) {
+            _classCallCheck(this, Indicator);
+
+            _initDefineProp(this, 'indicator', _descriptor, this);
+
+            this.powerUser = userContext.user.isAuthenticated;
+            this.eventAggregator = eventAggregator;
+            this.validation = validation;
+            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
+            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
+
+            this.indicatorService = indicatorService;
+            this.subscriptions = [];
+            this.errors = [];
+        }
+
+        Indicator.prototype.indicatorChanged = function indicatorChanged(indicator) {
+            if (indicator) {
+                var newIndicator = Object.assign({}, indicator);
+                this.newIndicator.editMode = false;
+                this.indicator = newIndicator;
+
+                _aureliaValidation.ValidationRules.ensure(function (u) {
+                    return u.name;
+                }).required({ message: "^Indicator name must be set" }).ensure(function (u) {
+                    return u.description;
+                }).required({ message: "^Description must be set" }).on(this.newIndicator);
+            }
+        };
+
+        Indicator.prototype.startEdit = function startEdit() {
+            this.originalIndicator = Object.assign({}, this.indicator);
+            this.indicator.editMode = true;
+        };
+
+        Indicator.prototype.cancelEdit = function cancelEdit() {
+            this.indicator = this.originalIndicator;
+            this.indicator.editMode = false;
+        };
+
+        Indicator.prototype.trySaveIndicator = function trySaveIndicator() {
+            var _this = this;
+
+            this.validation.validate().then(function (response) {
+                var r = response;
+            }).catch(function (error) {
+                _this.handleError(error);
+            });
+        };
+
+        Indicator.prototype.saveIndicator = function saveIndicator() {
+            alert('saved');
+        };
+
+        Indicator.prototype.attached = function attached() {};
+
+        Indicator.prototype.detached = function detached() {
+            if (this.subscriptions.length > 0) {
+                this.subscriptions.forEach(function (subscription) {
+                    subscription.dispose();
+                });
+            }
+        };
+
+        Indicator.prototype.handleError = function handleError(error) {
+            var self = this;
+
+            this.errorParser.parseError(error).then(function (errorInfo) {
+                self.errors.push(errorInfo);
+            });
+        };
+
+        return Indicator;
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'indicator', [_aureliaFramework.bindable], {
+        enumerable: true,
+        initializer: null
+    })), _class2)) || _class);
+});
 define('resources/elements/navigation/main-nav',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
     "use strict";
 
@@ -3762,13 +3788,32 @@ define('resources/elements/navigation/sub-nav',["exports", "aurelia-framework", 
         initializer: null
     })), _class2)) || _class);
 });
-define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-event-aggregator', '../../../services/rule-service', 'aurelia-validation', '../../../common/bootstrap-form-renderer'], function (exports, _aureliaFramework, _aureliaEventAggregator, _ruleService, _aureliaValidation, _bootstrapFormRenderer) {
-    'use strict';
+define('resources/elements/rule/rule',["exports", "toastr", "aurelia-framework", "aurelia-event-aggregator", "../../../services/rule-service", "aurelia-validation", "../../../common/bootstrap-form-renderer"], function (exports, _toastr, _aureliaFramework, _aureliaEventAggregator, _ruleService, _aureliaValidation, _bootstrapFormRenderer) {
+    "use strict";
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
     exports.Rule = undefined;
+
+    var toastr = _interopRequireWildcard(_toastr);
+
+    function _interopRequireWildcard(obj) {
+        if (obj && obj.__esModule) {
+            return obj;
+        } else {
+            var newObj = {};
+
+            if (obj != null) {
+                for (var key in obj) {
+                    if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+                }
+            }
+
+            newObj.default = obj;
+            return newObj;
+        }
+    }
 
     function _initDefineProp(target, property, descriptor, context) {
         if (!descriptor) return;
@@ -3821,23 +3866,26 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
 
     var _dec, _class, _desc, _value, _class2, _descriptor;
 
-    var Rule = exports.Rule = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _ruleService.RuleService, "User", _aureliaValidation.ValidationController, "Settings"), _dec(_class = (_class2 = function () {
-        function Rule(eventAggregator, ruleService, userContext, validation, globalSettings) {
+    var Rule = exports.Rule = (_dec = (0, _aureliaFramework.inject)(_aureliaEventAggregator.EventAggregator, _ruleService.RuleService, "User", _aureliaValidation.ValidationController, "Settings", "ErrorParser", _aureliaValidation.ValidationControllerFactory), _dec(_class = (_class2 = function () {
+        function Rule(eventAggregator, ruleService, userContext, validation, globalSettings, errorParser, controllerFactory) {
             _classCallCheck(this, Rule);
 
-            _initDefineProp(this, 'rule', _descriptor, this);
+            _initDefineProp(this, "rule", _descriptor, this);
 
             this.powerUser = userContext.user.isAuthenticated;
             this.eventAggregator = eventAggregator;
-            this.validation = validation;
-            this.validation.validateTrigger = _aureliaValidation.validateTrigger.change;
-            this.validation.addRenderer(new _bootstrapFormRenderer.BootstrapFormRenderer());
-            this.errors = [];
-            this.ruleInfoService = ruleService;
-            this.subscriptions = [];
-            this.ruleInfoInfo = { editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
+            this.globalSettings = globalSettings;
+            this.errorParser = errorParser;
 
-            this.periods = globalSettings.periods;
+            this.validation = controllerFactory.createForCurrentScope();
+            this.validation.validateTrigger = _aureliaValidation.validateTrigger.manual;
+
+
+            this.errors = [];
+            this.ruleService = ruleService;
+            this.subscriptions = [];
+            this.indicatorDataSeries = [];
+            this.periods = this.globalSettings.periods;
 
             this.compareTypes = [{ id: 0, name: 'Greater' }, { id: 1, name: 'Greater or Equal' }, { id: 2, name: 'Equal' }, { id: 3, name: 'Less' }, { id: 4, name: 'Less or Equal' }, { id: 4, name: 'Not Equal' }];
 
@@ -3845,41 +3893,35 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
 
             this.priceDataSeries = [{ id: 0, name: 'Close' }, { id: 1, name: 'Open' }, { id: 2, name: 'High' }, { id: 3, name: 'Low' }];
 
-            this.indicatorDataSeries = [{ id: 0, name: 'EMA (13) Daily' }, { id: 1, name: 'EMA (26) Daily' }];
-
             this.transformFunctions = [{ id: 0, name: 'First' }, { id: 1, name: 'Max' }, { id: 2, name: 'Average' }, { id: 3, name: 'Summarize' }];
         }
 
         Rule.prototype.ruleChanged = function ruleChanged(ruleItem) {
             if (ruleItem) {
                 var newRule = Object.assign({}, ruleItem);
+                this.indicatorDataSeries = this.globalSettings.getIndicators(newRule.period);
+
                 this.setDataSeries(newRule);
                 this.ruleInfo = newRule;
 
                 this.ruleInfo.editMode = false;
+                this.validation.reset();
 
-                _aureliaValidation.ValidationRules.ensure(function (u) {
-                    return u.name;
-                }).required({ message: "^Rule name must be set" }).ensure(function (u) {
-                    return u.description;
-                }).required({ message: "^Description must be set" }).ensure(function (u) {
-                    return u.skipItemsV1;
-                }).required().satisfies(function (value) {
+                _aureliaValidation.ValidationRules.ensure('name').required({ message: "^Rule name must be set" }).ensure('description').required({ message: "^Description must be set" }).ensure('skipItemsV1').required().satisfies(function (value) {
                     return value >= 0;
-                }).ensure(function (u) {
-                    return u.skipItemsV2;
-                }).required().satisfies(function (value) {
+                }).ensure('skipItemsV2').required().satisfies(function (value) {
                     return value >= 0;
-                }).ensure(function (u) {
-                    return u.takeItemsV1;
-                }).required().satisfies(function (value) {
+                }).ensure('takeItemsV1').required().satisfies(function (value) {
                     return value >= 0;
-                }).ensure(function (u) {
-                    return u.takeItemsV2;
-                }).required().satisfies(function (value) {
+                }).ensure('takeItemsV2').required().satisfies(function (value) {
                     return value >= 0;
                 }).on(this.ruleInfo);
             }
+        };
+
+        Rule.prototype.onPeriodChange = function onPeriodChange() {
+            this.indicatorDataSeries = this.globalSettings.getIndicators(this.ruleInfo.period);
+            this.setDataSeries(this.ruleInfo);
         };
 
         Rule.prototype.onDataSourceV1Change = function onDataSourceV1Change() {
@@ -3929,7 +3971,7 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
             var _this = this;
 
             this.validation.validate().then(function (response) {
-                if (response.length === 0) {
+                if (response.valid === true) {
                     _this.saveRule();
                 }
             }).catch(function (error) {
@@ -3938,8 +3980,15 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
         };
 
         Rule.prototype.saveRule = function saveRule() {
-            this.ruleInfo.editMode = false;
-            alert('saved');
+            var _this2 = this;
+
+            this.ruleService.saveRule(this.ruleInfo).then(function (response) {
+                _this2.ruleInfo.editMode = false;
+                toastr.success("Rule " + response.name + " saved successfully!", 'Rule Saved');
+            }).catch(function (error) {
+                _this2.handleError(error);
+                toastr.error("Failed to save rule", "Error");
+            });
         };
 
         Rule.prototype.handleError = function handleError(error) {
@@ -3951,7 +4000,7 @@ define('resources/elements/rule/rule',['exports', 'aurelia-framework', 'aurelia-
         };
 
         return Rule;
-    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'rule', [_aureliaFramework.bindable], {
+    }(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "rule", [_aureliaFramework.bindable], {
         enumerable: true,
         initializer: null
     })), _class2)) || _class);
@@ -5449,7 +5498,7 @@ define('aurelia-validation/implementation/validation-rules',["require", "exports
     exports.ValidationRules = ValidationRules;
 });
 
-define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n    <nav-header router.bind=\"router\"></nav-header>\r\n    <main-nav router.bind=\"router\"></main-nav>\r\n\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
+define('text!app.html', ['module'], function(module) { module.exports = "<template>\r\n    <!--<nav-header router.bind=\"router\"></nav-header>-->\r\n    <main-nav router.bind=\"router\"></main-nav>\r\n\r\n    <router-view></router-view>\r\n\r\n</template>\n"; });
 define('text!account/edit.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>User Profile</h3>\r\n    </header>\r\n    \r\n    <form submit.delegate='update()'>\r\n        <div class=\"form-group\">\r\n            <label for=\"firstName\">First name</label>\r\n            <input type=\"text\" class=\"form-control\" \r\n                   value.bind=\"user.firstName & validate\" \r\n                   id=\"firstName\" placeholder=\"First name\" />\r\n        </div>\r\n\r\n        <button type=\"submit\" class=\"btn btn-primary\">Update</button>\r\n        \r\n        <!--<ul if.bind=\"validation.errors\">\r\n            <li repeat.for=\"error of validation.errors\">\r\n                ${error}\r\n            </li>\r\n        </ul>-->\r\n    </form>\r\n\r\n</template>"; });
 define('text!account/login.html', ['module'], function(module) { module.exports = "<template>\r\n    \r\n    <header>\r\n        <h3>Login</h3>\r\n    </header>\r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Username</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"username\" />\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\">Password</div>\r\n        <div class=\"col-xs-10\">\r\n            <input type=\"text\" class=\"form-control\" value.bind=\"password\" />\r\n        </div>\r\n    </div>    \r\n    \r\n    <div class=\"row\">\r\n        <div class=\"col-xs-2\"></div>\r\n        <div class=\"col-xs-10\">\r\n            <button type=\"button\" click.delegate=\"login()\" class=\"btn btn-primary\">Login</button>\r\n        </div>\r\n    </div>\r\n\r\n</template>"; });
 define('text!account/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
@@ -5464,7 +5513,7 @@ define('text!studies/category.html', ['module'], function(module) { module.expor
 define('text!studies/navigation.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <compose repeat.for=\"menu of menus\" model.bind=\"menu\" view-model=\"../navigation/sub-nav\"></compose>\r\n\r\n    <div class=\"container page-content\">\r\n        <router-view></router-view>\r\n    </div>\r\n\r\n</template>"; });
 define('text!strategies/indicators/indicators.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_indicators-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Indicators</h3>\r\n                </header>\r\n                <div class=\"c_indicator-list\">\r\n                    <indicator repeat.for=\"indicator of indicators\" rule.bind=\"indicator\"></indicator>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12\">\r\n                <h3>Side Navigation</h3>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!strategies/rules/rule-sets.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3 first-letter-span>Manage Rule Sets</h3>\r\n    </header>\r\n</template>"; });
-define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rules-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Rules</h3>\r\n                </header>\r\n                <div class=\"c_rule-list\">\r\n                    <rule repeat.for=\"rule of rules\" rule.bind=\"rule\"></rule>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12 side-navigation\">\r\n                <h3>Time Frame</h3>\r\n                <ul>\r\n                    <li repeat.for=\"period in periods\">\r\n                        <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                        <a href.bind=\"/strategies/rules/${period.url}\" \r\n                           >${period.name} Rules</a>\r\n                    </li>                \r\n                </ul>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
+define('text!strategies/rules/rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rules-content\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-8 col-xs-12\">\r\n                <header>\r\n                    <h3 first-letter-span>Manage Rules</h3>\r\n                </header>\r\n                <div class=\"c_rule-list\">\r\n                    <rule repeat.for=\"rule of rules\" rule.bind=\"rule\"></rule>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-4 col-xs-12 side-navigation\">\r\n                <h3>Time Frame</h3>\r\n                <ul>\r\n                    <li repeat.for=\"period of periods\">\r\n                        <span class=\"glyphicon glyphicon-arrow-right\" aria-hidden=\"true\"></span>\r\n                        <a click.delegate=\"$parent.loadRulesForPeriod(period)\"\r\n                            class=\"${period.active ? 'active' : ''}\"\r\n                           >${period.name} Rules</a>\r\n                    </li>                \r\n                </ul>\r\n            </div>\r\n        </div>\r\n\r\n        <ul if.bind=\"errors.length > 0\">\r\n            <li repeat.for=\"error of errors\">\r\n                ${error.client.source}::${error.server.source} => <br />\r\n                ${error.client.message}(${error.server.message})\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!strategies/rules/strategy-rules.html', ['module'], function(module) { module.exports = "<template>\r\n    <header>\r\n        <h3>Manage Strategy Rules</h3>\r\n    </header>\r\n</template>"; });
 define('text!resources/elements/article/article-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <heading-block block.bind=\"block\"></heading-block>\r\n    <paragraph-block block.bind=\"block\"></paragraph-block>\r\n    <image-block block.bind=\"block\"></image-block>\r\n    <ordered-list-block block.bind=\"block\"></ordered-list-block>\r\n    <new-block block.bind=\"block\"></new-block>\r\n</template>"; });
 define('text!resources/elements/article/article.html', ['module'], function(module) { module.exports = "<template>\r\n    <edit-mode if.bind=\"editMode === true\" class=\"form-horizontal\">\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Title</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.title\">\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n            <label class=\"col-sm-2 control-label\">Url</label>\r\n            <div class=\"col-sm-10\">\r\n                <input type=\"text\" class=\"form-control\" value.bind=\"article.url\" placeholder=\"Atricle Url (no spaces)\">\r\n            </div>\r\n        </div>\r\n\r\n    </edit-mode>\r\n    <read-mode if.bind=\"editMode !== true\">\r\n        <header>\r\n            <h3>${article.title}</h3>\r\n        </header>\r\n    </read-mode>\r\n\r\n    <article-part class=\"${$parent.editMode === true ? 'edit-mode': ''}\"\r\n                  repeat.for=\"block of article.blocks\">\r\n        <block-actions block.bind=\"block\"></block-actions>\r\n        <article-block block.bind=\"block\"></article-block>\r\n    </article-part>\r\n\r\n    <div if.bind=\"editMode === true\" class=\"block-actions\">\r\n        <div class=\"btn-group\" role=\"group\" aria-label=\"Actions\">\r\n            <button type=\"button\" click.delegate=\"addBlock()\" class=\"btn btn-primary btn-xs\">Add New Block</button>\r\n        </div>\r\n    </div>\r\n</template>"; });
@@ -5474,10 +5523,10 @@ define('text!resources/elements/article/image-block.html', ['module'], function(
 define('text!resources/elements/article/new-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.isNew === true\">\r\n        <edit-mode>\r\n\r\n            <div class=\"form-horizontal\">\r\n                <div class=\"form-group\">\r\n                    <label class=\"col-sm-2 control-label\">Block Type</label>\r\n                    <div class=\"col-sm-10\">\r\n                        <select class=\"form-control\" value.bind=\"block.BlockType\">\r\n                            <option>Select</option>\r\n                            <option repeat.for=\"blockType of blockTypes\" value.bind=\"blockType\">${blockType}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n        </edit-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/ordered-list-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'OrderedList'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.items\" class=\"row\">\r\n                        <div class=\"col-xs-10\">\r\n                            <textarea rows=\"3\" id=\"${$parent.block.BlockId}-${$index}\"\r\n                                      value.bind=\"item\"></textarea>\r\n                        </div>\r\n                        <div class=\"col-xs-2\" style=\"text-align: left;\">\r\n                            <button type=\"button\"\r\n                                    click.delegate=\"$parent.deleteItem($index)\"\r\n                                    class=\"btn btn-danger btn-xs\">\r\n                                Delete\r\n                            </button>\r\n                        </div>\r\n                </li>\r\n            </ol>\r\n            <button type=\"button\" \r\n                    click.delegate=\"appendItem()\" \r\n                    class=\"btn btn-primary btn-xs\">\r\n                Add List Item\r\n            </button>\r\n\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <ol class=\"f\">\r\n                <li repeat.for=\"item of block.Items\">${item}</li>\r\n            </ol>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
 define('text!resources/elements/article/paragraph-block.html', ['module'], function(module) { module.exports = "<template>\r\n    <block-content if.bind=\"block.BlockType === 'Paragraph'\">\r\n        <edit-mode if.bind=\"block.isEditing === true\">\r\n            <textarea rows=\"4\" value.bind=\"block.Text\">\r\n            </textarea>\r\n        </edit-mode>\r\n        <read-mode if.bind=\"block.isEditing !== true\">\r\n            <p>${block.Text}</p>\r\n        </read-mode>\r\n    </block-content>\r\n</template>"; });
-define('text!resources/elements/indicator/indicator.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_indicator\" if.bind=\"indicator.deleted !== true\">\r\n\r\n        <div class=\"c_indicator-header\" click.delegate=\"indicator.expanded = !!!indicator.expanded\">\r\n            <span>${indicator.name}</span>\r\n            <a class=\"chevron\">\r\n                <span if.bind=\"indicator.expanded === true\" class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\r\n                <span if.bind=\"indicator.expanded !== true\" class=\"glyphicon glyphicon-menu-left\" aria-hidden=\"true\"></span>\r\n            </a>\r\n        </div>\r\n\r\n        <div class=\"c_indicator-details\" if.bind=\"indicator.expanded === true\">\r\n            <form submit.delegate=\"trySaveIndicator()\">\r\n                <fieldset disabled.bind=\"indicator.editMode !== true\">\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtName\">Indicator Name</label>\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"indicator.name & validate\">\r\n                    </div>\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtDescription\">Description</label>\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription\" value.bind=\"indicator.description & validate\"></textarea>\r\n                    </div>\r\n\r\n                    <div class=\"form-inline\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlPeriod-${indicator.indicatorId}\">Period:</label>\r\n                            <select id=\"ddlPeriod-${indicator.indicatorId}\" class=\"form-control\" value.bind=\"indicator.period\">\r\n                                <option repeat.for=\"period of periods\" model.bind=\"period.id\">${period.name}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                </fieldset>\r\n                \r\n                <ul if.bind=\"errors.length > 0\">\r\n                    <li repeat.for=\"error of errors\">\r\n                        ${error.client.source}::${error.server.source} => <br />\r\n                        ${error.client.message}(${error.server.message})\r\n                    </li>\r\n                </ul>\r\n\r\n                <div class=\"c_indicator-actions\">\r\n                    <button type=\"submit\" class=\"btn btn-danger\" if.bind=\"indicator.editMode === true\">Save</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" if.bind=\"indicator.editMode === true\" class=\"btn btn-default\">Cancel</button>\r\n                    <button type=\"button\" click.delegate=\"startEdit()\" if.bind=\"indicator.editMode !== true\" class=\"btn btn-danger\">Edit</button>\r\n                </div>\r\n\r\n            </form>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/chart/any-chart.html', ['module'], function(module) { module.exports = "<template>\r\n    <div id=\"${container}\" style=\"width: 500px; height: 400px;\"></div>\r\n</template>"; });
+define('text!resources/elements/indicator/indicator.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_indicator\" if.bind=\"indicator.deleted !== true\">\r\n\r\n        <div class=\"c_indicator-header\" click.delegate=\"indicator.expanded = !!!indicator.expanded\">\r\n            <span>${indicator.name}</span>\r\n            <a class=\"chevron\">\r\n                <span if.bind=\"indicator.expanded === true\" class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\r\n                <span if.bind=\"indicator.expanded !== true\" class=\"glyphicon glyphicon-menu-left\" aria-hidden=\"true\"></span>\r\n            </a>\r\n        </div>\r\n\r\n        <div class=\"c_indicator-details\" if.bind=\"indicator.expanded === true\">\r\n            <form submit.delegate=\"trySaveIndicator()\">\r\n                <fieldset disabled.bind=\"indicator.editMode !== true\">\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtName\">Indicator Name</label>\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName\" value.bind=\"indicator.name & validate\">\r\n                    </div>\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtDescription\">Description</label>\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription\" value.bind=\"indicator.description & validate\"></textarea>\r\n                    </div>\r\n\r\n                    <div class=\"form-inline\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlPeriod-${indicator.indicatorId}\">Period:</label>\r\n                            <select id=\"ddlPeriod-${indicator.indicatorId}\" class=\"form-control\" value.bind=\"indicator.period\">\r\n                                <option repeat.for=\"period of periods\" model.bind=\"period.id\">${period.name}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                </fieldset>\r\n                \r\n                <ul if.bind=\"errors.length > 0\">\r\n                    <li repeat.for=\"error of errors\">\r\n                        ${error.client.source}::${error.server.source} => <br />\r\n                        ${error.client.message}(${error.server.message})\r\n                    </li>\r\n                </ul>\r\n\r\n                <div class=\"c_indicator-actions\">\r\n                    <button type=\"submit\" class=\"btn btn-danger\" if.bind=\"indicator.editMode === true\">Save</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" if.bind=\"indicator.editMode === true\" class=\"btn btn-default\">Cancel</button>\r\n                    <button type=\"button\" click.delegate=\"startEdit()\" if.bind=\"indicator.editMode !== true\" class=\"btn btn-danger\">Edit</button>\r\n                </div>\r\n\r\n            </form>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/navigation/main-nav.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"main-nav\">\r\n        <div class=\"container\">\r\n            <div class=\"main-nav-items\">\r\n                <ul class=\"nav navbar-nav\">\r\n                    <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                        <a href.bind=\"row.href\">${row.title}</a>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n     </div>\r\n</template>"; });
 define('text!resources/elements/navigation/nav-header.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"container\">\r\n        <div class=\"navbar-brand\">\r\n\r\n            <img class=\"logo\" src=\"/content/images/logo.png\"/>\r\n            <a first-letter-span href=\"/\">Dream Space</a>\r\n        </div>\r\n        <ul class=\"nav navbar-nav navbar-right\">\r\n            <li role=\"presentation\" class=\"dropdown\" if.bind=\"isAuthenticated === true\">\r\n                <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>\r\n                    ${userContext.user.firstName} <span class=\"caret\"></span>\r\n                </a>\r\n                <ul class=\"dropdown-menu\">\r\n                    <li><a href.bind=\"loginUrl\">Account</a></li>\r\n                    <li><a click.delegate=\"logout()\">Logout</a></li>\r\n                </ul>\r\n            </li>\r\n            <li if.bind=\"isAuthenticated !== true\">\r\n                <a href.bind=\"loginUrl\">Login</a>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n</template>"; });
 define('text!resources/elements/navigation/sub-nav.html', ['module'], function(module) { module.exports = "<template>\r\n\r\n    <div class=\"sub-nav\">\r\n        <nav class=\"navbar navbar\">\r\n            <div class=\"container\">\r\n                <nav class=\"navbar\">\r\n                    <ul class=\"nav navbar-nav\">\r\n                        <li repeat.for=\"row of router.navigation\" class=\"${row.isActive ? 'active' : ''}\">\r\n                            <a href.bind=\"row.href\">${row.title}</a>\r\n                        </li>\r\n                    </ul>\r\n                </nav>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</template>"; });
-define('text!resources/elements/rule/rule.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rule\" if.bind=\"ruleInfo.deleted !== true\">\r\n\r\n        <div class=\"c_rule-header\" click.delegate=\"ruleInfo.expanded = !!!ruleInfo.expanded\">\r\n            <span>${ruleInfo.name}</span>\r\n            <a class=\"chevron\">\r\n                <span if.bind=\"ruleInfo.expanded === true\" class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\r\n                <span if.bind=\"ruleInfo.expanded !== true\" class=\"glyphicon glyphicon-menu-left\" aria-hidden=\"true\"></span>\r\n            </a>\r\n        </div>\r\n\r\n        <div class=\"c_rule-details\" if.bind=\"ruleInfo.expanded === true\">\r\n            <form submit.delegate=\"trySaveRule()\">\r\n                <fieldset disabled.bind=\"ruleInfo.editMode !== true\">\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtName-${ruleInfo.ruleId}\">Rule Name</label>\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.name & validate\">\r\n                    </div>\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtDescription-${ruleInfo.ruleId}\">Description</label>\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.description & validate\"></textarea>\r\n                    </div>\r\n\r\n                    <div class=\"form-inline\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlPeriod-${ruleInfo.ruleId}\">Period:</label>\r\n                            <select id=\"ddlPeriod-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.period\">\r\n                                <option repeat.for=\"period of periods\" model.bind=\"period.id\">${period.name}</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlCondition-${ruleInfo.ruleId}\">Compare operator:</label>\r\n                            <select id=\"ddlCondition-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.condition\">\r\n                                <option repeat.for=\"compareType of compareTypes\" model.bind=\"compareType.id\">${compareType.name}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare What-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare What</h3>\r\n\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV1-${ruleInfo.ruleId}\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSourceV1\" change.delegate=\"onDataSourceV1Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                            <label for=\"ddlDataSeriesV1-${ruleInfo.ruleId}\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSeriesV1\">\r\n                                <option repeat.for=\"dataSetries of ruleInfo.dataSeriesOptionsV1\" model.bind=\"dataSetries.id\">${dataSetries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 === 2\">\r\n                                <label for=\"txtConstV1-${ruleInfo.ruleId}\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.constV1\">\r\n                            </div>\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"txtSkipItemsV1-${ruleInfo.ruleId}\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.skipItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"txtTakeItemsV1-${ruleInfo.ruleId}\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.takeItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"ddlTransformItemsV1-${ruleInfo.ruleId}\">Data Transform:</label>\r\n                                <select id=\"ddlTransformItemsV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.transformItemsV1\">\r\n                                    <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                                </select>\r\n                            </div>\r\n\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare With-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare With</h3>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV2-${ruleInfo.ruleId}\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSourceV2\" change.delegate=\"onDataSourceV2Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlDataSeriesV2-${ruleInfo.ruleId}\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSeriesV2\">\r\n                                <option repeat.for=\"dataSeries of ruleInfo.dataSeriesOptionsV2\" model.bind=\"dataSeries.id\">${dataSeries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 === 2\">\r\n                                <label for=\"txtConstV2-${ruleInfo.ruleId}\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.constV2\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                                <label for=\"txtSkipItemsV2-${ruleInfo.ruleId}\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.skipItemsV2 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                                <label for=\"txtTakeItemsV2-${ruleInfo.ruleId}\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.takeItemsV2 & validate\">\r\n                            </div>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlTransformItemsV2-${ruleInfo.ruleId}\">Data Transform:</label>\r\n                            <select id=\"ddlTransformItemsV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.transformItemsV2\">\r\n                                <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </fieldset>\r\n                \r\n                <ul if.bind=\"errors.length > 0\">\r\n                    <li repeat.for=\"error of errors\">\r\n                        ${error.client.source}::${error.server.source} => <br />\r\n                        ${error.client.message}(${error.server.message})\r\n                    </li>\r\n                </ul>\r\n\r\n                <div class=\"c_rule-actions\">\r\n                    <button type=\"submit\" class=\"btn btn-danger\" if.bind=\"ruleInfo.editMode === true\">Save</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" if.bind=\"ruleInfo.editMode === true\" class=\"btn btn-default\">Cancel</button>\r\n                    <button type=\"button\" click.delegate=\"startEdit()\" if.bind=\"ruleInfo.editMode !== true\" class=\"btn btn-danger\">Edit</button>\r\n                </div>\r\n\r\n            </form>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
+define('text!resources/elements/rule/rule.html', ['module'], function(module) { module.exports = "<template>\r\n    <div class=\"c_rule\" if.bind=\"ruleInfo.deleted !== true\">\r\n\r\n        <div class=\"c_rule-header\" click.delegate=\"ruleInfo.expanded = !!!ruleInfo.expanded\">\r\n            <span>${ruleInfo.name}</span>\r\n            <a class=\"chevron\">\r\n                <span if.bind=\"ruleInfo.expanded === true\" class=\"glyphicon glyphicon-menu-down\" aria-hidden=\"true\"></span>\r\n                <span if.bind=\"ruleInfo.expanded !== true\" class=\"glyphicon glyphicon-menu-left\" aria-hidden=\"true\"></span>\r\n            </a>\r\n        </div>\r\n\r\n        <div class=\"c_rule-details\" if.bind=\"ruleInfo.expanded === true\">\r\n            <form submit.delegate=\"trySaveRule()\">\r\n                <fieldset disabled.bind=\"ruleInfo.editMode !== true\">\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtName-${ruleInfo.ruleId}\">Rule Name</label>\r\n                        <input type=\"text\" class=\"form-control\" id=\"txtName-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.name & validate\">\r\n                    </div>\r\n\r\n                    <div class=\"form-group\">\r\n                        <label for=\"txtDescription-${ruleInfo.ruleId}\">Description</label>\r\n                        <textarea rows=\"4\" class=\"form-control\" id=\"txtDescription-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.description & validate\"></textarea>\r\n                    </div>\r\n\r\n                    <div class=\"form-inline\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlPeriod-${ruleInfo.ruleId}\">Period:</label>\r\n                            <select id=\"ddlPeriod-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.period\" change.delegate=\"onPeriodChange()\">\r\n                                <option repeat.for=\"period of periods\" model.bind=\"period.id\">${period.name}</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlCondition-${ruleInfo.ruleId}\">Compare operator:</label>\r\n                            <select id=\"ddlCondition-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.condition\">\r\n                                <option repeat.for=\"compareType of compareTypes\" model.bind=\"compareType.id\">${compareType.name}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare What-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare What</h3>\r\n\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV1-${ruleInfo.ruleId}\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSourceV1\" change.delegate=\"onDataSourceV1Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                            <label for=\"ddlDataSeriesV1-${ruleInfo.ruleId}\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSeriesV1\">\r\n                                <option repeat.for=\"dataSetries of ruleInfo.dataSeriesOptionsV1\" model.bind=\"dataSetries.id\">${dataSetries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 === 2\">\r\n                                <label for=\"txtConstV1-${ruleInfo.ruleId}\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.constV1\">\r\n                            </div>\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"txtSkipItemsV1-${ruleInfo.ruleId}\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.skipItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"txtTakeItemsV1-${ruleInfo.ruleId}\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV1-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.takeItemsV1 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV1 !== 2\">\r\n                                <label for=\"ddlTransformItemsV1-${ruleInfo.ruleId}\">Data Transform:</label>\r\n                                <select id=\"ddlTransformItemsV1-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.transformItemsV1\">\r\n                                    <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                                </select>\r\n                            </div>\r\n\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--Compare With-->\r\n                    <div class=\"col-md-6\">\r\n                        <h3>Compare With</h3>\r\n                        <div class=\"form-group\">\r\n                            <label for=\"ddlDataSourceV2-${ruleInfo.ruleId}\">Data Source:</label>\r\n                            <select id=\"ddlDataSourceV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSourceV2\" change.delegate=\"onDataSourceV2Change()\">\r\n                                <option repeat.for=\"dataSource of dataSources\" model.bind=\"dataSource.id\">${dataSource.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlDataSeriesV2-${ruleInfo.ruleId}\">Data Series:</label>\r\n                            <select id=\"ddlDataSeriesV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.dataSeriesV2\">\r\n                                <option repeat.for=\"dataSeries of ruleInfo.dataSeriesOptionsV2\" model.bind=\"dataSeries.id\">${dataSeries.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                        <div class=\"form-inline-stack\">\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 === 2\">\r\n                                <label for=\"txtConstV2-${ruleInfo.ruleId}\">Constant:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtConstV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.constV2\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                                <label for=\"txtSkipItemsV2-${ruleInfo.ruleId}\">Skip:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtSkipItemsV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.skipItemsV2 & validate\">\r\n                            </div>\r\n\r\n                            <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                                <label for=\"txtTakeItemsV2-${ruleInfo.ruleId}\">Take:</label>\r\n                                <input type=\"text\" class=\"form-control\" id=\"txtTakeItemsV2-${ruleInfo.ruleId}\" value.bind=\"ruleInfo.takeItemsV2 & validate\">\r\n                            </div>\r\n                        </div>\r\n\r\n                        <div class=\"form-group\" if.bind=\"ruleInfo.dataSourceV2 !== 2\">\r\n                            <label for=\"ddlTransformItemsV2-${ruleInfo.ruleId}\">Data Transform:</label>\r\n                            <select id=\"ddlTransformItemsV2-${ruleInfo.ruleId}\" class=\"form-control\" value.bind=\"ruleInfo.transformItemsV2\">\r\n                                <option repeat.for=\"transformFunction of transformFunctions\" model.bind=\"transformFunction.id\">${transformFunction.name}</option>\r\n                            </select>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </fieldset>\r\n                \r\n                <ul if.bind=\"errors.length > 0\">\r\n                    <li repeat.for=\"error of errors\">\r\n                        ${error.client.source}::${error.server.source} => <br />\r\n                        ${error.client.message}(${error.server.message})\r\n                    </li>\r\n                </ul>\r\n\r\n                <div class=\"c_rule-actions\">\r\n                    <button type=\"submit\" class=\"btn btn-danger\" if.bind=\"ruleInfo.editMode === true\">Save</button>\r\n                    <button type=\"button\" click.delegate=\"cancelEdit()\" if.bind=\"ruleInfo.editMode === true\" class=\"btn btn-default\">Cancel</button>\r\n                    <button type=\"button\" click.delegate=\"startEdit()\" if.bind=\"ruleInfo.editMode !== true\" class=\"btn btn-danger\">Edit</button>\r\n                </div>\r\n\r\n            </form>\r\n        </div>\r\n\r\n    </div>\r\n</template>"; });
 //# sourceMappingURL=app-bundle.js.map

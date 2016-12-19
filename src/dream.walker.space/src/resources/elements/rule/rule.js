@@ -64,16 +64,6 @@ export class Rule {
             this.ruleInfo = newRule;
 
             this.ruleInfo.editMode = false;
-
-            ValidationRules
-                .ensure(u => u.name).required({message: "^Rule name must be set"})
-                .ensure(u => u.description).required({message: "^Description must be set"})
-                .ensure(u => u.skipItemsV1).required().satisfies(value => value >= 0)
-                .ensure(u => u.skipItemsV2).required().satisfies(value => value >= 0)
-                .ensure(u => u.takeItemsV1).required().satisfies(value => value >= 0)
-                .ensure(u => u.takeItemsV2).required().satisfies(value => value >= 0)
-                .on(this.ruleInfo);
-
         }
     }  
 
@@ -118,11 +108,25 @@ export class Rule {
     startEdit() {
         this.originalRule = Object.assign({}, this.ruleInfo);
         this.ruleInfo.editMode = true;
+        this.validationRules = ValidationRules
+            .ensure(u => u.name).displayName('Rule name').required().withMessage(`\${$displayName} cannot be blank.`)
+            .ensure(u => u.description).displayName('Rule description').required().withMessage(`\${$displayName} cannot be blank.`)
+            .ensure(u => u.skipItemsV1).displayName('Skip value').required().withMessage(`\${$displayName} cannot be blank.`)
+                .satisfies(value => value >= 0 && value < 1000).withMessage(`\${$displayName} must be between 0 - 999.`)
+            .ensure(u => u.skipItemsV2).displayName('Skip value').required().withMessage(`\${$displayName} cannot be blank.`)
+                .satisfies(value => value >= 0 && value < 1000).withMessage(`\${$displayName} must be between 0 - 999.`)
+            .ensure(u => u.takeItemsV1).displayName('Take value').required().withMessage(`\${$displayName} cannot be blank.`)
+                .satisfies(value => value >= 0 && value < 1000).withMessage(`\${$displayName} must be between 0 - 999.`)
+            .ensure(u => u.takeItemsV2).displayName('Take value').required().withMessage(`\${$displayName} cannot be blank.`)
+                .satisfies(value => value >= 0 && value < 1000).withMessage(`\${$displayName} must be between 0 - 999.`)
+            .on(this.ruleInfo);
+
     }
 
     cancelEdit() {
         this.ruleInfo = this.originalRule;
         this.ruleInfo.editMode = false;
+        this.validation.reset();
     }
 
     trySaveRule() {
@@ -130,6 +134,8 @@ export class Rule {
             .then(response => {
                 if(response.valid === true) {
                     this.saveRule();
+                } else {
+                    toastr.warning('Please correct validation errors.', 'Validation Errors')
                 }
             })
             .catch(error => {
