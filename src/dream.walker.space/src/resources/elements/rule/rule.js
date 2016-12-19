@@ -31,7 +31,7 @@ export class Rule {
             {id: 2, name: 'Equal'},
             {id: 3, name: 'Less'},
             {id: 4, name: 'Less or Equal'},
-            {id: 4, name: 'Not Equal'}
+            {id: 5, name: 'Not Equal'}
         ];
 
         this.dataSources = [
