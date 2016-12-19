@@ -15,7 +15,7 @@ namespace dream.walker.data.Models
         public IndicatorCore(Indicator indicator )
         {
             Name = GenerateName(indicator);
-            IndicatorId = indicator.IndicatorId;
+            Id = indicator.IndicatorId;
             Period = indicator.Period;
         }
 
@@ -27,7 +27,7 @@ namespace dream.walker.data.Models
         }
 
         public string Name { get; set; }
-        public int IndicatorId { get; set; }
+        public int Id { get; set; }
         public QuotePeriod  Period { get; set; }
     }
 }

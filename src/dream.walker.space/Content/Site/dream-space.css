@@ -533,6 +533,13 @@ form .validation-summary-error ul li {
 .c_strategy {
   background-color: rgba(255, 255, 255, 0.7);
 }
+.c_rules-content {
+  /*rule:last-child {
+        .c_rule {
+            border-bottom: 0px solid @solid-border-color;
+        }
+    }*/
+}
 .c_rules-content .c_rule-list {
   background-color: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(204, 204, 204, 0.36);
@@ -541,6 +548,15 @@ form .validation-summary-error ul li {
 .c_rules-content .c_rule {
   padding: 10px 10px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.36);
+}
+.c_rules-content .c_rule.c_rule-add,
+.c_rules-content .c_rule .c_rule-add {
+  cursor: pointer;
+  border-bottom: 0px solid rgba(204, 204, 204, 0.36);
+}
+.c_rules-content .c_rule.c_rule-add .glyphicon,
+.c_rules-content .c_rule .c_rule-add .glyphicon {
+  color: green;
 }
 .c_rules-content .c_rule .c_rule-actions {
   text-align: right;
@@ -560,7 +576,4 @@ form .validation-summary-error ul li {
 }
 .c_rules-content .c_rule .c_rule-details h3 {
   border-bottom: 1px solid #e22004;
-}
-.c_rules-content rule:last-child .c_rule {
-  border-bottom: 0px solid rgba(204, 204, 204, 0.36);
 }

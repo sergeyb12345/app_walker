@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="c_rule" if.bind="ruleInfo.deleted !== true">
 
-        <div class="c_rule-header" click.delegate="ruleInfo.expanded = !!!ruleInfo.expanded">
+        <div class="c_rule-header" click.delegate="onExpanded()">
             <span>${ruleInfo.name}</span>
             <a class="chevron">
                 <span if.bind="ruleInfo.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
@@ -52,7 +52,7 @@
                         <div class="form-group" if.bind="ruleInfo.dataSourceV1 !== 2">
                             <label for="ddlDataSeriesV1-${ruleInfo.ruleId}">Data Series:</label>
                             <select id="ddlDataSeriesV1-${ruleInfo.ruleId}" class="form-control" value.bind="ruleInfo.dataSeriesV1">
-                                <option repeat.for="dataSetries of ruleInfo.dataSeriesOptionsV1" model.bind="dataSetries.id">${dataSetries.name}</option>
+                                <option repeat.for="dataSeries of ruleInfo.dataSeriesOptionsV1" model.bind="dataSeries.id">${dataSeries.name}</option>
                             </select>
                         </div>
 

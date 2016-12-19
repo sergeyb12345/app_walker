@@ -51,6 +51,18 @@ export class Rules {
         return result;
     }
 
+    addRule() {
+        let rule = {
+            name: 'New Rule',
+            expanded: true,
+            period: this.activePeriod.id,
+            editMode: true,
+            ruleId: 0
+        };
+
+        this.rules.push(rule);
+    }
+
     loadRulesForPeriod (period){
         let url = `/strategies/rules/${period.url}`;
         this.router.navigate(url);

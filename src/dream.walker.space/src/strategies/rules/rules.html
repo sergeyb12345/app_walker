@@ -7,6 +7,14 @@
                 </header>
                 <div class="c_rule-list">
                     <rule repeat.for="rule of rules" rule.bind="rule"></rule>
+                    <div class="c_rule c_rule-add" click.delegate="addRule()">
+                        <div class="c_rule-header">
+                            <a>Register new rule</a>
+                            <a class="chevron">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4 col-xs-12 side-navigation">

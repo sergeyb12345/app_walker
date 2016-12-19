@@ -63,9 +63,16 @@ export class Rule {
             this.setDataSeries(newRule);
             this.ruleInfo = newRule;
 
-            this.ruleInfo.editMode = false;
+            //this.ruleInfo.editMode = false;
         }
     }  
+
+    onExpanded() {
+        this.ruleInfo.expanded = !!!this.ruleInfo.expanded;
+        if(this.ruleInfo.expanded !== true && this.ruleInfo.ruleId > 0 && this.ruleInfo.editMode === true) {
+            this.cancelEdit();
+        }
+    }
 
     onPeriodChange() {
         this.indicatorDataSeries = this.globalSettings.getIndicators(this.ruleInfo.period);
@@ -124,8 +131,12 @@ export class Rule {
     }
 
     cancelEdit() {
-        this.ruleInfo = this.originalRule;
-        this.ruleInfo.editMode = false;
+        if(this.ruleInfo.ruleId > 0) {
+            this.ruleInfo = this.originalRule;
+            this.ruleInfo.editMode = false;
+        } else {
+            this.ruleInfo.deleted = true;
+        }
         this.validation.reset();
     }
 
@@ -147,6 +158,7 @@ export class Rule {
         this.ruleService.saveRule(this.ruleInfo) 
             .then(response => {
                 this.ruleInfo.editMode = false;
+                this.ruleInfo.expanded = false;
                 toastr.success(`Rule ${response.name} saved successfully!`, 'Rule Saved');
             })
             .catch(error => {
