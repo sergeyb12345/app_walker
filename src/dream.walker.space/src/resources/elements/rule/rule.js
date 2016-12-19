@@ -140,6 +140,28 @@ export class Rule {
         this.validation.reset();
     }
 
+    cancelDelete() {
+        this.ruleInfo.deleteMode = false;
+        this.ruleInfo.expanded = false;
+    }
+
+    startDelete() {
+        this.ruleInfo.deleteMode = true;
+        this.ruleInfo.expanded = true;
+    }
+
+    confirmDelete() {
+        this.ruleService.deleteRule(this.ruleInfo.ruleId) 
+            .then(response => {
+                this.ruleInfo.deleted = true;
+                toastr.success(`Rule ${response.name} deleted successfully!`, 'Rule Deleted');
+            })
+            .catch(error => {
+                this.handleError(error);
+                toastr.error("Failed to delete rule", "Error");
+            });    
+    }
+
     trySaveRule() {
         this.validation.validate()
             .then(response => {

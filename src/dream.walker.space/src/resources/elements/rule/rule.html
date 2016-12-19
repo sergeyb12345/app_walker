@@ -1,17 +1,22 @@
 ﻿<template>
     <div class="c_rule" if.bind="ruleInfo.deleted !== true">
+        <div class="c_rule-header" click.trigger="onExpanded()">
+            <button type="button" show.bind="ruleInfo.expanded !== true" click.delegate="startDelete()" class="btn btn-danger btn-xs">Delete</button>
 
-        <div class="c_rule-header" click.delegate="onExpanded()">
-            <span>${ruleInfo.name}</span>
-            <a class="chevron">
-                <span if.bind="ruleInfo.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-                <span if.bind="ruleInfo.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-            </a>
+            <span >
+
+                <span>${ruleInfo.name}</span>
+                <a class="chevron">
+                    <span if.bind="ruleInfo.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                    <span if.bind="ruleInfo.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                </a>
+            </span>
         </div>
 
         <div class="c_rule-details" if.bind="ruleInfo.expanded === true">
-            <form submit.delegate="trySaveRule()">
-                <fieldset disabled.bind="ruleInfo.editMode !== true">
+
+            <form submit.delegate="trySaveRule()" if.bind="ruleInfo.deleteMode !== true">
+                <fieldset disabled.bind="ruleInfo.editMode !== true" >
 
                     <div class="form-group">
                         <label for="txtName-${ruleInfo.ruleId}">Rule Name</label>
@@ -138,9 +143,18 @@
                     <button type="button" click.delegate="cancelEdit()" if.bind="ruleInfo.editMode === true" class="btn btn-default">Cancel</button>
                     <button type="button" click.delegate="startEdit()" if.bind="ruleInfo.editMode !== true" class="btn btn-danger">Edit</button>
                 </div>
-
             </form>
-        </div>
 
+            <div class="c_rule-actions" if.bind="ruleInfo.deleteMode === true">
+                <p>
+                    <br />
+                    I'll try to delete the rule, however, if this rule is used anywhere else then delete will be cancelled.
+                    <br />
+                </p>
+
+                <button type="button" click.delegate="confirmDelete()" class="btn btn-danger">Delete</button>
+                <button type="button" click.delegate="cancelDelete()" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
     </div>
 </template>

@@ -562,17 +562,27 @@ form .validation-summary-error ul li {
   text-align: right;
   border-top: 1px solid #e22004;
   padding-top: 10px;
-  margin-top: 10px;
 }
 .c_rules-content .c_rule .c_rule-header {
   cursor: pointer;
+  text-transform: capitalize;
 }
 .c_rules-content .c_rule .c_rule-header .chevron {
   float: right;
 }
+.c_rules-content .c_rule .c_rule-header .btn {
+  margin-right: 10px;
+  z-index: 100;
+}
 .c_rules-content .c_rule .c_rule-details {
+  padding-top: 10px;
+}
+.c_rules-content .c_rule .c_rule-details form {
   border-top: 1px solid #e22004;
   padding-top: 10px;
+}
+.c_rules-content .c_rule .c_rule-details form fieldset {
+  padding-bottom: 10px;
 }
 .c_rules-content .c_rule .c_rule-details h3 {
   border-bottom: 1px solid #e22004;

@@ -29,19 +29,33 @@
             text-align: right;
             border-top: 1px solid @h3-color;
             padding-top:10px;
-            margin-top:10px;
         }
 
         .c_rule-header {
             cursor: pointer;
+            text-transform: capitalize;
+
             .chevron {
                 float: right;
+            }
+
+            .btn {
+                margin-right: 10px;
+                z-index: 100;
             }
         }
 
         .c_rule-details {
-            border-top: 1px solid @h3-color;
             padding-top: 10px;
+
+            form {
+                border-top: 1px solid @h3-color;
+                padding-top: 10px;
+
+                fieldset {
+                    padding-bottom: 10px;
+                }
+            }
 
             h3 {
                 //visibility:visible;

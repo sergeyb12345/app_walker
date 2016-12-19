@@ -122,7 +122,7 @@ namespace dream.walker.data.Services
                 var record = await repository.GetAsync(id);
                 if (record != null)
                 {
-                    repository.Delete(record);
+                    record.Deleted = true;
                     await repository.CommitAsync();
                 }
             }
