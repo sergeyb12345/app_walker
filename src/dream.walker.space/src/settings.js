@@ -55,6 +55,8 @@ export class Settings {
                         return this.indicatorService.getNames()
                             .then(response => {
                                 this.indicators = response;
+
+                                this.initialized = true;
                             })
                             .catch(error => {
                                 return this.handleError(error, "initialize");

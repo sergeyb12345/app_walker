@@ -16,6 +16,10 @@ export class BootstrapFormRenderer {
     }
 
     add(element, error) {
+        if(!error) {
+            return;
+        }
+
         const formGroup = element.closest('.form-group');
         if (!formGroup) {
             return;
@@ -37,6 +41,9 @@ export class BootstrapFormRenderer {
     }
 
     remove(element, error) {
+        if(!error) {
+            return;
+        }
         const formGroup = element.closest('.form-group');
         if (!formGroup) {
             return;

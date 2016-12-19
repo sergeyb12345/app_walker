@@ -1,23 +1,25 @@
-﻿import {inject, bindable} from "aurelia-framework";
+﻿import * as toastr from "toastr";
+import {inject, bindable} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {RuleService} from '../../../services/rule-service';
 import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation"
 import {BootstrapFormRenderer} from "../../../common/bootstrap-form-renderer"
 
-@inject(EventAggregator, RuleService, "User", ValidationController, "Settings")
+@inject(EventAggregator, RuleService, "User", ValidationController, "Settings", "ErrorParser")
 export class Rule {
 
     @bindable rule;
 
-    constructor (eventAggregator, ruleService, userContext, validation, globalSettings) {
+    constructor (eventAggregator, ruleService, userContext, validation, globalSettings, errorParser) {
         this.powerUser = userContext.user.isAuthenticated;
         this.eventAggregator = eventAggregator;
         this.globalSettings = globalSettings;
+        this.errorParser = errorParser;
         this.validation = validation;
         this.validation.validateTrigger = validateTrigger.change;
         this.validation.addRenderer(new BootstrapFormRenderer());
         this.errors =[];
-        this.ruleInfoService = ruleService;
+        this.ruleService = ruleService;
         this.subscriptions = [];
         this.ruleInfoInfo = {editMode: false, dataSeriesOptionsV1: [], dataSeriesOptionsV2: [] };
         this.indicatorDataSeries = [];
@@ -126,7 +128,7 @@ export class Rule {
     trySaveRule() {
         this.validation.validate()
             .then(response => {
-                if(response.length === 0){
+                if(response.valid === true) {
                     this.saveRule();
                 }
             })
@@ -136,8 +138,15 @@ export class Rule {
     }
 
     saveRule(){
-        this.ruleInfo.editMode = false;
-        alert('saved')
+        this.ruleService.saveRule(this.ruleInfo) 
+            .then(response => {
+                this.ruleInfo.editMode = false;
+                toastr.success(`Rule ${response.name} saved successfully!`, 'Rule Saved');
+            })
+            .catch(error => {
+                this.handleError(error);
+                toastr.error("Failed to save rule", "Error");
+            });    
     }
 
     handleError(error) {
