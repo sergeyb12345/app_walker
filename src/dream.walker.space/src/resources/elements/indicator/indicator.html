@@ -32,8 +32,8 @@
                         </div>
                         <div class="form-group">
                             <label for="ddlPeriod-${indicatorInfo.name}">Formula:</label>
-                            <select id="ddlPeriod-${indicatorInfo.indicatorId}" class="form-control" value.bind="indicatorInfo.name">
-                                <option repeat.for="formula of formulaes" value.bind="formula">${formula}</option>
+                            <select id="ddlPeriod-${indicatorInfo.indicatorId}" class="form-control" value.bind="indicatorInfo.name" change.delegate="onFormulaChange()">
+                                <option repeat.for="formula of formulaes" value.bind="formula.name">${formula.name}</option>
                             </select>
                         </div>
                     </div>
