@@ -1,0 +1,68 @@
+﻿/// <reference path="../base/_variables" />
+
+.c_indicators-content {
+
+    .c_indicator-list {
+        background-color:@page-bg-content;
+        border: 1px solid @solid-border-color;
+        padding:0 10px;
+
+        h3 {
+            //visibility:hidden;
+        }
+    }
+
+    .c_indicator {
+        padding:10px 10px;
+        border-bottom: 1px solid @solid-border-color;
+
+        &.c_indicator-add, .c_indicator-add {
+            cursor: pointer;
+            border-bottom: 0px solid @solid-border-color;
+
+            .glyphicon {
+                color:green;
+            }
+        }
+
+        .c_indicator-actions {
+            text-align: right;
+            border-top: 1px solid @h3-color;
+            padding-top:10px;
+        }
+
+        .c_indicator-header {
+            cursor: pointer;
+            text-transform: capitalize;
+
+            .chevron {
+                float: right;
+            }
+
+            .btn {
+                margin-right: 10px;
+                z-index: 100;
+            }
+        }
+
+        .c_indicator-details {
+            padding-top: 10px;
+
+            form {
+                border-top: 1px solid @h3-color;
+                padding-top: 10px;
+
+                fieldset {
+                    padding-bottom: 10px;
+                }
+            }
+
+            h3 {
+                //visibility:visible;
+                border-bottom: 1px solid @h3-color;
+            }
+        }
+    }
+
+}
+

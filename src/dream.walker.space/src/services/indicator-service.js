@@ -15,8 +15,6 @@ export class IndicatorService {
 
         this.eventAggregator = eventAggregator;
         this.http = http;
-        this.indicatorsWeekly = [];
-        this.indicatorsDaily = [];
     }
 
     getNames() {

@@ -587,3 +587,50 @@ form .validation-summary-error ul li {
 .c_rules-content .c_rule .c_rule-details h3 {
   border-bottom: 1px solid #e22004;
 }
+.c_indicators-content .c_indicator-list {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(204, 204, 204, 0.36);
+  padding: 0 10px;
+}
+.c_indicators-content .c_indicator {
+  padding: 10px 10px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.36);
+}
+.c_indicators-content .c_indicator.c_indicator-add,
+.c_indicators-content .c_indicator .c_indicator-add {
+  cursor: pointer;
+  border-bottom: 0px solid rgba(204, 204, 204, 0.36);
+}
+.c_indicators-content .c_indicator.c_indicator-add .glyphicon,
+.c_indicators-content .c_indicator .c_indicator-add .glyphicon {
+  color: green;
+}
+.c_indicators-content .c_indicator .c_indicator-actions {
+  text-align: right;
+  border-top: 1px solid #e22004;
+  padding-top: 10px;
+}
+.c_indicators-content .c_indicator .c_indicator-header {
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.c_indicators-content .c_indicator .c_indicator-header .chevron {
+  float: right;
+}
+.c_indicators-content .c_indicator .c_indicator-header .btn {
+  margin-right: 10px;
+  z-index: 100;
+}
+.c_indicators-content .c_indicator .c_indicator-details {
+  padding-top: 10px;
+}
+.c_indicators-content .c_indicator .c_indicator-details form {
+  border-top: 1px solid #e22004;
+  padding-top: 10px;
+}
+.c_indicators-content .c_indicator .c_indicator-details form fieldset {
+  padding-bottom: 10px;
+}
+.c_indicators-content .c_indicator .c_indicator-details h3 {
+  border-bottom: 1px solid #e22004;
+}

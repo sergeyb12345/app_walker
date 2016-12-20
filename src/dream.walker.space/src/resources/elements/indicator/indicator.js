@@ -1,55 +1,95 @@
-﻿import {inject, bindable} from "aurelia-framework";
+﻿import * as toastr from "toastr";
+import {inject, bindable} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {IndicatorService} from '../../../services/indicator-service';
 import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation"
 import {BootstrapFormRenderer} from "../../../common/bootstrap-form-renderer"
 
-@inject(EventAggregator, IndicatorService, "User", ValidationController)
+@inject(EventAggregator, IndicatorService, "User", ValidationController, "Settings", "ErrorParser")
 export class Indicator {
 
     @bindable indicator;
 
-    constructor (eventAggregator, indicatorService, userContext, validation) {
+    constructor (eventAggregator, indicatorService, userContext, validation, globalSettings, errorParser) {
         this.powerUser = userContext.user.isAuthenticated;
         this.eventAggregator = eventAggregator;
+        this.globalSettings = globalSettings;
+        this.errorParser = errorParser;
         this.validation = validation;
         this.validation.validateTrigger = validateTrigger.change;
         this.validation.addRenderer(new BootstrapFormRenderer());
-
+        this.errors =[];
         this.indicatorService = indicatorService;
         this.subscriptions = [];
-        this.errors = [];
+        this.indicatorDataSeries = [];
+        this.periods = this.globalSettings.periods;
+        this.formulaes = ['EMA','MACD','ForceIndex']
     }
 
-    indicatorChanged(indicator) {
-        if (indicator) {
-            let newIndicator = Object.assign({}, indicator);
-            this.newIndicator.editMode = false;
-            this.indicator = newIndicator;
-
-
-            ValidationRules
-                .ensure(u => u.name).required({message: "^Indicator name must be set"})
-                .ensure(u => u.description).required({message: "^Description must be set"})
-                .on(this.newIndicator);
-
+    indicatorChanged(indicatorItem) {
+        if (indicatorItem) {
+            let newIndicator = Object.assign({}, indicatorItem);
+            this.indicatorInfo = newIndicator;
         }
     }  
 
+    onExpanded() {
+        this.indicatorInfo.expanded = !!!this.indicatorInfo.expanded;
+        if(this.indicatorInfo.expanded !== true && this.indicatorInfo.indicatorId > 0 && this.indicatorInfo.editMode === true) {
+            this.cancelEdit();
+        }
+    }
+
     startEdit() {
-        this.originalIndicator = Object.assign({}, this.indicator);
-        this.indicator.editMode = true;
+        this.originalIndicator = Object.assign({}, this.indicatorInfo);
+        this.indicatorInfo.editMode = true;
+
+        ValidationRules
+            .ensure(u => u.description).displayName('Indicator Name').required().withMessage(`\${$displayName} cannot be blank.`)
+            .on(this.indicatorInfo);
+
     }
 
     cancelEdit() {
-        this.indicator = this.originalIndicator;
-        this.indicator.editMode = false;
+        if(this.indicatorInfo.indicatorId > 0) {
+            this.indicatorInfo = this.originalIndicator;
+            this.indicatorInfo.editMode = false;
+        } else {
+            this.indicatorInfo.deleted = true;
+        }
+        this.validation.reset();
+    }
+
+    cancelDelete() {
+        this.indicatorInfo.deleteMode = false;
+        this.indicatorInfo.expanded = false;
+    }
+
+    startDelete() {
+        this.indicatorInfo.deleteMode = true;
+        this.indicatorInfo.expanded = true;
+    }
+
+    confirmDelete() {
+        this.indicatorService.deleteIndicator(this.indicatorInfo.indicatorId) 
+            .then(response => {
+                this.indicatorInfo.deleted = true;
+                toastr.success(`Indicator ${response.name} deleted successfully!`, 'Indicator Deleted');
+            })
+            .catch(error => {
+                this.handleError(error);
+                toastr.error("Failed to delete indicator", "Error");
+            });    
     }
 
     trySaveIndicator() {
         this.validation.validate()
             .then(response => {
-                let r = response;
+                if(response.valid === true) {
+                    this.saveIndicator();
+                } else {
+                    toastr.warning('Please correct validation errors.', 'Validation Errors')
+                }
             })
             .catch(error => {
                 this.handleError(error);
@@ -57,20 +97,16 @@ export class Indicator {
     }
 
     saveIndicator(){
-        alert('saved')
-    }
-
-    attached() {
-        //subscribe here
-    }
-
-
-    detached() {
-        if (this.subscriptions.length > 0) {
-            this.subscriptions.forEach(function(subscription) {
-                subscription.dispose();
-            });
-        }
+        this.indicatorService.saveIndicator(this.indicatorInfo) 
+            .then(response => {
+                this.indicatorInfo.editMode = false;
+                this.indicatorInfo.expanded = false;
+                toastr.success(`indicator ${response.name} saved successfully!`, 'Indicator Saved');
+            })
+            .catch(error => {
+                this.handleError(error);
+                toastr.error("Failed to save indicator", "Error");
+            });    
     }
 
     handleError(error) {
@@ -81,5 +117,4 @@ export class Indicator {
                 self.errors.push(errorInfo);
             });
     }
-
 }

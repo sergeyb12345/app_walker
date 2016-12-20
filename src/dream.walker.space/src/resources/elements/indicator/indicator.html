@@ -1,39 +1,44 @@
 ﻿<template>
-    <div class="c_indicator" if.bind="indicator.deleted !== true">
+    <div class="c_indicator" if.bind="indicatorInfo.deleted !== true">
+        <div class="c_indicator-header" click.trigger="onExpanded()">
+            <button type="button" show.bind="indicatorInfo.expanded !== true" click.delegate="startDelete()" class="btn btn-danger btn-xs">Delete</button>
 
-        <div class="c_indicator-header" click.delegate="indicator.expanded = !!!indicator.expanded">
-            <span>${indicator.name}</span>
-            <a class="chevron">
-                <span if.bind="indicator.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-                <span if.bind="indicator.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-            </a>
+            <span>
+
+                <span>${indicatorInfo.description}</span>
+                <a class="chevron">
+                    <span if.bind="indicatorInfo.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                    <span if.bind="indicatorInfo.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                </a>
+            </span>
         </div>
 
-        <div class="c_indicator-details" if.bind="indicator.expanded === true">
-            <form submit.delegate="trySaveIndicator()">
-                <fieldset disabled.bind="indicator.editMode !== true">
+        <div class="c_indicator-details" if.bind="indicatorInfo.expanded === true">
+
+            <form submit.delegate="trySaveIndicator()" if.bind="indicatorInfo.deleteMode !== true">
+                <fieldset disabled.bind="indicatorInfo.editMode !== true">
 
                     <div class="form-group">
-                        <label for="txtName">Indicator Name</label>
-                        <input type="text" class="form-control" id="txtName" value.bind="indicator.name & validate">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="txtDescription">Description</label>
-                        <textarea rows="4" class="form-control" id="txtDescription" value.bind="indicator.description & validate"></textarea>
+                        <label for="txtDescription-${indicatorInfo.indicatorId}">Indicator Name</label>
+                        <input type="text" class="form-control" id="txtDescription-${indicatorInfo.indicatorId}" value.bind="indicatorInfo.description & validate" />
                     </div>
 
                     <div class="form-inline">
                         <div class="form-group">
-                            <label for="ddlPeriod-${indicator.indicatorId}">Period:</label>
-                            <select id="ddlPeriod-${indicator.indicatorId}" class="form-control" value.bind="indicator.period">
+                            <label for="ddlPeriod-${indicatorInfo.indicatorId}">Period:</label>
+                            <select id="ddlPeriod-${indicatorInfo.indicatorId}" class="form-control" value.bind="indicatorInfo.period" >
                                 <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="ddlPeriod-${indicatorInfo.name}">Formula:</label>
+                            <select id="ddlPeriod-${indicatorInfo.indicatorId}" class="form-control" value.bind="indicatorInfo.name">
+                                <option repeat.for="formula of formulaes" value.bind="formula">${formula}</option>
+                            </select>
+                        </div>
                     </div>
-
                 </fieldset>
-                
+
                 <ul if.bind="errors.length > 0">
                     <li repeat.for="error of errors">
                         ${error.client.source}::${error.server.source} => <br />
@@ -42,13 +47,22 @@
                 </ul>
 
                 <div class="c_indicator-actions">
-                    <button type="submit" class="btn btn-danger" if.bind="indicator.editMode === true">Save</button>
-                    <button type="button" click.delegate="cancelEdit()" if.bind="indicator.editMode === true" class="btn btn-default">Cancel</button>
-                    <button type="button" click.delegate="startEdit()" if.bind="indicator.editMode !== true" class="btn btn-danger">Edit</button>
+                    <button type="submit" class="btn btn-danger" if.bind="indicatorInfo.editMode === true">Save</button>
+                    <button type="button" click.delegate="cancelEdit()" if.bind="indicatorInfo.editMode === true" class="btn btn-default">Cancel</button>
+                    <button type="button" click.delegate="startEdit()" if.bind="indicatorInfo.editMode !== true" class="btn btn-danger">Edit</button>
                 </div>
-
             </form>
-        </div>
 
+            <div class="c_indicator-actions" if.bind="indicatorInfo.deleteMode === true">
+                <p>
+                    <br />
+                    I'll try to delete the indicator, however, if this indicator is used anywhere else then delete will be cancelled.
+                    <br />
+                </p>
+
+                <button type="button" click.delegate="confirmDelete()" class="btn btn-danger">Delete</button>
+                <button type="button" click.delegate="cancelDelete()" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
     </div>
 </template>

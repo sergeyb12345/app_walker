@@ -6,11 +6,26 @@
                     <h3 first-letter-span>Manage Indicators</h3>
                 </header>
                 <div class="c_indicator-list">
-                    <indicator repeat.for="indicator of indicators" rule.bind="indicator"></indicator>
+                    <indicator repeat.for="indicator of indicators" indicator.bind="indicator"></indicator>
+                    <div class="c_indicator c_indicator-add" click.delegate="addIndicator()">
+                        <div class="c_indicator-header">
+                            <a>Register new indicator</a>
+                            <a class="chevron">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 col-xs-12">
-                <h3>Side Navigation</h3>
+            <div class="col-md-4 col-xs-12 side-navigation">
+                <h3>Time Frame</h3>
+                <ul>
+                    <li repeat.for="period of periods">
+                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                        <a click.delegate="$parent.loadIndicatorsForPeriod(period)"
+                           class="${period.active ? 'active' : ''}">${period.name} Indicators</a>
+                    </li>
+                </ul>            
             </div>
         </div>
 
