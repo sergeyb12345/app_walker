@@ -65,6 +65,7 @@ namespace dream.walker.space.IoC
             builder.RegisterType<RuleSetRepository>().As<IRuleSetRepository>().InstancePerDependency();
             builder.RegisterType<StrategyRuleSetRepository>().As<IStrategyRuleSetRepository>().InstancePerDependency();
             builder.RegisterType<CompanyRuleSetRepository>().As<ICompanyRuleSetRepository>().InstancePerDependency();
+            builder.RegisterType<RuleSetDetailsRepository>().As<IRuleSetDetailsRepository>().InstancePerDependency();
 
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
 
@@ -80,6 +81,7 @@ namespace dream.walker.space.IoC
             builder.RegisterType<AzureStorageClient>().As<IStorageClient>();
             builder.RegisterType<ArticleStorageService>().As<IArticleStorageService>();
             builder.RegisterType<IndicatorService>().As<IIndicatorService>();
+            builder.RegisterType<RuleSetService>().As<IRuleSetService>();
 
         }
 

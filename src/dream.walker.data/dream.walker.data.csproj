@@ -200,6 +200,7 @@
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\IndicatorCore.cs" />
+    <Compile Include="Models\RuleSetModel.cs" />
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
@@ -221,6 +222,7 @@
     <Compile Include="MsSqlDbMigrator.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />
     <Compile Include="Repositories\CompanyRuleSetRepository.cs" />
+    <Compile Include="Repositories\RuleSetDetailsRepository.cs" />
     <Compile Include="Repositories\RuleSetRepository.cs" />
     <Compile Include="Repositories\SectionRepository.cs" />
     <Compile Include="Repositories\CompanyIndicatorRepository.cs" />
@@ -254,6 +256,7 @@
     <Compile Include="Services\ICompanyService.cs" />
     <Compile Include="Services\IIndicatorService.cs" />
     <Compile Include="Services\IRuleService.cs" />
+    <Compile Include="Services\IRuleSetService.cs" />
     <Compile Include="Services\IStrategyService.cs" />
     <Compile Include="Requests\UpdateQuotesRequest.cs" />
     <Compile Include="Services\StrategyService.cs" />

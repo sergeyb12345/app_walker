@@ -259,6 +259,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="Controllers\IndicatorsApiController.cs" />
+    <Compile Include="Controllers\RuleSetsApiController.cs" />
     <Compile Include="Controllers\RulesApiController.cs" />
     <Compile Include="Filters\NoStackExceptionFilterAttribute.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -512,6 +513,7 @@
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
     <Content Include="src\services\indicator-service.js" />
+    <Content Include="src\services\rule-set-service.js" />
     <Content Include="src\services\rule-service.js" />
     <Content Include="src\services\strategy-service.js" />
     <Content Include="src\services\blob-services.js" />

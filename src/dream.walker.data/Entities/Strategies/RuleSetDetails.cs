@@ -7,7 +7,6 @@ namespace dream.walker.data.Entities.Strategies
         public int RuleSetId { get; set; }
         public int RuleId { get; set; }
         public int OrderId { get; set; }
-        public bool Deleted { get; set; }
 
         [ForeignKey("RuleSetId")]
         public virtual RuleSet RuleSet { get; set; }
