@@ -24,6 +24,14 @@ export class Indicator {
         this.indicatorDataSeries = [];
         this.periods = this.globalSettings.periods;
         this.formulaes = ['EMA','MACD','ForceIndex']
+        this.plotNumbers = [0,1,2,3];
+        this.chartTypes = [
+            {name:'Ohlc',id: 0},
+            {name:'Candlestick', id: 1},
+            {name:'Line', id: 2},
+            {name:'Column', id: 3},
+            {name:'Area', id: 4}
+        ];
     }
 
     indicatorChanged(indicatorItem) {
@@ -46,6 +54,8 @@ export class Indicator {
 
         ValidationRules
             .ensure(u => u.description).displayName('Indicator Name').required().withMessage(`\${$displayName} cannot be blank.`)
+            .ensure(u => u.chartColor).displayName('Line Color').required().withMessage(`\${$displayName} cannot be blank.`)
+                .matches(/^#[0-9A-F]{6}$/).withMessage(`\${$displayName} value should be in format: #AAFF99.`)
             .on(this.indicatorInfo);
 
     }

@@ -18,6 +18,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.reader", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.tests", "src\dream.walker.tests\dream.walker.tests.csproj", "{DC550AD2-78E7-456E-BA7E-D92D46AD13CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.indicators", "src\dream.walker.indicators\dream.walker.indicators.csproj", "{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.calculators", "src\dream.walker.calculators\dream.walker.calculators.csproj", "{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,14 @@ Global
 		{DC550AD2-78E7-456E-BA7E-D92D46AD13CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC550AD2-78E7-456E-BA7E-D92D46AD13CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC550AD2-78E7-456E-BA7E-D92D46AD13CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3DD96E0-079E-4A28-ACC3-AA5B2EA39C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

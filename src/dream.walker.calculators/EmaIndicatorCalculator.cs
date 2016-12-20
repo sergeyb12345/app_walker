@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using dream.walker.data.Entities;
 using dream.walker.data.Enums;
 using dream.walker.data.Extensions;
 using dream.walker.indicators;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
+using dream.walker.data.Entities.Indicators;
 
 namespace dream.walker.calculators
 {
@@ -40,13 +40,13 @@ namespace dream.walker.calculators
                 throw new NotSupportedException($"Calculator '{_calculator.Name}' does not support indicator '{indicator.Name}'");
             }
 
-            var param = indicator.Params.FirstOrDefault(p => p.ParamName == IndicatorParamName.Period);
+            var param = indicator.Params.FirstOrDefault(p => p.ParamName == IndicatorParamName.Period.ToString());
             if (param == null || param.Value == 0)
             {
                 throw new ArgumentException($"Period parameter value is not set. Params: {indicator.JsonParams}");
             }
 
-            _transformedQuotes = quotes.ConvertToPeriod(indicator.QuotePeriod);
+            _transformedQuotes = quotes.ConvertToPeriod(indicator.Period);
             if (_transformedQuotes.Count < param.Value)
             {
                 throw new ArgumentException($"Not enougn data to process indicator '{indicator.Name}' with params: '{indicator.JsonParams}'");

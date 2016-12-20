@@ -37,6 +37,44 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <h4>Chart Properties</h4>
+
+                        <div class="form-inline-stack">
+                            <div class="form-group">
+                                <label for="ddlChartType-${indicatorInfo.indicatorId}">Chart Type:</label>
+                                <select id="ddlChartType-${indicatorInfo.indicatorId}" class="form-control" value.bind="indicatorInfo.chartType">
+                                    <option repeat.for="chartType of chartTypes" model.bind="chartType.id">${chartType.name}</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="txtChartPlot-${indicatorInfo.indicatorId}">Plot Number:</label>
+                                <select id="txtChartPlot-${indicatorInfo.indicatorId}" class="form-control" value.bind="indicatorInfo.chartPlotNumber">
+                                    <option repeat.for="plotNumber of plotNumbers" model.bind="plotNumber">${plotNumber}</option>
+                                </select>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="txtChartColor-${indicatorInfo.indicatorId}">Line Color:</label>
+                                <input type="text" class="form-control" id="txtChartColor-${indicatorInfo.indicatorId}" value.bind="indicatorInfo.chartColor">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4>Formula Parameters</h4>
+
+                        <div class="form-inline-stack">
+                            <div class="form-group" repeat.for="param of indicatorInfo.params">
+                                <label for="txtParam-${param.paramName}">${param.paramName}:</label>
+                                <input type="text" class="form-control" id="txtParam-${param.paramName}" value.bind="param.value">
+                            </div>
+                        </div>
+                    </div>
+
                 </fieldset>
 
                 <ul if.bind="errors.length > 0">

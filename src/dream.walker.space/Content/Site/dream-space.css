@@ -77,7 +77,10 @@ h2,
 }
 h3,
 .h3,
-.H3 {
+.H3,
+h4,
+.h4,
+h4 {
   font-family: "PT Sans";
   font-size: 19px;
   font-weight: 400;
@@ -85,13 +88,23 @@ h3,
 }
 h3 span,
 .h3 span,
-.H3 span {
+.H3 span,
+h4 span,
+.h4 span,
+h4 span {
   color: #333333;
 }
-h3[first-letter-span] {
+h4,
+.h4,
+h4 {
+  font-size: 16px;
+}
+h3[first-letter-span],
+h4[first-letter-span] {
   color: #2d4945;
 }
-h3[first-letter-span] span {
+h3[first-letter-span] span,
+h4[first-letter-span] span {
   color: #e22004;
 }
 ul li,
@@ -533,13 +546,6 @@ form .validation-summary-error ul li {
 .c_strategy {
   background-color: rgba(255, 255, 255, 0.7);
 }
-.c_rules-content {
-  /*rule:last-child {
-        .c_rule {
-            border-bottom: 0px solid @solid-border-color;
-        }
-    }*/
-}
 .c_rules-content .c_rule-list {
   background-color: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(204, 204, 204, 0.36);
@@ -584,7 +590,7 @@ form .validation-summary-error ul li {
 .c_rules-content .c_rule .c_rule-details form fieldset {
   padding-bottom: 10px;
 }
-.c_rules-content .c_rule .c_rule-details h3 {
+.c_rules-content .c_rule .c_rule-details h4 {
   border-bottom: 1px solid #e22004;
 }
 .c_indicators-content .c_indicator-list {
@@ -631,6 +637,10 @@ form .validation-summary-error ul li {
 .c_indicators-content .c_indicator .c_indicator-details form fieldset {
   padding-bottom: 10px;
 }
-.c_indicators-content .c_indicator .c_indicator-details h3 {
+.c_indicators-content .c_indicator .c_indicator-details .form-inline {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.c_indicators-content .c_indicator .c_indicator-details h4 {
   border-bottom: 1px solid #e22004;
 }

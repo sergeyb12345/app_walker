@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using dream.walker.data.Entities;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
+using dream.walker.data.Entities.Indicators;
 
 namespace dream.walker.calculators
 {

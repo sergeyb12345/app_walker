@@ -4,7 +4,7 @@ namespace dream.walker.data.Models
 {
     public class IndicatorParam
     {
-        public IndicatorParamName ParamName { get; set; }
+        public string ParamName { get; set; }
         public int Value { get; set; }
     }
 }

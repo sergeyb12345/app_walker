@@ -5,6 +5,7 @@ using dream.walker.data.Entities;
 using dream.walker.data.Services;
 using dream.walker.reader.Models;
 using Newtonsoft.Json;
+using dream.walker.data.Entities.Indicators;
 
 namespace dream.walker.calculators.IndicatorProcessor
 {

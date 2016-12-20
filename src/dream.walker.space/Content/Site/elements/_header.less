@@ -6,7 +6,7 @@ h2, .h2 {
     margin-bottom: 20px;
 }
 
-h3, .h3, .H3 {
+h3, .h3, .H3 , h4, .h4, h4 {
     font-family: "PT Sans";
     font-size: 19px;
     font-weight: 400;
@@ -17,7 +17,12 @@ h3, .h3, .H3 {
     }
 }
 
-h3[first-letter-span] {
+h4, .h4, h4 {
+    font-size: 16px;
+}
+
+
+h3[first-letter-span], h4[first-letter-span] {
     color:@header-color;
     span {
         color: @link-color;
