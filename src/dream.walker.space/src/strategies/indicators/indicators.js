@@ -53,11 +53,15 @@ export class Indicators {
 
     addIndicator() {
         let indicator = {
-            name: 'New Indicator',
+            isNew: true,
             expanded: true,
+            description: 'New Indicator',
             period: this.activePeriod.id,
             editMode: true,
-            indicatorId: 0
+            indicatorId: 0,
+            chartColor: '#000000',
+            chartPlotNumber: 0,
+            chartType: 2 //Line
         };
 
         this.indicators.push(indicator);

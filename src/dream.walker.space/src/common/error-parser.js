@@ -49,7 +49,7 @@
 
 
     parseError(error) {
-
+        let self = this;
         var promise = new Promise(
             function(resolve, reject) { // (A)
 
@@ -75,7 +75,7 @@
 
                 if (error.exception) {
 
-                    this.parseErrorFromStream(error.exception.body)
+                    self.parseErrorFromStream(error.exception.body)
                         .then(serverError => {
                             errorInfo.server.source = serverError.source;
                             errorInfo.server.message = serverError.message;

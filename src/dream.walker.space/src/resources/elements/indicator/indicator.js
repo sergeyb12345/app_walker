@@ -52,6 +52,11 @@ export class Indicator {
         if (indicatorItem) {
             let newIndicator = Object.assign({}, indicatorItem);
             this.indicatorInfo = newIndicator;
+
+            if(this.indicatorInfo.isNew === true) {
+                this.indicatorInfo.name = this.formulaes[0].name;
+                this.indicatorInfo.params = this.formulaes[0].defaults;
+            }
         }
     }  
 
@@ -78,7 +83,7 @@ export class Indicator {
         ValidationRules
             .ensure('description').displayName('Indicator Name').required().withMessage(`\${$displayName} cannot be blank.`)
             .ensure('chartColor').displayName('Line Color').required().withMessage(`\${$displayName} cannot be blank.`)
-                .matches(/^#[0-9A-F]{6}$/).withMessage(`\${$displayName} value should be in format: #AAFF99.`)
+                .matches(/^#[0-9a-fA-F]{6}$/).withMessage(`\${$displayName} value should be in format: #AAFF99.`)
             .on(this.indicatorInfo);
 
     }
@@ -107,7 +112,7 @@ export class Indicator {
         this.indicatorService.deleteIndicator(this.indicatorInfo.indicatorId) 
             .then(response => {
                 this.indicatorInfo.deleted = true;
-                toastr.success(`Indicator ${response.name} deleted successfully!`, 'Indicator Deleted');
+                toastr.success(`Indicator ${this.indicatorInfo.description} deleted successfully!`, 'Indicator Deleted');
             })
             .catch(error => {
                 this.handleError(error);
@@ -129,7 +134,9 @@ export class Indicator {
             });    
     }
 
-    saveIndicator(){
+    saveIndicator() {
+        this.errors = [];
+        this.indicatorInfo.jsonParams = JSON.stringify(this.indicatorInfo.params);
         this.indicatorService.saveIndicator(this.indicatorInfo) 
             .then(response => {
                 this.indicatorInfo.editMode = false;

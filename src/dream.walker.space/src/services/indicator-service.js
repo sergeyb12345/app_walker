@@ -53,7 +53,7 @@ export class IndicatorService {
     deleteIndicator(id) {
         return this.http.fetch("indicator/"+id, {method: 'delete'})
             .then(response => {
-                return response.json();
+                return response;
             })
             .catch(error => {
                 return this.handleError(error, "deleteIndicator");

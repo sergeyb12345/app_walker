@@ -1,8 +1,9 @@
 ﻿import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import toastr from 'toastr'
+import {ErrorParser} from './error-parser';
 
-@inject(EventAggregator, "ErrorParser")
+@inject(EventAggregator, ErrorParser)
 export class ErrorHandler {
 
     constructor(eventAggregator, errorParser) {

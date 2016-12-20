@@ -3,6 +3,7 @@ import environment from './environment';
 import {Settings} from './settings';
 import {ErrorParser} from './common/error-parser';
 import {UserContext} from './account/user-context';
+import {ErrorHandler} from './common/error-handler';
 
 
 //Configure Bluebird Promises.
@@ -17,6 +18,7 @@ export function configure(aurelia) {
     let errorparser = aurelia.container.get(ErrorParser);
     let userContext = aurelia.container.get(UserContext);
     let settings = aurelia.container.get(Settings);
+    let handler = aurelia.container.get(ErrorHandler);
 
     userContext.initialize()
         .then(response => {
