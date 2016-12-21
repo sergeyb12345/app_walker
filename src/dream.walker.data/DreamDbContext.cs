@@ -93,6 +93,7 @@ namespace dream.walker.data
             modelBuilder.Entity<Section>().Property(a => a.Title).IsRequired().HasMaxLength(250);
             modelBuilder.Entity<Section>().Property(a => a.Url).IsRequired().HasMaxLength(250);
 
+            modelBuilder.Entity<vRuleSet>().HasKey(t => new { t.RuleId, t.RuleSetId });
 
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
@@ -112,5 +113,6 @@ namespace dream.walker.data
         public DbSet<Article> Articles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Section> Sections { get; set; }
+        public virtual DbSet<vRuleSet> vRuleSets { get; set; }
     }
 }

@@ -1,5 +1,39 @@
 ﻿<template>
-    <header>
-        <h3 first-letter-span>Manage Rule Sets</h3>
-    </header>
+    <div class="c_rule_sets-content">
+        <div class="row">
+            <div class="col-md-8 col-xs-12">
+                <header>
+                    <h3 first-letter-span>Manage Rule Sets</h3>
+                </header>
+                <div class="c_rule_set-list">
+                    <rule-set repeat.for="ruleset of rulesets" ruleset.bind="ruleset"></rule-set>
+                    <div class="c_rule_set c_rule_set-add" click.delegate="addRuleSet()">
+                        <div class="c_rule_set-header">
+                            <a>Register new rule set</a>
+                            <a class="chevron">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 side-navigation">
+                <h3>Time Frame</h3>
+                <ul>
+                    <li repeat.for="period of periods">
+                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                        <a click.delegate="$parent.loadRuleSetsForPeriod(period)"
+                           class="${period.active ? 'active' : ''}">${period.name} Rules</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <ul if.bind="errors.length > 0">
+            <li repeat.for="error of errors">
+                ${error.client.source}::${error.server.source} => <br />
+                ${error.client.message}(${error.server.message})
+            </li>
+        </ul>
+    </div>
 </template>

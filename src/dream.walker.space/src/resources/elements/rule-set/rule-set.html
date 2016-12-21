@@ -1,0 +1,95 @@
+﻿<template>
+    <div class="c_rule_set" if.bind="ruleSetInfo.deleted !== true">
+        <div class="c_rule_set-header" click.trigger="onExpanded()">
+            <button type="button" show.bind="ruleSetInfo.expanded !== true" click.delegate="startDelete()" class="btn btn-danger btn-xs">Delete</button>
+
+            <span>
+
+                <span>${ruleSetInfo.name}</span>
+                <a class="chevron">
+                    <span if.bind="ruleSetInfo.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                    <span if.bind="ruleSetInfo.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                </a>
+            </span>
+        </div>
+
+        <div class="c_rule_set-details" if.bind="ruleSetInfo.expanded === true">
+
+            <form submit.delegate="trySaveIndicator()" if.bind="ruleSetInfo.deleteMode !== true">
+                <fieldset disabled.bind="ruleSetInfo.editMode !== true">
+
+                    <div class="form-group">
+                        <label for="txtName-${ruleSetInfo.ruleSetId}">Rule Set Name</label>
+                        <input type="text" class="form-control" id="txtName-${ruleSetInfo.ruleSetId}" value.bind="ruleSetInfo.name & validate" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtDescription-${ruleSetInfo.ruleSetId}">Description</label>
+                        <textarea rows="4" class="form-control" id="txtDescription-${ruleSetInfo.ruleSetId}" value.bind="ruleSetInfo.description & validate"></textarea>
+                    </div>
+
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="ddlPeriod-${ruleSetInfo.ruleSetId}">Period:</label>
+                            <select id="ddlPeriod-${ruleSetInfo.ruleSetId}" class="form-control" value.bind="ruleSetInfo.period">
+                                <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4>Set of Rules:</h4>
+                
+                    <div class="c_rule_set-list">
+                        <div class="c_rule_set" repeat.for="rule of ruleSetInfo.rules">
+                            <div class="c_rule_set-header">
+                                <button type="button" show.bind="rule.expanded !== true" click.delegate="startDeleteRule()" class="btn btn-danger btn-xs">Delete</button>
+
+                                <span>
+
+                                    <span> ${rule.ruleName}</span>
+                                    <a class="chevron">
+                                        <span if.bind="rule.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                                        <span if.bind="rule.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="c_rule_set c_rule_set-add" click.delegate="addRule()">
+                            <div class="c_rule_set-header">
+                                <a>Add new rule</a>
+                                <a class="chevron">
+                                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <ul if.bind="errors.length > 0">
+                    <li repeat.for="error of errors">
+                        ${error.client.source}::${error.server.source} => <br />
+                        ${error.client.message}(${error.server.message})
+                    </li>
+                </ul>
+
+                <div class="c_rule_set-actions">
+                    <button type="submit" class="btn btn-danger" if.bind="ruleSetInfo.editMode === true">Save</button>
+                    <button type="button" click.delegate="cancelEdit()" if.bind="ruleSetInfo.editMode === true" class="btn btn-default">Cancel</button>
+                    <button type="button" click.delegate="startEdit()" if.bind="ruleSetInfo.editMode !== true" class="btn btn-danger">Edit</button>
+                </div>
+            </form>
+
+            <div class="c_rule_set-actions" if.bind="ruleSetInfo.deleteMode === true">
+                <p>
+                    <br />
+                    I'll try to delete the rule set, however, if this rule set is used anywhere else then delete will be cancelled.
+                    <br />
+                </p>
+
+                <button type="button" click.delegate="confirmDelete()" class="btn btn-danger">Delete</button>
+                <button type="button" click.delegate="cancelDelete()" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
+    </div>
+</template>

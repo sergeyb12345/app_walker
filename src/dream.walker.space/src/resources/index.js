@@ -5,6 +5,7 @@ export function configure(config) {
     config.globalResources(['./elements/navigation/sub-nav']);
     config.globalResources(['./elements/chart/any-chart']);
     config.globalResources(['./elements/rule/rule']);
+    config.globalResources(['./elements/rule-set/rule-set']);
     config.globalResources(['./elements/indicator/indicator']);
     config.globalResources(['./attributes/first-letter-span']);
     config.globalResources(

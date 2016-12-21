@@ -1,0 +1,77 @@
+﻿/// <reference path="../base/_variables" />
+
+.c_rule_sets-content {
+
+    .c_rule_set-list {
+        background-color:@page-bg-content;
+        border: 1px solid @solid-border-color;
+        padding:0 10px;
+
+        h3 {
+            //visibility:hidden;
+        }
+    }
+
+    .c_rule_set {
+        padding:10px 10px;
+        border-bottom: 1px solid @solid-border-color;
+
+        &.c_rule_set-add, .c_rule_set-add {
+            cursor: pointer;
+            border-bottom: 0px solid @solid-border-color;
+
+            .glyphicon {
+                color:green;
+            }
+        }
+
+        .c_rule_set-actions {
+            text-align: right;
+            border-top: 1px solid @h3-color;
+            padding-top:10px;
+        }
+
+        .c_rule_set-header {
+            cursor: pointer;
+            text-transform: capitalize;
+
+            .chevron {
+                float: right;
+            }
+
+            .btn {
+                margin-right: 10px;
+                z-index: 100;
+            }
+        }
+
+        .c_rule_set-details {
+            padding-top: 10px;
+
+            form {
+                border-top: 1px solid @h3-color;
+                padding-top: 10px;
+
+                fieldset {
+                    padding-bottom: 10px;
+                }
+            }
+
+            .c_rule_set-list {
+                margin-left: 14px;
+                margin-top: 30px;
+                margin-bottom: 20px;
+            }
+
+
+            h4 {
+                //visibility:visible;
+                margin-top:25px;
+                margin-left:14px;
+                border-bottom: 1px solid @h3-color;
+            }
+        }
+    }
+
+}
+

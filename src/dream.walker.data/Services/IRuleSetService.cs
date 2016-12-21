@@ -6,6 +6,7 @@ using dream.walker.data.Models;
 using Autofac;
 using dream.walker.data.Repositories;
 using dream.walker.data.Entities.Strategies;
+using System.Linq;
 
 namespace dream.walker.data.Services
 {
@@ -44,17 +45,10 @@ namespace dream.walker.data.Services
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var repository = scope.Resolve<IRuleSetRepository>();
-                var header = await repository.GetAsync(id);
+                var repository = scope.Resolve<IVRuleSetRepository>();
+                var data = await repository.GetAsync(id);
 
-                var detailsRepository = scope.Resolve<IRuleSetDetailsRepository>();
-                var details = await detailsRepository.GetAsync(id);
-
-                return new RuleSetModel
-                {
-                    Header = header,
-                    Details = details
-                };
+                return new RuleSetModel(data, id);
             }
         }
 
@@ -62,24 +56,15 @@ namespace dream.walker.data.Services
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var repository = scope.Resolve<IRuleSetRepository>();
-                var headers = await repository.GetAsync(period, false);
+                var repository = scope.Resolve<IVRuleSetRepository>();
+                var data = await repository.GetAllAsync(period, false);
                 var result = new List<RuleSetModel>();
 
-                if (headers != null)
+                foreach (var item in data)
                 {
-                    var detailsRepository = scope.Resolve<IRuleSetDetailsRepository>();
-
-                    foreach (var header in headers)
+                    if(result.All(r => r.RuleSetId != item.RuleSetId))
                     {
-                        var details = await detailsRepository.GetAsync(header.RuleSetId);
-                        var item = new RuleSetModel
-                        {
-                            Header = header,
-                            Details = details ?? new List<RuleSetDetails>()
-                        };
-
-                        result.Add(item);
+                        result.Add(new RuleSetModel(data, item.RuleSetId));
                     }
                 }
 

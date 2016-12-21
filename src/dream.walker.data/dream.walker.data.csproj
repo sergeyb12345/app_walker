@@ -71,6 +71,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
@@ -197,9 +199,22 @@
     <Compile Include="Migrations\201612161202125_AlterIndicator.Designer.cs">
       <DependentUpon>201612161202125_AlterIndicator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612211219516_vRuleSet.cs" />
+    <Compile Include="Migrations\201612211219516_vRuleSet.Designer.cs">
+      <DependentUpon>201612211219516_vRuleSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612211226258_vRuleSet3.cs" />
+    <Compile Include="Migrations\201612211226258_vRuleSet3.Designer.cs">
+      <DependentUpon>201612211226258_vRuleSet3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612211456330_AltervRuleSet.cs" />
+    <Compile Include="Migrations\201612211456330_AltervRuleSet.Designer.cs">
+      <DependentUpon>201612211456330_AltervRuleSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\IndicatorCore.cs" />
+    <Compile Include="Models\RuleModel.cs" />
     <Compile Include="Models\RuleSetModel.cs" />
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
@@ -222,6 +237,7 @@
     <Compile Include="MsSqlDbMigrator.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />
     <Compile Include="Repositories\CompanyRuleSetRepository.cs" />
+    <Compile Include="Repositories\VRuleSetRepository.cs" />
     <Compile Include="Repositories\RuleSetDetailsRepository.cs" />
     <Compile Include="Repositories\RuleSetRepository.cs" />
     <Compile Include="Repositories\SectionRepository.cs" />
@@ -260,6 +276,7 @@
     <Compile Include="Services\IStrategyService.cs" />
     <Compile Include="Requests\UpdateQuotesRequest.cs" />
     <Compile Include="Services\StrategyService.cs" />
+    <Compile Include="Entities\Strategies\vRuleSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -351,6 +368,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612161202125_AlterIndicator.resx">
       <DependentUpon>201612161202125_AlterIndicator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612211219516_vRuleSet.resx">
+      <DependentUpon>201612211219516_vRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612211226258_vRuleSet3.resx">
+      <DependentUpon>201612211226258_vRuleSet3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612211456330_AltervRuleSet.resx">
+      <DependentUpon>201612211456330_AltervRuleSet.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
