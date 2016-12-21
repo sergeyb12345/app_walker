@@ -51,6 +51,11 @@ body .has-success .form-control:focus {
   border-radius: 0;
   min-width: 70px;
 }
+.btn-group .btn,
+.btn-group-vertical .btn {
+  min-width: 10px;
+  margin-right: 0;
+}
 .btn-default {
   color: #c9302c;
   border-color: #c9302c;
@@ -626,6 +631,17 @@ form .validation-summary-error ul li {
 .c_rule_sets-content .c_rule_set .c_rule_set-header .btn {
   margin-right: 10px;
   z-index: 100;
+}
+.c_rule_sets-content .c_rule_set .c_rule_set-header .btn-group,
+.c_rule_sets-content .c_rule_set .c_rule_set-header .btn-group-vertical {
+  margin-top: -3px;
+  margin-right: -3px;
+  margin-left: 6px;
+}
+.c_rule_sets-content .c_rule_set .c_rule_set-header .btn-group .btn,
+.c_rule_sets-content .c_rule_set .c_rule_set-header .btn-group-vertical .btn {
+  margin-right: 0;
+  font-size: 8px;
 }
 .c_rule_sets-content .c_rule_set .c_rule_set-details {
   padding-top: 10px;

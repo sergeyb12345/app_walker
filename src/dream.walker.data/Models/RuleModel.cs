@@ -9,8 +9,9 @@ namespace dream.walker.data.Models
 {
     public class RuleModel
     {
-        public string RuleName { get; set; }
+        public string Name { get; set; }
         public int RuleId { get; set; }
         public int OrderId { get; set; }
+        public string Description { get; set; }
     }
 }

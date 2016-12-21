@@ -1,7 +1,5 @@
 ﻿/// <reference path="../base/_variables" />
 
-/// <reference path="../base/_variables" />
-
 .btn {
     font-weight: normal;
     font-size: 13px;
@@ -9,6 +7,13 @@
     font-family: 'Open Sans', sans-serif;
     border-radius:0;
     min-width:70px;
+}
+
+.btn-group, .btn-group-vertical {
+    .btn {
+        min-width:10px;
+        margin-right: 0;
+    }
 }
 
 .btn-default {

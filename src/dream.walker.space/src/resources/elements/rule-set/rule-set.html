@@ -2,15 +2,12 @@
     <div class="c_rule_set" if.bind="ruleSetInfo.deleted !== true">
         <div class="c_rule_set-header" click.trigger="onExpanded()">
             <button type="button" show.bind="ruleSetInfo.expanded !== true" click.delegate="startDelete()" class="btn btn-danger btn-xs">Delete</button>
-
-            <span>
-
-                <span>${ruleSetInfo.name}</span>
-                <a class="chevron">
-                    <span if.bind="ruleSetInfo.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-                    <span if.bind="ruleSetInfo.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-                </a>
-            </span>
+            <span>${ruleSetInfo.name}</span>
+           
+            <a class="chevron">
+                <span if.bind="ruleSetInfo.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                <span if.bind="ruleSetInfo.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+            </a>
         </div>
 
         <div class="c_rule_set-details" if.bind="ruleSetInfo.expanded === true">
@@ -37,34 +34,22 @@
                         </div>
                     </div>
 
-                    <h4>Set of Rules:</h4>
+                </fieldset>
+
+                <h4>Set of Rules:</h4>
                 
-                    <div class="c_rule_set-list">
-                        <div class="c_rule_set" repeat.for="rule of ruleSetInfo.rules">
-                            <div class="c_rule_set-header">
-                                <button type="button" show.bind="rule.expanded !== true" click.delegate="startDeleteRule()" class="btn btn-danger btn-xs">Delete</button>
-
-                                <span>
-
-                                    <span> ${rule.ruleName}</span>
-                                    <a class="chevron">
-                                        <span if.bind="rule.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-                                        <span if.bind="rule.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-                                    </a>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="c_rule_set c_rule_set-add" click.delegate="addRule()">
-                            <div class="c_rule_set-header">
-                                <a>Add new rule</a>
-                                <a class="chevron">
-                                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                                </a>
-                            </div>
+                <div class="c_rule_set-list">
+                    <rule-set-item class="c_rule_set-item" repeat.for="rule of ruleSetInfo.rules" rule.bind="rule"></rule-set-item>
+                    <div class="c_rule_set c_rule_set-add" click.delegate="addRule()">
+                        <div class="c_rule_set-header">
+                            <a>Attach rule</a>
+                            <a class="chevron">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                </fieldset>
 
                 <ul if.bind="errors.length > 0">
                     <li repeat.for="error of errors">

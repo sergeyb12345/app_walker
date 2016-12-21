@@ -27,8 +27,9 @@ namespace dream.walker.data.Models
                     var details = new RuleModel
                     {
                         RuleId = item.RuleId,
-                        RuleName = item.RuleName,
-                        OrderId = item.OrderId
+                        Name = item.RuleName,
+                        OrderId = item.OrderId,
+                        Description = item.RuleDescription
                     };
                     Rules.Add(details);
                 }

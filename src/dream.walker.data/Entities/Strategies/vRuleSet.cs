@@ -15,6 +15,8 @@ namespace dream.walker.data
 
         public string Description { get; set; }
 
+        public string RuleDescription { get; set; }
+
         public int Period { get; set; }
 
         public bool Deleted { get; set; }

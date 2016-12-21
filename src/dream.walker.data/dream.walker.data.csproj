@@ -211,6 +211,10 @@
     <Compile Include="Migrations\201612211456330_AltervRuleSet.Designer.cs">
       <DependentUpon>201612211456330_AltervRuleSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612211904547_AlterViewRuleSet.cs" />
+    <Compile Include="Migrations\201612211904547_AlterViewRuleSet.Designer.cs">
+      <DependentUpon>201612211904547_AlterViewRuleSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\IndicatorCore.cs" />
@@ -377,6 +381,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612211456330_AltervRuleSet.resx">
       <DependentUpon>201612211456330_AltervRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612211904547_AlterViewRuleSet.resx">
+      <DependentUpon>201612211904547_AlterViewRuleSet.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

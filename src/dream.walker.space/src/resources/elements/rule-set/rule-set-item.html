@@ -1,3 +1,48 @@
 ﻿<template>
+    <div class="c_rule_set" if.bind="rule.deleted !== true">
+        <div class="c_rule_set-header" click.trigger="onExpanded()">
+            <button type="button" show.bind="rule.expanded !== true" click.delegate="startDelete()" class="btn btn-warning btn-xs">Detach</button>
+            <span>${rule.name}</span>
+            
+            <div class="chevron">
+                <a>
+                    <span if.bind="rule.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                    <span if.bind="rule.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                </a>
+                <div class="btn-group-vertical" role="group" aria-label="...">
+                    <button type="button" class="btn btn-xs btn-default" click.trigger="onMoveUp()">
+                        <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-xs btn-default" click.trigger="onMoveDown()">
+                        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
 
+        <div class="c_rule_set-details" if.bind="rule.expanded === true">
+
+            <form if.bind="rule.deleteMode !== true">
+                <fieldset disabled.bind="rule.editMode !== true">
+
+                    <div class="form-group">
+                        <label for="txtDescription-${rule.ruleId}">Description</label>
+                        <textarea rows="4" class="form-control" id="txtDescription-${rule.ruleId}" value.bind="rule.description"></textarea>
+                    </div>
+
+                </fieldset>
+            </form>
+
+            <div class="c_rule_set-actions" if.bind="rule.deleteMode === true">
+                <p>
+                    <br />
+                    Rule will be detached from the rule set. You can add it later at any time.
+                    <br />
+                </p>
+
+                <button type="button" click.delegate="confirmDelete()" class="btn btn-warning">Detach</button>
+                <button type="button" click.delegate="cancelDelete()" class="btn btn-default">Cancel</button>
+            </div>
+        </div>
+    </div>
 </template>
