@@ -101,10 +101,10 @@ namespace dream.walker.data.Services
                     await detailsRepository.DeleteAsync(ruleSet.RuleSetId);
                     await detailsRepository.CommitAsync();
 
-                    if (model.Rules.Any())
+                    if (model.Rules.Any(r => !r.Deleted))
                     {
                         var orderId = 1;
-                        foreach (var rule in model.Rules)
+                        foreach (var rule in model.Rules.Where(r => !r.Deleted))
                         {
                             var details = detailsRepository.Add(new RuleSetDetails());
                             details.RuleId = rule.RuleId;

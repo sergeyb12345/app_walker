@@ -40,7 +40,8 @@
                 
                 <div class="c_rule_set-list">
                     <rule-set-item class="c_rule_set-item" repeat.for="rule of ruleSetInfo.rules" rule.bind="rule"></rule-set-item>
-                    <div class="c_rule_set c_rule_set-add" >
+
+                    <div class="c_rule_set c_rule_set-add" show.bind="ruleSetInfo.editMode === true">
                         <div class="c_rule_set-header" click.delegate="addRule()">
                             <a>Attach rule</a>
                             <a class="chevron">
@@ -49,7 +50,7 @@
                         </div>
                     </div>
 
-                    <div class="c_rule_set-details" if.bind="ruleSetInfo.isAdding === true">
+                    <div class="c_rule_set-details" if.bind="ruleSetInfo.isAdding === true && ruleSetInfo.editMode === true">
                         
                         <div class="form-group">
                             <label for="ddlRules-${ruleSetInfo.ruleSetId}">Period:</label>

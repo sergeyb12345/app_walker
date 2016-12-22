@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="c_rule_set" if.bind="rule.deleted !== true">
         <div class="c_rule_set-header" click.trigger="onExpanded()">
-            <button type="button" show.bind="rule.expanded !== true" click.delegate="startDelete()" class="btn btn-warning btn-xs">Detach</button>
+            <button type="button" show.bind="rule.expanded !== true && editMode === true" click.delegate="startDelete()" class="btn btn-warning btn-xs">Detach</button>
             <span>${rule.name}</span>
             
             <div class="chevron">
@@ -9,7 +9,7 @@
                     <span if.bind="rule.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
                     <span if.bind="rule.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
                 </a>
-                <div class="btn-group-vertical" role="group" aria-label="..." >
+                <div class="btn-group-vertical" role="group" aria-label="..." show.bind="editMode === true">
                     <button type="button" class="btn btn-xs btn-default" click.trigger="onMoveUp()">
                         <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
                     </button>

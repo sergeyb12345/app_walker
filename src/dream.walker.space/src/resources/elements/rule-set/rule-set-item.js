@@ -7,6 +7,8 @@ export class RuleSetItem {
 
     constructor (eventAggregator) {
         this.eventAggregator = eventAggregator;
+        this.subscriptions = [];
+        this.editMode = false;
     }
 
     onExpanded() {
@@ -21,6 +23,7 @@ export class RuleSetItem {
     confirmDelete() {
         this.rule.deleteMode = false;
         this.rule.expanded = false;
+        this.rule.deleted = true;
     }
 
     cancelDelete() {
@@ -36,5 +39,31 @@ export class RuleSetItem {
     onMoveDown() {
         this.eventAggregator.publish('rule-set-item-down-' + this.rule.ruleSetId, this.rule);
         return false;
+    }
+
+    detached() {
+        this.unsubscribe();
+    }
+    
+    setEditMode(flag) {
+        this.editMode = flag;
+    }
+
+    unsubscribe() {
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach(function(subscription) {
+                subscription.dispose();
+            });
+        }
+    }
+
+    attached() {
+
+        this.subscriptions.push(
+            this.eventAggregator.subscribe('rule-set-edit-mode-' + this.rule.ruleSetId, flag => this.setEditMode(flag)));
+
+        this.subscriptions.push(
+            this.eventAggregator.subscribe('rule-set-edit-mode-' + this.rule.ruleSetId, flag => this.setEditMode(flag)));
+
     }
 }

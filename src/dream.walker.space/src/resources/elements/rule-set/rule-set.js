@@ -48,6 +48,7 @@ export class RuleSet {
     startEdit() {
         this.originalRuleSet = Object.assign({}, this.ruleSetInfo);
         this.ruleSetInfo.editMode = true;
+        this.eventAggregator.publish('rule-set-edit-mode-' + this.ruleSetInfo.ruleSetId, true);
 
         ValidationRules
             .ensure('name').displayName('Rule Set Name').required().withMessage(`\${$displayName} cannot be blank.`)
@@ -60,6 +61,8 @@ export class RuleSet {
         if(this.ruleSetInfo.ruleSetId > 0) {
             this.ruleSetInfo = this.originalRuleSet;
             this.ruleSetInfo.editMode = false;
+            this.eventAggregator.publish('rule-set-edit-mode-' + this.ruleSetInfo.ruleSetId, false);
+
         } else {
             this.ruleSetInfo.deleted = true;
         }
@@ -146,7 +149,10 @@ export class RuleSet {
             .then(response => {
                 this.ruleSetInfo.editMode = false;
                 this.ruleSetInfo.expanded = false;
+
                 toastr.success(`Rule set ${response.name} saved successfully!`, 'Rule set Saved');
+
+                this.eventAggregator.publish('rule-set-edit-mode-' + this.ruleSetInfo.ruleSetId, false);
             })
             .catch(error => {
                 this.handleError(error);

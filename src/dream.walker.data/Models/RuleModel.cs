@@ -14,5 +14,6 @@ namespace dream.walker.data.Models
         public int RuleSetId { get; set; }
         public int OrderId { get; set; }
         public string Description { get; set; }
+        public bool Deleted { get; set; }
     }
 }
