@@ -83,6 +83,7 @@ export class RuleSets {
             });     
     }
 
+
     handleError(error) {
         let self = this;
 
@@ -91,4 +92,5 @@ export class RuleSets {
                 self.errors.push(errorInfo);
             });
     }
+
 }

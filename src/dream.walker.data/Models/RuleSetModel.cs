@@ -29,7 +29,8 @@ namespace dream.walker.data.Models
                         RuleId = item.RuleId,
                         Name = item.RuleName,
                         OrderId = item.OrderId,
-                        Description = item.RuleDescription
+                        Description = item.RuleDescription,
+                        RuleSetId = RuleSetId
                     };
                     Rules.Add(details);
                 }

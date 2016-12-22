@@ -29,10 +29,12 @@ export class RuleSetItem {
     }
 
     onMoveUp() {
-
+        this.eventAggregator.publish('rule-set-item-up-' + this.rule.ruleSetId, this.rule);
+        return false;
     }
 
     onMoveDown() {
-
+        this.eventAggregator.publish('rule-set-item-down-' + this.rule.ruleSetId, this.rule);
+        return false;
     }
 }

@@ -2,18 +2,20 @@
 import {inject, bindable} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {RuleSetService} from '../../../services/rule-set-service';
+import {RuleService} from '../../../services/rule-service';
 import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation"
 import {BootstrapFormRenderer} from "../../../common/bootstrap-form-renderer"
 
-@inject(EventAggregator, RuleSetService, "User", ValidationController, "Settings", "ErrorParser")
+@inject(EventAggregator, RuleSetService, RuleService, "User", ValidationController, "Settings", "ErrorParser")
 export class RuleSet {
 
     @bindable ruleset;
 
-    constructor (eventAggregator, ruleSetService, userContext, validation, globalSettings, errorParser) {
+    constructor (eventAggregator, ruleSetService, ruleService, userContext, validation, globalSettings, errorParser) {
         this.powerUser = userContext.user.isAuthenticated;
         this.eventAggregator = eventAggregator;
         this.globalSettings = globalSettings;
+        this.ruleService = ruleService;
         this.errorParser = errorParser;
         this.validation = validation;
         this.validation.validateTrigger = validateTrigger.change;
@@ -22,6 +24,10 @@ export class RuleSet {
         this.ruleSetService = ruleSetService;
         this.subscriptions = [];
         this.periods = this.globalSettings.periods;
+        this.rules = []; 
+        this.attachedRuleId = 0;
+        this.attachedRule = {ruleId: 0};
+
     }
 
     rulesetChanged(ruleSetItem) {
@@ -82,6 +88,37 @@ export class RuleSet {
             });    
     }
 
+    addRule() {
+        this.ruleSetInfo.isAdding = !!!this.ruleSetInfo.isAdding;
+        if(this.ruleSetInfo.isAdding && this.rules.length === 0) {
+            
+            let self = this;
+
+            this.ruleService.getRulesForPeriod(this.ruleSetInfo.period)
+                .then(response => {
+                    self.rules = response;        
+                    if(self.rules.length > 0) {
+                        self.attachedRule = self.rules[0];
+                    }
+                })
+                .catch(error => {
+                    toastr.error("Failed to get rules", "ruleService.getRulesForPeriod");
+                });            
+        }
+    }
+
+    onRuleChange() {
+        this.attachedRule = this.rules.find(item => item.ruleId === this.attachedRuleId);
+    }
+
+    cancelAddRule() {
+        this.ruleSetInfo.isAdding = false;
+    }
+
+    confirmAddRule() {
+        this.ruleSetInfo.isAdding = false;
+    }
+
     trysaveRuleSet() {
         this.validation.validate()
             .then(response => {
@@ -110,6 +147,25 @@ export class RuleSet {
             });    
     }
 
+    moveRuleUp(rule) {
+        if(rule && rule.ruleId) {
+            let index = this.ruleSetInfo.rules.findIndex(item => item.ruleId === rule.ruleId);
+            if(index > 0) {
+                this.ruleSetInfo.rules.splice(index-1,0,this.ruleSetInfo.rules.splice(index,1)[0]);
+            }
+        }
+    }
+
+    moveRuleDown(rule) {
+        if(rule && rule.ruleId) {
+            let index = this.ruleSetInfo.rules.findIndex(item => item.ruleId === rule.ruleId);
+            if(index > -1 && index < this.ruleSetInfo.rules.length - 1) {
+                this.ruleSetInfo.rules.splice(index+1,0,this.ruleSetInfo.rules.splice(index,1)[0]);
+            }
+        }
+    }
+
+
     handleError(error) {
         let self = this;
 
@@ -118,4 +174,27 @@ export class RuleSet {
                 self.errors.push(errorInfo);
             });
     }
+
+    detached() {
+        this.unsubscribe();
+    }
+    
+    unsubscribe() {
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach(function(subscription) {
+                subscription.dispose();
+            });
+        }
+    }
+
+    attached() {
+
+        this.subscriptions.push(
+            this.eventAggregator.subscribe('rule-set-item-up-' + this.ruleset.ruleSetId, rule => this.moveRuleUp(rule)));
+
+        this.subscriptions.push(
+            this.eventAggregator.subscribe('rule-set-item-down-' + this.ruleset.ruleSetId, rule => this.moveRuleDown(rule)));
+
+    }
+
 }

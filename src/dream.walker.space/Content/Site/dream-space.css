@@ -658,6 +658,10 @@ form .validation-summary-error ul li {
   margin-top: 30px;
   margin-bottom: 20px;
 }
+.c_rule_sets-content .c_rule_set .c_rule_set-details .c_rule-actions {
+  text-align: right;
+  margin-bottom: 20px;
+}
 .c_rule_sets-content .c_rule_set .c_rule_set-details h4 {
   margin-top: 25px;
   margin-left: 14px;

@@ -40,12 +40,32 @@
                 
                 <div class="c_rule_set-list">
                     <rule-set-item class="c_rule_set-item" repeat.for="rule of ruleSetInfo.rules" rule.bind="rule"></rule-set-item>
-                    <div class="c_rule_set c_rule_set-add" click.delegate="addRule()">
-                        <div class="c_rule_set-header">
+                    <div class="c_rule_set c_rule_set-add" >
+                        <div class="c_rule_set-header" click.delegate="addRule()">
                             <a>Attach rule</a>
                             <a class="chevron">
                                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                             </a>
+                        </div>
+                    </div>
+
+                    <div class="c_rule_set-details" if.bind="ruleSetInfo.isAdding === true">
+                        
+                        <div class="form-group">
+                            <label for="ddlRules-${ruleSetInfo.ruleSetId}">Period:</label>
+                            <select id="ddlRules-${ruleSetInfo.ruleSetId}" class="form-control" value.bind="attachedRuleId" change.delegate="onRuleChange()">
+                                <option repeat.for="rule of rules" model.bind="rule.ruleId">${rule.name}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" if.bind="attachedRule.ruleId > 0">
+                            <label for="txtRuleDescription-${attachedRule.ruleId}">Description</label>
+                            <textarea rows="4" class="form-control" readonly id="txtRuleDescription-${attachedRule.ruleId}" value.bind="attachedRule.description"></textarea>
+                        </div>
+
+                        <div class="c_rule-actions">
+                            <button type="button" click.delegate="confirmAddRule()" class="btn btn-warning">Attach</button>
+                            <button type="button" click.delegate="cancelAddRule()" class="btn btn-default">Cancel</button>
                         </div>
                     </div>
                 </div>
