@@ -31,13 +31,13 @@ namespace dream.walker.data.Services
         {
             using (var scope = _container.BeginLifetimeScope())
             {
+                var detailsRepository = scope.Resolve<IRuleSetDetailsRepository>();
+                await detailsRepository.DeleteAsync(id);
+                await detailsRepository.CommitAsync();
+
                 var repository = scope.Resolve<IRuleSetRepository>();
-                var record = await repository.GetAsync(id);
-                if (record != null)
-                {
-                    record.Deleted = true;
-                    await repository.CommitAsync();
-                }
+                await repository.DeleteAsync(id);
+                await repository.CommitAsync();
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace dream.walker.data.Repositories
         Task<RuleSet> GetAsync(int ruleSetId);
         Task CommitAsync();
         Task<List<RuleSet>> GetAsync(QuotePeriod period, bool includeDeleted);
+        Task DeleteAsync(int id);
     }
 
 
@@ -40,6 +42,15 @@ namespace dream.walker.data.Repositories
         {
             var record = await Dbset.FirstOrDefaultAsync(r => r.RuleSetId == ruleSetId);
             return record;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var record = await Dbset.FirstOrDefaultAsync(r => r.RuleSetId == id);
+            if(record != null)
+            {
+                Dbset.Remove(record);
+            }
         }
     }
 }
