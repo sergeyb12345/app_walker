@@ -117,9 +117,16 @@ export class RuleSet {
 
     confirmAddRule() {
         this.ruleSetInfo.isAdding = false;
+        this.ruleSetInfo.rules.push({
+            name: this.attachedRule.name,
+            description: this.attachedRule.description,
+            ruleId: this.attachedRule.ruleId,
+            ruleSetId: this.ruleSetInfo.ruleSetId,
+            orderId: 0
+        });
     }
 
-    trysaveRuleSet() {
+    trySaveRuleSet() {
         this.validation.validate()
             .then(response => {
                 if(response.valid === true) {

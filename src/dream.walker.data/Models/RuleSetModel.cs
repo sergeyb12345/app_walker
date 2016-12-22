@@ -1,4 +1,5 @@
 ﻿using dream.walker.data.Entities.Strategies;
+using dream.walker.data.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace dream.walker.data.Models
             {
                 RuleSetId = header.RuleSetId;
                 Name = header.RuleSetName;
-                Period = header.Period;
+                Period = (QuotePeriod)header.Period;
                 Deleted = header.Deleted;
                 Description = header.Description;
 
@@ -39,7 +40,7 @@ namespace dream.walker.data.Models
 
         public List<RuleModel> Rules { get; set; }
 
-        public int Period { get; set; }
+        public QuotePeriod Period { get; set; }
         public int RuleSetId { get; set; }
         public string Name { get; set; }
         public bool Deleted { get; set; }

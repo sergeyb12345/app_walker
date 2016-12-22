@@ -15,6 +15,7 @@ namespace dream.walker.data.Repositories
         Task<RuleSetDetails> GetAsync(int ruleId, int ruleSetId);
         Task DeleteAsync(int ruleId, int ruleSetId);
         Task CommitAsync();
+        Task DeleteAsync(int ruleSetId);
     }
 
 
@@ -22,6 +23,18 @@ namespace dream.walker.data.Repositories
     {
         public RuleSetDetailsRepository(DreamDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public async Task DeleteAsync(int ruleSetId)
+        {
+            var records = await Dbset.Where(r => r.RuleSetId == ruleSetId).OrderBy(r => r.OrderId).ToListAsync();
+            if(records != null)
+            {
+                foreach (var entity in records)
+                {
+                    Dbset.Remove(entity);
+                }
+            }
         }
 
         public async Task DeleteAsync(int ruleId, int ruleSetId)

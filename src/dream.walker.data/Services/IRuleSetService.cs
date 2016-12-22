@@ -72,9 +72,57 @@ namespace dream.walker.data.Services
             }
         }
 
-        public Task<RuleSetModel> SaveRuleSetAsync(RuleSetModel model)
+        public async Task<RuleSetModel> SaveRuleSetAsync(RuleSetModel model)
         {
-            throw new NotImplementedException();
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IRuleSetRepository>();
+
+                RuleSet ruleSet = null;
+
+                if(model.RuleSetId > 0)
+                {
+                    ruleSet = await repository.GetAsync(model.RuleSetId);
+                } else
+                {
+                    ruleSet = repository.Add(new RuleSet());
+                }
+
+                if(ruleSet != null)
+                {
+                    ruleSet.Name = model.Name;
+                    ruleSet.Description = model.Description;
+                    ruleSet.Deleted = model.Deleted;
+                    ruleSet.Period = model.Period;
+
+                    await repository.CommitAsync();
+
+                    var detailsRepository = scope.Resolve<IRuleSetDetailsRepository>();
+                    await detailsRepository.DeleteAsync(ruleSet.RuleSetId);
+                    await detailsRepository.CommitAsync();
+
+                    if (model.Rules.Any())
+                    {
+                        var orderId = 1;
+                        foreach (var rule in model.Rules)
+                        {
+                            var details = detailsRepository.Add(new RuleSetDetails());
+                            details.RuleId = rule.RuleId;
+                            details.OrderId = orderId;
+                            details.RuleSetId = ruleSet.RuleSetId;
+
+                            orderId += 1;
+                        }
+                        await detailsRepository.CommitAsync();
+                    }
+
+
+                    model.RuleSetId = ruleSet.RuleSetId;
+                }
+
+
+                return model;
+            }
         }
     }
 }

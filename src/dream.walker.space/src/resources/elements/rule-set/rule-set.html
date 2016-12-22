@@ -12,7 +12,7 @@
 
         <div class="c_rule_set-details" if.bind="ruleSetInfo.expanded === true">
 
-            <form submit.delegate="trySaveIndicator()" if.bind="ruleSetInfo.deleteMode !== true">
+            <form submit.delegate="trySaveRuleSet()" if.bind="ruleSetInfo.deleteMode !== true">
                 <fieldset disabled.bind="ruleSetInfo.editMode !== true">
 
                     <div class="form-group">
