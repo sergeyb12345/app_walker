@@ -51,13 +51,15 @@ export class RuleSets {
         return result;
     }
 
-    addRule() {
+    addRuleSet() {
         let rule = {
             name: 'New Rule set',
+            description: '',
             expanded: true,
             period: this.activePeriod.id,
             editMode: true,
-            ruleSetId: 0
+            ruleSetId: 0,
+            rules: []
         };
 
         this.rulesets.push(rule);
