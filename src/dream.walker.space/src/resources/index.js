@@ -12,6 +12,7 @@ export function configure(config) {
     config.globalResources(['./attributes/first-letter-span']);
     config.globalResources(
         './elements/article/article',
+        './elements/article/strategy',
         './elements/article/article-block',
         './elements/article//heading-block',
         './elements/article//paragraph-block',
@@ -19,5 +20,10 @@ export function configure(config) {
         './elements/article/ordered-list-block',
         './elements/article/block-actions',
         './elements/article/new-block'
+    );
+    config.globalResources(
+        './elements/article-parts/article-parts',
+        './elements/article-parts/article-part-paragraph',
+        './elements/article-parts/article-part-new'
     );
 }

@@ -22,11 +22,11 @@
         </header>
     </read-mode>
 
-    <article-part class="${$parent.editMode === true ? 'edit-mode': ''}"
+    <article-part-item class="${$parent.editMode === true ? 'edit-mode': ''}"
                   repeat.for="block of article.blocks">
         <block-actions block.bind="block"></block-actions>
         <article-block block.bind="block"></article-block>
-    </article-part>
+    </article-part-item>
 
     <div if.bind="editMode === true" class="block-actions">
         <div class="btn-group" role="group" aria-label="Actions">

@@ -17,6 +17,7 @@ System.config({
   },
 
   map: {
+    "aurelia-binding": "npm:aurelia-binding@1.1.0",
     "aurelia-bootstrapper": "npm:aurelia-bootstrapper@2.0.1",
     "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.1",
     "aurelia-fetch-client": "npm:aurelia-fetch-client@1.1.0",

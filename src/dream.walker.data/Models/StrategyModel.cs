@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using dream.walker.data.Entities.Strategies;
 
 namespace dream.walker.data.Models
 {
@@ -9,6 +11,17 @@ namespace dream.walker.data.Models
         public StrategyModel()
         {
             RuleSets = new List<StrategyRuleSetModel>();
+        }
+
+        public StrategyModel(Strategy strategy):this()
+        {
+            StrategyId = strategy.StrategyId;
+            Title = strategy.Name;
+            Active = strategy.Active;
+            Url = strategy.Url;
+            Deleted = strategy.Deleted;
+            Summary = strategy.Description;
+            Blocks = JsonConvert.DeserializeObject<List<dynamic>>(strategy.JsonArticleBlocks??String.Empty);
         }
 
         public StrategyModel(List<vStrategy> data, int strategyId) :this()

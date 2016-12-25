@@ -29,7 +29,7 @@ namespace dream.walker.space.Controllers
 
         [HttpGet]
         [Route("getByUrl/{url}")]
-        [ResponseType(typeof(Strategy))]
+        [ResponseType(typeof(StrategyModel))]
         public async Task<IHttpActionResult> GetStrategyByUrl(string url)
         {
             var records = await _service.GetStrategyByUrlAsync(url);

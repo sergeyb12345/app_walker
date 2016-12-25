@@ -1,0 +1,23 @@
+﻿<template>
+    <form if.bind="part.editMode === true">
+        <h4>Add new part</h4>
+        <fieldset>
+            <div class="form-group">
+                <label class="col-sm-10 control-label">Part Type</label>
+                <div class="col-sm-6">
+                    <select class="form-control" change.delegate="onTypeChange()" value.bind="selectedType">
+                        <option>- Select part type -</option>
+                        <option repeat.for="type of partTypes" model.bind="type.id">${type.name}</option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+            <!--anchor-->
+            <!--anchor-->
+            <button type="button" show.bind="canAdd" click.delegate="add()" class="btn btn-danger au-target" au-target-id="97">Add</button><!--anchor-->
+            <button type="button" click.delegate="cancel()" class="btn btn-default au-target" au-target-id="97">Cancel</button><!--anchor-->
+        </div>
+    </form>
+</template>

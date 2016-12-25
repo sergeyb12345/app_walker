@@ -1,6 +1,7 @@
 ﻿export function configure(config) {
     config.globalResources(
         './article',
+        './strategy',
         './article-block',
         './heading-block',
         './paragraph-block',

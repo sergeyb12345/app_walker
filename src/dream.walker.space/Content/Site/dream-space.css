@@ -103,6 +103,8 @@ h4,
 .h4,
 h4 {
   font-size: 16px;
+  border-bottom: 1px solid #e22004;
+  margin-bottom: 15px;
 }
 h3[first-letter-span],
 h4[first-letter-span] {
@@ -333,6 +335,9 @@ fieldset[disabled] .form-control {
   box-shadow: none;
   border: 1px solid rgba(204, 204, 204, 0.36);
 }
+form {
+  margin-bottom: 10px;
+}
 form label {
   font-weight: normal;
   font-family: 'Roboto', sans-serif;
@@ -360,8 +365,17 @@ form .validation-summary-error ul {
 form .validation-summary-error ul li {
   list-style: none;
 }
+form fieldset {
+  margin-bottom: 15px;
+}
+form .form-actions {
+  text-align: right;
+  border-top: 1px solid #e22004;
+  padding-top: 10px;
+}
 .article {
   background-color: rgba(255, 255, 255, 0.7);
+  min-height: 50px;
 }
 .article ol li,
 .article ul li {
@@ -455,6 +469,27 @@ form .validation-summary-error ul li {
   padding-left: 0;
 }
 .article image-block edit-mode .row {
+  margin-bottom: 10px;
+}
+.c_article_parts {
+  border: 1px solid rgba(204, 204, 204, 0.36);
+  padding: 0 10px;
+}
+.c_article_part {
+  padding-top: 10px;
+  border-bottom: solid 1px rgba(204, 204, 204, 0.36);
+  padding-bottom: 0px;
+}
+.c_article_part .c_article_part-add {
+  cursor: pointer;
+  padding-left: 5px;
+  padding-bottom: 10px;
+}
+.c_article_part .c_article_part-add .chevron {
+  float: right;
+  color: #008000;
+}
+.c_article_part .form-group {
   margin-bottom: 10px;
 }
 .categories .category edit-mode {
@@ -553,6 +588,7 @@ form .validation-summary-error ul li {
 }
 .c_strategy {
   background-color: rgba(255, 255, 255, 0.7);
+  padding-bottom: 20px;
 }
 .c_rules-content .c_rule-list {
   background-color: rgba(255, 255, 255, 0.7);

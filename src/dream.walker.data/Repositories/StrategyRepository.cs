@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using dream.walker.data.Entities.Strategies;
+using dream.walker.data.Models;
 
 namespace dream.walker.data.Repositories
 {
@@ -10,7 +11,7 @@ namespace dream.walker.data.Repositories
     {
         Strategy Get(int id);
         Task<List<Strategy>> GetAllAsync(bool includeDeleted);
-        Task<Strategy> GetByUrlAsync(string url);
+        Task<StrategyModel> GetByUrlAsync(string url);
         Strategy Add(Strategy strategy);
         Task<Strategy> GetAsync(int strategyId);
         Task CommitAsync();
@@ -35,10 +36,10 @@ namespace dream.walker.data.Repositories
             return records;
         }
 
-        public async Task<Strategy> GetByUrlAsync(string url)
+        public async Task<StrategyModel> GetByUrlAsync(string url)
         {
             var record = await Dbset.FirstOrDefaultAsync(r => r.Url.ToLower() == url.ToLower());
-            return record;
+            return new StrategyModel(record);
         }
 
         public async Task<Strategy> GetAsync(int strategyId)

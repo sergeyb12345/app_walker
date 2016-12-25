@@ -3,7 +3,7 @@
 
 .article {
     background-color:@page-bg-content;
-
+    min-height: 50px; //TODO:remove
     h3 {
     }
     ol, ul {
@@ -123,5 +123,31 @@
 
 
         }
+    }
+}
+
+.c_article_parts {
+    border: 1px solid @solid-border-color;
+    padding: 0 10px;
+}
+
+.c_article_part {
+    padding-top: 10px;
+    border-bottom: solid 1px @solid-border-color;
+    padding-bottom: 0px;
+
+    .c_article_part-add {
+        cursor: pointer;
+        padding-left: 5px;
+        padding-bottom: 10px;
+
+        .chevron {
+            float: right;
+            color: #008000;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 10px;
     }
 }

@@ -28,7 +28,7 @@ namespace dream.walker.data.Services
             }
         }
 
-        public async Task<Strategy> GetStrategyByUrlAsync(string url)
+        public async Task<StrategyModel> GetStrategyByUrlAsync(string url)
         {
             using (var scope = _container.BeginLifetimeScope())
             {

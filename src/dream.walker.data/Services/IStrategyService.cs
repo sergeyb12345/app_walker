@@ -8,7 +8,7 @@ namespace dream.walker.data.Services
     public interface IStrategyService
     {
         Task<List<StrategySummary>> GetStrategiesAsync();
-        Task<Strategy> GetStrategyByUrlAsync(string url);
+        Task<StrategyModel> GetStrategyByUrlAsync(string url);
         Task<Strategy> SaveStrategyAsync(Strategy model);
         Task<Strategy> GetStrategyAsync(int id);
     }

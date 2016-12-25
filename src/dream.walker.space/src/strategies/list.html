@@ -7,7 +7,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a click.delegate="startEdit()">Edit Page</a></li>
+                <li><a click.delegate="startEdit()">Edit Article</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="/strategies/rules">Manage Rules</a></li>
                 <li><a href="/strategies/rule-sets">Manage Rule Sets</a></li>
@@ -15,35 +15,32 @@
             </ul>
         </div>
 
-        <div class="btn-group" role="group" aria-label="...">
-            <button type="button" if.bind="editMode === true" click.delegate="saveArticle()" class="btn btn-success">Apply Changes</button>
-            <button type="button" if.bind="editMode === true" click.delegate="cancelEdit()" class="btn btn-default">Cancel</button>
+        <div class="btn-group" role="group" aria-label="..." if.bind="editMode === true">
+            <button type="button" click.delegate="trySaveArticle()" class="btn btn-success">Apply Changes</button>
+            <button type="button" click.delegate="cancelEdit()" class="btn btn-default">Cancel</button>
         </div>
 
     </div>
 
-    <div class="c_strategy-content">
-        <div class="row">
-            <div class="col-md-8 col-xs-12">
-                <div class="c_strategy">
-                    <header>
-                        <h3>{strategy.name}</h3>
-                    </header>
-                    <div class="col-md-8 article">
-                        <article article.bind="strategyarticle"></article>
-                    </div>
-                </div>
+    <div class="row">
+        <div class="col-md-8 col-xs-12 c_strategy">
+            <header>
+                <h3>${strategy.title}</h3>
+            </header>
+
+            <div class="c_article_parts">
+                <article-parts parts.bind="strategy.blocks"></article-parts>
             </div>
-            <div class="col-md-4 col-xs-12 side-navigation">
-                <h3>Defined Strategies</h3>
-                <ul>
-                    <li repeat.for="summary of summaries">
-                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                        <a click.delegate="$parent.navigateToStrategy(summary.url)" title="${summary.summary}"
-                           class="${summary.selected ? 'active' : ''} ${summary.active ? '' : 'disabled'}">${summary.title} Rules</a>
-                    </li>
-                </ul>
-            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 side-navigation">
+            <h3>Defined Strategies</h3>
+            <ul>
+                <li repeat.for="summary of summaries">
+                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                    <a click.delegate="$parent.navigateToStrategy(summary.url)" title="${summary.summary}"
+                        class="${summary.selected ? 'active' : ''} ${summary.active ? '' : 'disabled'}">${summary.title} Rules</a>
+                </li>
+            </ul>
         </div>
     </div>
 </template>

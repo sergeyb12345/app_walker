@@ -1,0 +1,6 @@
+﻿<template>
+    <div class="form-group" if.bind="part.editMode === true">
+        <textarea rows="4" class="form-control" value.bind="part.text"></textarea>
+    </div>
+    <p if.bind="part.editMode !== true">${part.text}</p>
+</template>

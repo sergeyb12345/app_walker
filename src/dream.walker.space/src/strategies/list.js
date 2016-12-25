@@ -15,6 +15,8 @@ export class List {
         this.errors = [];
         this.summaries = [];
         this.strategy = {};
+
+        this.subscribe();
     }
 
     activate(params, routeConfig, navigationInstruction) {
@@ -43,6 +45,9 @@ export class List {
                 .then(data => {
                     if (data && data.strategyId) {
                         self.strategy = data;
+                        if (!self.strategy.blocks) {
+                            self.strategy.blocks = [];
+                        }
                         self.selectActiveSummary(data.strategyId);
                     } else {
                         self.navigateToDefaultStrategy();
@@ -67,17 +72,49 @@ export class List {
         } 
     }
 
-    attached() {
-        //subscribe here
+    setEditMode (editMode) {
+        this.editMode = editMode;
+    }
+
+    startEdit() {
+        if (this.strategy) {
+            this.eventAggregator.publish('start-edit-article', true);
+        }
+
+        this.setEditMode(true);
+    }
+
+    cancelEdit() {
+        if (this.article) {
+            this.eventAggregator.publish('cancel-edit-article', true);
+        }
+ 
+        this.setEditMode(false);
+    }
+
+    trySaveArticle() {
+
+        if (this.article) {
+            this.eventAggregator.publish('try-save-article', true);
+        }
+    }
+
+    subscribe() {
+        this.unsubscribe();
+        this.eventAggregator.subscribe('save-article', flag => this.saveStrategy(flag));
     }
 
 
-    detached() {
+    unsubscribe() {
         if (this.subscriptions.length > 0) {
             this.subscriptions.forEach(function(subscription) {
                 subscription.dispose();
             });
         }
+    }
+
+    detached() {
+        this.unsubscribe();
     }
 
     handleError(error) {
