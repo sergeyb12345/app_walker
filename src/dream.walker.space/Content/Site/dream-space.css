@@ -17,7 +17,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   color: #333333;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.8) 100%, #ffffff 0%), url(/Content/Images/emma_bg_.jpg) no-repeat 0 0;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.8) 100%, #ffffff 0%), url(/Content/Images/emma_bg.jpg) no-repeat 0 0;
   background-size: 100%;
   background-attachment: fixed;
   background-position: top;
@@ -533,6 +533,9 @@ form .validation-summary-error ul li {
   /*text-decoration: none;*/
   -webkit-transition: all 0.35s ease;
   transition: all 0.35s ease;
+}
+.side-navigation ul li a.disabled {
+  opacity: 0.6;
 }
 .side-navigation ul li .glyphicon {
   font-size: 8px;

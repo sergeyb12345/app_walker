@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using dream.walker.data.Entities.Strategies;
+using dream.walker.data.Models;
 using dream.walker.data.Services;
 
 namespace dream.walker.space.Controllers
@@ -18,11 +19,11 @@ namespace dream.walker.space.Controllers
         }
 
         [HttpGet]
-        [Route("getAll")]
-        [ResponseType(typeof(List<Strategy>))]
-        public async Task<IHttpActionResult> GetAllStrategies()
+        [Route("getSummaries")]
+        [ResponseType(typeof(List<StrategySummary>))]
+        public async Task<IHttpActionResult> GeStrategySummaries()
         {
-            var records = await _service.GetStrategiesAsync(true);
+            var records = await _service.GetStrategiesAsync();
             return Ok(records);
         }
 

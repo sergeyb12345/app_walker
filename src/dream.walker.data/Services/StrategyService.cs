@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using dream.walker.data.Entities.Strategies;
+using dream.walker.data.Models;
 using dream.walker.data.Repositories;
 
 namespace dream.walker.data.Services
@@ -15,13 +17,14 @@ namespace dream.walker.data.Services
             _container = container;
         }
 
-        public async Task<List<Strategy>> GetStrategiesAsync(bool includeDeleted)
+        public async Task<List<StrategySummary>> GetStrategiesAsync()
         {
             using (var scope = _container.BeginLifetimeScope())
             {
                 var repository = scope.Resolve<IStrategyRepository>();
-                var records = await repository.GetAllAsync(includeDeleted);
-                return records;
+                var records = await repository.GetAllAsync(false);
+
+                return records.Select(r => new StrategySummary(r)).OrderBy(s => s.Title).ToList();
             }
         }
 
@@ -55,7 +58,6 @@ namespace dream.walker.data.Services
                 {
                     record.Name = model.Name;
                     record.Url = model.Url;
-                    record.Description = model.Description;
                     record.Deleted = model.Deleted;
                     await repository.CommitAsync();
                 }
@@ -73,5 +75,6 @@ namespace dream.walker.data.Services
                 return record;
             }
         }
+
     }
 }

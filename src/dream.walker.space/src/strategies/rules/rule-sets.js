@@ -2,11 +2,11 @@
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {RuleSetService} from '../../services/rule-set-service';
 
-@inject(EventAggregator, RuleSetService, "ErrorParser", "Settings")
+@inject(EventAggregator, RuleSetService, "ErrorParser", "Settings", "User")
 export class RuleSets {
 
-    constructor (eventAggregator, ruleSetService, errorParser, globalSettings) {
-
+    constructor (eventAggregator, ruleSetService, errorParser, globalSettings, userContext) {
+         this.powerUser = userContext.user.isAuthenticated;
         this.errorParser = errorParser;
         this.eventAggregator = eventAggregator;
         this.ruleSetService = ruleSetService;

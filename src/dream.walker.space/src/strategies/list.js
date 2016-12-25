@@ -2,73 +2,75 @@
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {StrategyService} from '../services/strategy-service';
 
-@inject(EventAggregator, StrategyService, "ErrorParser")
+@inject(EventAggregator, StrategyService, "ErrorParser", "User")
 export class List {
 
-    constructor (eventAggregator, strategyService, errorParser) {
-
+    constructor (eventAggregator, strategyService, errorParser, userContext) {
+        this.powerUser = userContext.user.isAuthenticated;
         this.errorParser = errorParser;
         this.eventAggregator = eventAggregator;
         this.strategyService = strategyService;
         this.subscriptions = [];
         this.editMode = false;
         this.errors = [];
-        this.strategies = [];
+        this.summaries = [];
+        this.strategy = {};
     }
 
     activate(params, routeConfig, navigationInstruction) {
+        this.router = navigationInstruction.router;
 
         let self = this;
-        this.router = navigationInstruction.router;
-        this.strategyService.getAll()
+        this.strategyService.getSummaries()
             .then(data => {
-                self.strategies = data;
-            })
-            .catch(error => {
-                this.handleError(error);
+                self.summaries = data;
+                self.loadStrategy(params.strategyUrl);
             });
+    }
+
+    navigateToStrategy(url) {
+        if (url && url.length > 0) {
+            let strategyUrl = '/strategies/strategy/' + url;
+            this.router.navigate(strategyUrl);
+        }
+    }
+
+    loadStrategy(url) {
+        let self = this;
+
+        if (url && url.length > 0) {
+            this.strategyService.getByUrl(url)
+                .then(data => {
+                    if (data && data.strategyId) {
+                        self.strategy = data;
+                        self.selectActiveSummary(data.strategyId);
+                    } else {
+                        self.navigateToDefaultStrategy();
+                    }
+                });
+
+        } else {
+            this.navigateToDefaultStrategy();
+        }
+    }
+
+    selectActiveSummary(id) {
+        this.summaries.forEach(function(item) {
+            item.selected = item.strategyId === id;
+        });
+    }
+
+    navigateToDefaultStrategy() {
+        if (this.summaries && this.summaries.length > 0) {
+            let strategyUrl = '/strategies/strategy/' + this.summaries[0].url;
+            this.router.navigate(strategyUrl);
+        } 
     }
 
     attached() {
         //subscribe here
     }
 
-    enable(strategy) {
-        if (strategy && strategy.strategyId) {
-            this.strategyService.enable(strategy.strategyId)
-                .then(data => {
-                    if (data) {
-                        strategy.deleted = data.deleted;
-                    }
-                })
-                .catch(error => {
-                    this.handleError(error);
-                });
-        }
-    }
-
-    disable(strategy) {
-        if (strategy && strategy.strategyId) {
-            this.strategyService.disable(strategy.strategyId)
-                .then(data => {
-                    if (data) {
-                        strategy.deleted = data.deleted;
-                    }
-                })
-                .catch(error => {
-                    this.handleError(error);
-                });
-        }
-    }
-
-    generateUrl(strategy) {
-        let url = "";
-
-        if (strategy && strategy.strategyId) {
-            url = this.router.generate("strategy-edit", {strategy: strategy.url});
-        }
-        return url;
-    }
 
     detached() {
         if (this.subscriptions.length > 0) {

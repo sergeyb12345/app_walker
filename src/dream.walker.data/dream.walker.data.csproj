@@ -97,6 +97,7 @@
     <Compile Include="Entities\Companies\CompanyNHNL.cs" />
     <Compile Include="Entities\Companies\CompanyRuleSet.cs" />
     <Compile Include="Entities\Indicators\MarketNHNL.cs" />
+    <Compile Include="Entities\Strategies\vStrategy.cs" />
     <Compile Include="Enums\DataSourceType.cs" />
     <Compile Include="Entities\Strategies\RuleSet.cs" />
     <Compile Include="Entities\Strategies\RuleSetDetails.cs" />
@@ -215,11 +216,38 @@
     <Compile Include="Migrations\201612211904547_AlterViewRuleSet.Designer.cs">
       <DependentUpon>201612211904547_AlterViewRuleSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612241147111_CreateViewStrategy.cs" />
+    <Compile Include="Migrations\201612241147111_CreateViewStrategy.Designer.cs">
+      <DependentUpon>201612241147111_CreateViewStrategy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612241152048_AlterStrategy.cs" />
+    <Compile Include="Migrations\201612241152048_AlterStrategy.Designer.cs">
+      <DependentUpon>201612241152048_AlterStrategy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612241153559_AlterViewStrategy.cs" />
+    <Compile Include="Migrations\201612241153559_AlterViewStrategy.Designer.cs">
+      <DependentUpon>201612241153559_AlterViewStrategy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612241328069_AlterStrategy2.cs" />
+    <Compile Include="Migrations\201612241328069_AlterStrategy2.Designer.cs">
+      <DependentUpon>201612241328069_AlterStrategy2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612241331222_AlterStrategy3.cs" />
+    <Compile Include="Migrations\201612241331222_AlterStrategy3.Designer.cs">
+      <DependentUpon>201612241331222_AlterStrategy3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612241333038_AltervStrategy.cs" />
+    <Compile Include="Migrations\201612241333038_AltervStrategy.Designer.cs">
+      <DependentUpon>201612241333038_AltervStrategy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\IndicatorCore.cs" />
     <Compile Include="Models\RuleModel.cs" />
+    <Compile Include="Models\StrategyModel.cs" />
     <Compile Include="Models\RuleSetModel.cs" />
+    <Compile Include="Models\StrategyRuleSetModel.cs" />
+    <Compile Include="Models\StrategySummary.cs" />
     <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
@@ -241,6 +269,7 @@
     <Compile Include="MsSqlDbMigrator.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />
     <Compile Include="Repositories\CompanyRuleSetRepository.cs" />
+    <Compile Include="Repositories\VStrategyRepository.cs" />
     <Compile Include="Repositories\VRuleSetRepository.cs" />
     <Compile Include="Repositories\RuleSetDetailsRepository.cs" />
     <Compile Include="Repositories\RuleSetRepository.cs" />
@@ -384,6 +413,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612211904547_AlterViewRuleSet.resx">
       <DependentUpon>201612211904547_AlterViewRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241147111_CreateViewStrategy.resx">
+      <DependentUpon>201612241147111_CreateViewStrategy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241152048_AlterStrategy.resx">
+      <DependentUpon>201612241152048_AlterStrategy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241153559_AlterViewStrategy.resx">
+      <DependentUpon>201612241153559_AlterViewStrategy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241328069_AlterStrategy2.resx">
+      <DependentUpon>201612241328069_AlterStrategy2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241331222_AlterStrategy3.resx">
+      <DependentUpon>201612241331222_AlterStrategy3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241333038_AltervStrategy.resx">
+      <DependentUpon>201612241333038_AltervStrategy.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

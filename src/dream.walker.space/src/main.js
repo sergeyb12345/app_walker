@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import environment from './environment';
 import {Settings} from './settings';
 import {ErrorParser} from './common/error-parser';
@@ -26,9 +25,9 @@ export function configure(aurelia) {
             settings.initialize()
                 .then(response => {
                     aurelia.use
-                        .instance('ErrorParser',errorparser)
-                        .instance('Settings',settings)
-                        .instance('User',userContext)
+                        .instance('ErrorParser', errorparser)
+                        .instance('Settings', settings)
+                        .instance('User', userContext)
                         .standardConfiguration()
                         .feature('resources')
                         .feature('navigation')

@@ -1,0 +1,24 @@
+﻿<template>
+    <div class="actions" if.bind="powerUser">
+
+        <div if.bind="editMode !== true" class="btn-group" role="group">
+            <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Administration
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="/strategies">Manage Strategies</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="/strategies/rules">Manage Rules</a></li>
+                <li><a href="/strategies/rule-sets">Manage Rule Sets</a></li>
+                <li><a href="/strategies/indicators">Manage Indicators</a></li>
+            </ul>
+        </div>
+
+        <div class="btn-group" role="group" aria-label="...">
+            <button type="button" if.bind="editMode === true" click.delegate="saveArticle()" class="btn btn-success">Apply Changes</button>
+            <button type="button" if.bind="editMode === true" click.delegate="cancelEdit()" class="btn btn-default">Cancel</button>
+        </div>
+
+    </div>
+</template>

@@ -515,6 +515,8 @@
     <Content Include="src\resources\elements\rule\rule.html" />
     <Content Include="src\resources\elements\rule\rule.js" />
     <Content Include="src\resources\attributes\first-letter-span.js" />
+    <Content Include="src\resources\elements\strategy\strategy-admin.html" />
+    <Content Include="src\resources\elements\strategy\strategy-admin.js" />
     <Content Include="src\resources\index.js" />
     <Content Include="src\services\article-service.js" />
     <Content Include="src\services\indicator-service.js" />
@@ -535,10 +537,8 @@
     <Content Include="src\strategies\navigation.js" />
     <Content Include="src\strategies\rules\rule-sets.html" />
     <Content Include="src\strategies\rules\rule-sets.js" />
-    <Content Include="src\strategies\rules\strategy-rules.html" />
     <Content Include="src\strategies\rules\rules.html" />
     <Content Include="src\strategies\rules\rules.js" />
-    <Content Include="src\strategies\rules\strategy-rules.js" />
     <Content Include="src\resources\elements\article\article.html" />
     <Content Include="src\resources\elements\article\article.js" />
     <Content Include="src\studies\category.html" />

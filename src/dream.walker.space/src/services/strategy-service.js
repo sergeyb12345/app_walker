@@ -19,14 +19,14 @@ export class StrategyService {
     }
 
     
-    getAll() {
+    getSummaries() {
 
-        return this.http.fetch('strategy/getAll', {
+        return this.http.fetch('strategy/getSummaries', {
             method: 'get'
             })
         .then(response => response.json())
         .catch(error => {
-            return this.handleError(error, "getAll");
+            return this.handleError(error, "getSummaries");
         });
     }
 

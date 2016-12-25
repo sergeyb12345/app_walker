@@ -8,6 +8,7 @@ export function configure(config) {
     config.globalResources(['./elements/rule-set/rule-set']);
     config.globalResources(['./elements/rule-set/rule-set-item']);
     config.globalResources(['./elements/indicator/indicator']);
+    config.globalResources(['./elements/strategy/strategy-admin']);
     config.globalResources(['./attributes/first-letter-span']);
     config.globalResources(
         './elements/article/article',
