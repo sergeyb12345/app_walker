@@ -1,4 +1,5 @@
-﻿import {inject} from "aurelia-framework";
+﻿import * as toastr from "toastr";
+import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {StrategyService} from '../services/strategy-service';
 import articleEvents from  "../resources/elements/article-parts/article-events";
@@ -37,6 +38,14 @@ export class List {
                 self.summaries = data;
                 self.loadStrategy(params.strategyUrl);
             });
+    }
+
+    setActiveStatus(flag) {
+        this.strategy.active = flag;
+        let summary = this.summaries.find(s => s.strategyId === this.strategy.strategyId);
+        if (summary) {
+            summary.active = flag;
+        }
     }
 
     navigateToStrategy(url) {
@@ -113,6 +122,38 @@ export class List {
     }
 
     trySaveArticle() {
+        this.validation.validate()
+            .then(response => {
+                let valid = false;
+                if(response.valid === true) {
+                    if (this.articlePartsValidate()) {
+                        valid = true;
+                    }
+                }
+                if (valid) {
+                    this.saveStrategy();
+
+                } else {
+                    toastr.warning('Please correct validation errors.', 'Validation Errors');
+                }
+            })
+            .catch(error => {
+                this.handleError(error);
+            });    
+    }
+
+    articlePartsValidate() {
+        if (this.strategy.blocks.length > 0) {
+            let index = this.strategy.blocks.findIndex(b => !b.valid);
+            return index === -1;
+        } else {
+            toastr.warning('Article is empty', 'Validation Errors');
+            return false;
+        }
+    }
+    
+    saveStrategy() {
+        toastr.success(`Validated, can save!`, 'Success');
     }
 
     subscribe() {

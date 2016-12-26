@@ -45,6 +45,19 @@
                         <input type="text" class="form-control" value.bind="strategy.url & validate">
                     </div>
 
+                   <div class="form-group">
+                        <label>Strategy Status: </label>
+
+                        <div class="input-group" style="width: 40%">
+                            <input type="text" class="form-control" disabled="disabled" aria-label="..." value="${strategy.active ? 'Acive' : 'Inactive'}">
+                            <div class="input-group-btn">
+                                <button type="button" click.delegate="setActiveStatus(true)" if.bind="!strategy.active" class="btn btn-danger">Activate</button>
+                                <button type="button" click.delegate="setActiveStatus(false)" if.bind="strategy.active" class="btn btn-danger">Deactivate</button>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </fieldset>
                 <h4>Article Parts</h4>
             </form>

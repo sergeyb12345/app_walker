@@ -504,6 +504,9 @@ form .form-actions {
   padding-bottom: 0px;
 }
 .c_article_part form h4 {
+  margin-top: 2px;
+  border: 0;
+  color: #333333;
   margin-bottom: 5px;
 }
 .c_article_part .form-group {
