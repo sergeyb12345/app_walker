@@ -127,9 +127,11 @@
 }
 
 .c_article_parts {
-    border: 1px solid @solid-border-color;
     padding: 0 10px;
-    background-color:@article-parts-bg;
+    
+    &.edit-mode {
+        border: 1px solid @solid-border-color;
+    }
 }
 
 .c_article_part {

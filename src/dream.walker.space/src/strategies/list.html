@@ -28,9 +28,31 @@
                 <h3>${strategy.title}</h3>
             </header>
 
-            <div class="c_article_parts">
+            <form if.bind="editMode === true">
+                <fieldset>
+                    <div class="form-group">
+                        <label>Strategy Name</label>
+                        <input type="text" class="form-control" value.bind="strategy.title & validate">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Summary</label>
+                        <textarea rows="4" class="form-control" value.bind="strategy.summary & validate"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Strategy Url</label>
+                        <input type="text" class="form-control" value.bind="strategy.url & validate">
+                    </div>
+
+                </fieldset>
+                <h4>Article Parts</h4>
+            </form>
+
+            <div class="c_article_parts ${editMode ? 'edit-mode' : ''}">
                 <article-parts parts.bind="strategy.blocks"></article-parts>
             </div>
+
         </div>
         <div class="col-md-4 col-xs-12">
             <div class="side-navigation">

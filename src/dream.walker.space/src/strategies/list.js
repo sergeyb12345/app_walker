@@ -1,15 +1,24 @@
 ﻿import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {StrategyService} from '../services/strategy-service';
+import articleEvents from  "../resources/elements/article-parts/article-events";
+import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation"
+import {BootstrapFormRenderer} from "../common/bootstrap-form-renderer"
 
-@inject(EventAggregator, StrategyService, "ErrorParser", "User")
+@inject(EventAggregator, StrategyService, "ErrorParser", "User", ValidationController)
 export class List {
 
-    constructor (eventAggregator, strategyService, errorParser, userContext) {
+    constructor (eventAggregator, strategyService, errorParser, userContext, validation) {
         this.powerUser = userContext.user.isAuthenticated;
         this.errorParser = errorParser;
+        this.articleEvents = articleEvents;
         this.eventAggregator = eventAggregator;
         this.strategyService = strategyService;
+
+        this.validation = validation;
+        this.validation.validateTrigger = validateTrigger.change;
+        this.validation.addRenderer(new BootstrapFormRenderer());
+
         this.subscriptions = [];
         this.editMode = false;
         this.errors = [];
@@ -77,31 +86,37 @@ export class List {
     }
 
     startEdit() {
-        if (this.strategy) {
-            this.eventAggregator.publish('start-edit-article', true);
-        }
+        this.originalStrategy = Object.assign({}, this.strategy);
 
+        this.eventAggregator.publish(this.articleEvents.subscribed.onEditModeChanged, true);
         this.setEditMode(true);
+
+        this.validationRules = ValidationRules
+                .ensure(u => u.title).displayName('Strategy name').required().withMessage(`\${$displayName} cannot be blank.`)
+                .ensure(u => u.summary).displayName('Summary').required().withMessage(`\${$displayName} cannot be blank.`)
+                .ensure(u => u.url).displayName('Strategy url').required().withMessage(`\${$displayName} cannot be blank.`)
+            .on(this.strategy);
+
     }
 
     cancelEdit() {
-        if (this.article) {
-            this.eventAggregator.publish('cancel-edit-article', true);
-        }
- 
+        this.eventAggregator.publish(this.articleEvents.subscribed.onEditModeChanged, false);
         this.setEditMode(false);
+
+        if(this.strategy.strategyId > 0) {
+            this.strategy = this.originalStrategy;
+            this.strategy.editMode = false;
+        } else {
+            this.strategy.deleted = true;
+        }
+        this.validation.reset();
     }
 
     trySaveArticle() {
-
-        if (this.article) {
-            this.eventAggregator.publish('try-save-article', true);
-        }
     }
 
     subscribe() {
         this.unsubscribe();
-        this.eventAggregator.subscribe('save-article', flag => this.saveStrategy(flag));
     }
 
 

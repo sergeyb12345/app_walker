@@ -1,40 +1,60 @@
 ﻿import {inject, bindable} from "aurelia-framework";
 import partTypes from  "./part-types";
 import partActions from  "./part-actions";
-import {ObserverLocator} from 'aurelia-binding';
+import articleEvents from  "./article-events";
 import {BindingEngine} from 'aurelia-binding';
+import {EventAggregator} from 'aurelia-event-aggregator';
 
-@inject(BindingEngine)
+@inject(BindingEngine, EventAggregator)
 export class ArticleParts {
     @bindable parts;
 
-    constructor (bindingEngine) {
+    constructor (bindingEngine, eventAggregator) {
         this.parts = [];
         this.partType = partTypes;
         this.partAction = partActions;
-        this.editMode = true;
+        this.events = articleEvents;
+        this.editMode = false;
         this.bindingEngine = bindingEngine;
+        this.eventAggregator = eventAggregator;
 
         this.partsSubscriptions = [];
-        this.subscriptions = [];
+        this.partsChangedSubscription = null;
+        this.eventSubscriptions = [];
     }
 
     attached() {
+        this.eventSubscriptions.push(
+            this.eventAggregator.subscribe(this.events.subscribed.onEditModeChanged, flag => this.setEditMode(flag)));
+
+    }
+
+    setEditMode(flag) {
+        this.editMode = flag;
     }
 
     partsChanged(newValue) {
-        if (newValue && this.subscriptions.length === 0) {
-            this.subscriptions.push(
-                this.bindingEngine.collectionObserver(this.parts).subscribe(splices => this.onPartsChanged(splices)));
+        if (newValue && !this.partsChangedSubscription) {
+            this.partsChangedSubscription = this.bindingEngine.collectionObserver(this.parts).subscribe(splices => this.onPartsChanged(splices));
         }
     }
 
     detached() {
-        if (this.subscriptions.length > 0) {
-            this.subscriptions.forEach(function(subscription) {
+        if (this.partsChangedSubscription) {
+            this.partsChangedSubscription.dispose();
+        }
+
+        if (this.eventSubscriptions.length > 0) {
+            this.eventSubscriptions.forEach(function(subscription) {
                 subscription.dispose();
             });
-        }    
+        }        
+        
+        if (this.partsSubscriptions.length > 0) {
+            this.partsSubscriptions.forEach(function(subscription) {
+                subscription.dispose();
+            });
+        }
     }
 
     addPart() {

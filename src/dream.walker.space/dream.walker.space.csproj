@@ -491,6 +491,7 @@
     <Content Include="src\resources\elements\article-parts\article-part-heading.js" />
     <Content Include="src\resources\elements\article-parts\article-part-paragraph.html" />
     <Content Include="src\resources\elements\article-parts\article-part-paragraph.js" />
+    <Content Include="src\resources\elements\article-parts\article-events.js" />
     <Content Include="src\resources\elements\article-parts\part-actions.js" />
     <Content Include="src\resources\elements\article-parts\part-types.js" />
     <Content Include="src\resources\elements\article-parts\article-parts.html" />
