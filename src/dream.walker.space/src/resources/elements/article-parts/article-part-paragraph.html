@@ -1,6 +1,18 @@
 ﻿<template>
-    <div class="form-group" if.bind="part.editMode === true">
-        <textarea rows="4" class="form-control" value.bind="part.text"></textarea>
-    </div>
+
+    <form if.bind="part.editMode === true">
+        <h4>Define Paragraph</h4>
+        <fieldset>
+            <div class="form-group ${!textValid ? 'has-error' : ''}">
+                <label class="col-sm-10">Paragraph Text</label>
+                <div class="col-sm-12">
+                    <textarea rows="4" class="form-control" value.bind="part.text"></textarea>
+                    <span if.bind="!textValid" class="help-block validation-message">Paragraph text cannot be blank.</span>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
     <p if.bind="part.editMode !== true">${part.text}</p>
 </template>
