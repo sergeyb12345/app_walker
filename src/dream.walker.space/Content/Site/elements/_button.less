@@ -28,7 +28,7 @@
 
     &:hover {
         color: @btn-default-border-color;
-        background-color: rgba(201, 48, 44, 0.30);
+        background-color: @btn-default-bg-hover;
         border-color: @btn-default-border-color;
 
     }
@@ -37,4 +37,14 @@
 .dropdown-menu > li > a {
     //font-family: 'Roboto', sans-serif;
     font-family: 'Open Sans', sans-serif;
+}
+
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline-color: transparent;
+ }
+
+.btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+    color: @btn-default-border-color;
+    background-color: @btn-default-bg-hover;
+    border-color: @btn-default-border-color;
 }

@@ -3,7 +3,7 @@
     
     <div class="c_rule_sets-content">
         <div class="row">
-            <div class="col-md-8 col-xs-12">
+            <div class="col-md-8 col-xs-12 c_rule_sets">
                 <header>
                     <h3 first-letter-span>Manage Rule Sets</h3>
                 </header>
@@ -19,15 +19,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-xs-12 side-navigation">
-                <h3>Time Frame</h3>
-                <ul>
-                    <li repeat.for="period of periods">
-                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                        <a click.delegate="$parent.loadRuleSetsForPeriod(period)"
-                           class="${period.active ? 'active' : ''}">${period.name} Rules</a>
-                    </li>
-                </ul>
+            <div class="col-md-4 col-xs-12">
+                <div class="side-navigation">
+                    <h3>Time Frame</h3>
+                    <ul>
+                        <li repeat.for="period of periods">
+                            <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                            <a click.delegate="$parent.loadRuleSetsForPeriod(period)"
+                               class="${period.active ? 'active' : ''}">${period.name} Rules</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 

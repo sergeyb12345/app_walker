@@ -5,12 +5,10 @@
         <article-part-new part.bind="part" if.bind="part.type === $parent.partType.unset"></article-part-new>
     </div>
 
-    <div class="c_article_part" click.delegate="addPart()" if.bind="editMode === true">
-        <div class="c_article_part-add">
-            <a>Add new part</a>
-            <a class="chevron">
-                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-            </a>
-        </div>
+    <div class="c_article_part-add" click.delegate="addPart()" if.bind="editMode === true">
+        <a>Add new part</a>
+        <a class="chevron">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+        </a>
     </div>
 </template>
