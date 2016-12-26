@@ -483,10 +483,15 @@
     <Content Include="src\navigation\sub-menu.js" />
     <Content Include="src\navigation\sub-nav.html" />
     <Content Include="src\navigation\sub-nav.js" />
+    <Content Include="src\resources\elements\article-parts\article-part-actions.html" />
+    <Content Include="src\resources\elements\article-parts\article-part-actions.js" />
     <Content Include="src\resources\elements\article-parts\article-part-new.html" />
     <Content Include="src\resources\elements\article-parts\article-part-new.js" />
+    <Content Include="src\resources\elements\article-parts\article-part-heading.html" />
+    <Content Include="src\resources\elements\article-parts\article-part-heading.js" />
     <Content Include="src\resources\elements\article-parts\article-part-paragraph.html" />
     <Content Include="src\resources\elements\article-parts\article-part-paragraph.js" />
+    <Content Include="src\resources\elements\article-parts\part-actions.js" />
     <Content Include="src\resources\elements\article-parts\part-types.js" />
     <Content Include="src\resources\elements\article-parts\article-parts.html" />
     <Content Include="src\resources\elements\article-parts\article-parts.js" />

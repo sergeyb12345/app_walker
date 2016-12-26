@@ -1,0 +1,30 @@
+﻿<template>
+
+    <form if.bind="part.editMode === true">
+        <h4>Define heading</h4>
+        <fieldset>
+            <div class="form-group ${!typeValid ? 'has-error' : ''}">
+                <label class="col-sm-10">Heading Type</label>
+                <div class="col-sm-5">
+                    <select class="form-control" change.delegate="onChange()" value.bind="part.headingType">
+                        <option>- Select heading type -</option>
+                        <option repeat.for="heading of headingTypes" value.bind="heading">${heading}</option>
+                    </select>
+                    <span if.bind="!typeValid" class="help-block validation-message">Heading type not selected.</span>
+                </div>
+            </div>
+            
+            <div class="form-group ${!textValid ? 'has-error' : ''}">
+                <label class="col-sm-10">Heading Text</label>
+                <div class="col-sm-12">
+                    <input type="text" class="form-control" value.bind="part.text">
+                    <span if.bind="!textValid" class="help-block validation-message">Heading text cannot be blank.</span>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+    <span if.bind="part.editMode !== true" class="${part.headingType}">${part.text}</span>
+
+</template>

@@ -24,6 +24,8 @@ export function configure(config) {
     config.globalResources(
         './elements/article-parts/article-parts',
         './elements/article-parts/article-part-paragraph',
+        './elements/article-parts/article-part-heading',
+        './elements/article-parts/article-part-actions',
         './elements/article-parts/article-part-new'
     );
 }

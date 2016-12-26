@@ -1,11 +1,14 @@
 ﻿import {inject, bindable} from "aurelia-framework";
 import partTypes from  "./part-types";
+import partActions from  "./part-actions";
 
 export class ArticlePartNew {
     @bindable part;
 
     constructor () {
         this.partTypes = partTypes.types;
+        this.partAction = partActions;
+
         this.canAdd = false;
         this.selectedType = null;
     }
@@ -19,6 +22,6 @@ export class ArticlePartNew {
     }
 
     cancel() {
-        this.part.type = partTypes.deleted;
+        this.part.action = this.partAction.remove;
     }
 }

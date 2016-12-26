@@ -502,8 +502,17 @@ form .form-actions {
   border-bottom: solid 1px rgba(204, 204, 204, 0.36);
   padding-bottom: 0px;
 }
-.c_article_part .form-control {
+.c_article_part form h4 {
+  margin-bottom: 5px;
+}
+.c_article_part .form-group {
+  margin-bottom: 10px;
+}
+.c_article_part .form-group .form-control {
   background-color: rgba(255, 255, 255, 0.4);
+}
+.c_article_part .form-group label {
+  padding-top: 10px;
 }
 .c_article_part-add {
   cursor: pointer;
@@ -569,6 +578,7 @@ form .form-actions {
   padding-top: 20px;
   margin-top: 0;
   color: #333333;
+  margin-bottom: 20px;
 }
 .side-navigation .block-actions {
   text-align: right;

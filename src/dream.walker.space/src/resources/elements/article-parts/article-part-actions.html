@@ -1,0 +1,9 @@
+﻿<template>
+    <form if.bind="part.editMode === true">
+        <div class="form-actions">
+            <button type="button" click.delegate="remove()" class="btn btn-danger">Remove</button>
+            <button type="button" click.delegate="moveUp()" class="btn btn-default">Move Up</button>
+            <button type="button" click.delegate="moveDown()" class="btn btn-default">Move Down</button>
+        </div>
+    </form>
+</template>
