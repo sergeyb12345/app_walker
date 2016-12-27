@@ -10,6 +10,8 @@ export function configure(config) {
     config.globalResources(['./elements/indicator/indicator']);
     config.globalResources(['./elements/strategy/strategy-admin']);
     config.globalResources(['./attributes/first-letter-span']);
+    config.globalResources(['./value-converters/blob-to-url']);
+    config.globalResources(['./value-converters/filelist-to-array']);
     config.globalResources(
         './elements/article/article',
         './elements/article/strategy',
@@ -26,6 +28,7 @@ export function configure(config) {
         './elements/article-parts/article-part-paragraph',
         './elements/article-parts/article-part-heading',
         './elements/article-parts/article-part-actions',
+        './elements/article-parts/article-part-image',
         './elements/article-parts/article-part-new'
     );
 }

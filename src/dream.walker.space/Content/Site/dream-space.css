@@ -367,6 +367,25 @@ form label {
   margin-bottom: -2px;
   margin-left: 2px;
 }
+form label input[type="file"] {
+  position: fixed;
+  top: -1000px;
+}
+form .form-group .file {
+  background-color: rgba(223, 223, 223, 0.13);
+  border: 1px solid rgba(204, 204, 204, 0.36);
+}
+form .form-group .file label {
+  margin-left: -2px;
+}
+form .form-group .file span {
+  margin-top: 5px;
+  float: right;
+  margin-right: 10px;
+}
+form .form-group label.btn {
+  padding-top: 6px;
+}
 form textarea.html {
   font-family: monospace;
 }
@@ -511,6 +530,9 @@ form .form-actions {
   border: 0;
   color: #333333;
   margin-bottom: 5px;
+}
+.c_article_part img {
+  width: 100%;
 }
 .c_article_part .form-group {
   margin-bottom: 10px;

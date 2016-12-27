@@ -27,9 +27,36 @@ form {
         font-size: 13px;
         color:rgba(0, 0, 0, 0.55);
         margin-bottom:-2px;
-        
         margin-left:2px;
+
+        input[type="file"] {
+            position: fixed;
+            top: -1000px;
+        }
     }
+
+    .form-group {
+        .file {
+            background-color: @input-bg-readonly;
+            border: 1px solid @solid-border-color;
+
+            label {
+                margin-left: -2px;
+            }
+            span {
+                margin-top: 5px;
+                float: right;
+                margin-right:10px;
+            }
+        }
+
+        label {
+            &.btn {
+                padding-top: 6px;
+            }
+        }
+    }
+
     textarea {
         &.html {
             font-family: monospace;

@@ -485,6 +485,8 @@
     <Content Include="src\navigation\sub-nav.js" />
     <Content Include="src\resources\elements\article-parts\article-part-actions.html" />
     <Content Include="src\resources\elements\article-parts\article-part-actions.js" />
+    <Content Include="src\resources\elements\article-parts\article-part-image.html" />
+    <Content Include="src\resources\elements\article-parts\article-part-image.js" />
     <Content Include="src\resources\elements\article-parts\article-part-new.html" />
     <Content Include="src\resources\elements\article-parts\article-part-new.js" />
     <Content Include="src\resources\elements\article-parts\article-part-heading.html" />
@@ -533,6 +535,8 @@
     <Content Include="src\resources\elements\strategy\strategy-admin.html" />
     <Content Include="src\resources\elements\strategy\strategy-admin.js" />
     <Content Include="src\resources\index.js" />
+    <Content Include="src\resources\value-converters\blob-to-url.js" />
+    <Content Include="src\resources\value-converters\filelist-to-array.js" />
     <Content Include="src\services\article-service.js" />
     <Content Include="src\services\indicator-service.js" />
     <Content Include="src\services\rule-set-service.js" />
@@ -606,7 +610,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="src\resources\binding-behaviors\" />
-    <Folder Include="src\resources\value-converters\" />
     <Folder Include="Views\Chart\" />
     <Folder Include="Views\Health\" />
   </ItemGroup>
