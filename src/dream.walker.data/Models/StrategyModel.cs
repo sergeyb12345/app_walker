@@ -60,8 +60,8 @@ namespace dream.walker.data.Models
         public string Title { get; set; }
         public bool Deleted { get; set; }
         public string Summary { get; set; }
-        public bool Active { get; private set; }
-        public string Url { get; private set; }
+        public bool Active { get; set; }
+        public string Url { get; set; }
     }
 
 

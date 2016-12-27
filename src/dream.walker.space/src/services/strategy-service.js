@@ -57,7 +57,9 @@ export class StrategyService {
             method: 'post',
             body:json(strategy)
         })
-        .then(response => response.json())
+        .then(response => {
+            return response;
+        })
         .catch(error => {
             this.handleError(error, "update");
         });

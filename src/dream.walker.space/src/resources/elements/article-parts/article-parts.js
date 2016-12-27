@@ -31,6 +31,11 @@ export class ArticleParts {
 
     setEditMode(flag) {
         this.editMode = flag;
+        if (this.parts) {
+            this.parts.forEach(function(item) {
+                item.editMode = flag;
+            });
+        }
     }
 
     partsChanged(newValue) {

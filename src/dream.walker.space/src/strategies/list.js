@@ -50,6 +50,7 @@ export class List {
 
     navigateToStrategy(url) {
         if (url && url.length > 0) {
+            this.setEditMode(false);
             let strategyUrl = '/strategies/strategy/' + url;
             this.router.navigate(strategyUrl);
         }
@@ -92,12 +93,12 @@ export class List {
 
     setEditMode (editMode) {
         this.editMode = editMode;
+        this.eventAggregator.publish(this.articleEvents.subscribed.onEditModeChanged, editMode);
     }
 
     startEdit() {
         this.originalStrategy = Object.assign({}, this.strategy);
 
-        this.eventAggregator.publish(this.articleEvents.subscribed.onEditModeChanged, true);
         this.setEditMode(true);
 
         this.validationRules = ValidationRules
@@ -109,7 +110,6 @@ export class List {
     }
 
     cancelEdit() {
-        this.eventAggregator.publish(this.articleEvents.subscribed.onEditModeChanged, false);
         this.setEditMode(false);
 
         if(this.strategy.strategyId > 0) {
@@ -153,7 +153,20 @@ export class List {
     }
     
     saveStrategy() {
-        toastr.success(`Validated, can save!`, 'Success');
+        
+        let self = this;
+        this.setEditMode(false);
+
+        this.strategyService.update(this.strategy)
+            .then(data => {
+              
+                toastr.success(`Strategy staved successfully!`, 'Strategy saved');
+                self.navigateToStrategy(this.strategy.url);
+            })
+            .catch(error => {
+                this.setEditMode(true);
+                toastr.error(`Failed to save strategy!`, 'Application Error');
+            });    
     }
 
     subscribe() {

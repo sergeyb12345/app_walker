@@ -9,7 +9,7 @@ namespace dream.walker.data.Services
     {
         Task<List<StrategySummary>> GetStrategiesAsync();
         Task<StrategyModel> GetStrategyByUrlAsync(string url);
-        Task<Strategy> SaveStrategyAsync(Strategy model);
+        Task<StrategyModel> SaveStrategyAsync(StrategyModel model);
         Task<Strategy> GetStrategyAsync(int id);
     }
 }

@@ -499,9 +499,11 @@ form .form-actions {
 .c_article_parts.edit-mode {
   border: 1px solid rgba(204, 204, 204, 0.36);
 }
+.c_article_parts.edit-mode .c_article_part {
+  border-bottom: solid 1px rgba(204, 204, 204, 0.36);
+}
 .c_article_part {
   padding-top: 10px;
-  border-bottom: solid 1px rgba(204, 204, 204, 0.36);
   padding-bottom: 0px;
 }
 .c_article_part form h4 {

@@ -47,8 +47,8 @@ namespace dream.walker.space.Controllers
 
         [HttpPost]
         [Route("")]
-        [ResponseType(typeof(Strategy))]
-        public async Task<IHttpActionResult> SaveStrategy([FromBody] Strategy model)
+        [ResponseType(typeof(StrategyModel))]
+        public async Task<IHttpActionResult> SaveStrategy([FromBody] StrategyModel model)
         {
 
             var result = await _service.SaveStrategyAsync(model);

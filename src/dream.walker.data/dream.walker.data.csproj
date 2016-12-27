@@ -112,6 +112,7 @@
     <Compile Include="Entities\Strategies\Rule.cs" />
     <Compile Include="Enums\ValueLocationType.cs" />
     <Compile Include="Extensions\QuotesModelExtensions.cs" />
+    <Compile Include="Helpers\Slug.cs" />
     <Compile Include="Migrations\201605151153585_CreateTableIndicatorRule.cs" />
     <Compile Include="Migrations\201605151153585_CreateTableIndicatorRule.Designer.cs">
       <DependentUpon>201605151153585_CreateTableIndicatorRule.cs</DependentUpon>

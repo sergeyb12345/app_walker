@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using dream.walker.data.Entities.Strategies;
+using dream.walker.data.Helpers;
 using dream.walker.data.Models;
 using dream.walker.data.Repositories;
+using Newtonsoft.Json;
 
 namespace dream.walker.data.Services
 {
@@ -38,7 +40,7 @@ namespace dream.walker.data.Services
             }
         }
 
-        public async Task<Strategy> SaveStrategyAsync(Strategy model)
+        public async Task<StrategyModel> SaveStrategyAsync(StrategyModel model)
         {
             using (var scope = _container.BeginLifetimeScope())
             {
@@ -56,13 +58,20 @@ namespace dream.walker.data.Services
 
                 if (record != null)
                 {
-                    record.Name = model.Name;
+                    //model.Url = Slug.Create(true, model.Title);
+                    record.Name = model.Title;
                     record.Url = model.Url;
                     record.Deleted = model.Deleted;
+                    record.Description = model.Summary;
+                    record.Active = model.Active;
+                    record.JsonArticleBlocks = JsonConvert.SerializeObject(model.Blocks);
+
                     await repository.CommitAsync();
+
+                    model.StrategyId = record.StrategyId;
                 }
 
-                return record;
+                return model;
             }
         }
 
