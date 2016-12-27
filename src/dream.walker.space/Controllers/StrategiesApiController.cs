@@ -55,5 +55,13 @@ namespace dream.walker.space.Controllers
 
             return Ok(result);
         }
+
+        [HttpDelete]
+        [Route("{id:int:min(1)}")]
+        public async Task<IHttpActionResult> DeleteStrategy(int id)
+        {
+            await _service.DeleteStrategyAsync(id);
+            return Ok();
+        }
     }
 }

@@ -85,5 +85,18 @@ namespace dream.walker.data.Services
             }
         }
 
+        public async Task DeleteStrategyAsync(int id)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IStrategyRepository>();
+                var record = await repository.GetAsync(id);
+                if (record != null)
+                {
+                    record.Deleted = true;
+                    await repository.CommitAsync();
+                }
+            }
+        }
     }
 }

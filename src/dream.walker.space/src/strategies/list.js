@@ -37,7 +37,42 @@ export class List {
             .then(data => {
                 self.summaries = data;
                 self.loadStrategy(params.strategyUrl);
-            });
+            })
+            .catch(error => {
+                toastr.error('Failed to load summaries', 'Load Summaries Failed');
+            });   
+    }
+
+    addStrategy() {
+        this.strategy = {
+            strategyId: 0,
+            title: '',
+            url: '',
+            summary: '',
+            active: false,
+            deleted: false,
+            blocks: []
+        };
+
+        this.startEdit();
+        this.validation.validate();
+    }
+
+    deleteStrategy() {
+        let self = this;
+
+        if (this.strategy && this.strategy.strategyId > 0) {
+            this.strategyService.deleteStrategy(this.strategy.strategyId)
+                .then(response => {
+                    toastr.success('Strategy deleted successfully', 'Strategy Deleted');
+                    self.setEditMode(false);
+                    self.router.navigate('/strategies' );
+                })
+                .catch(error => {
+                    toastr.error('Failed to delete strategy', 'Delete Failed');
+                });   
+
+        }
     }
 
     setActiveStatus(flag) {

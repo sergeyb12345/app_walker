@@ -546,10 +546,6 @@
     <Content Include="src\services\strategy-service.js" />
     <Content Include="src\services\blob-services.js" />
     <Content Include="src\settings.js" />
-    <Content Include="src\strategies\edit.html" />
-    <Content Include="src\strategies\create.html" />
-    <Content Include="src\strategies\create.js" />
-    <Content Include="src\strategies\edit.js" />
     <Content Include="src\strategies\indicators\indicators.html" />
     <Content Include="src\strategies\indicators\indicators.js" />
     <Content Include="src\strategies\list.html" />

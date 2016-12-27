@@ -6,8 +6,6 @@
 
         config.map([
             { route: ['','strategy/:strategyUrl'], moduleId: "./list", name:"strategy-list", title: "Strategies", nav:true },
-            { route: ['create'], moduleId: "./create", name:"strategy-create", title: "Create Strategy", nav:false, auth: true },
-            { route: ['edit','edit/:strategy'], moduleId: "./edit", name:"strategy-edit", title: "Modify Strategy", nav:false, auth: true },
             { route: ['rules','rules/:period'], moduleId: "./rules/rules", name:"manage-rules", title: "Manage Rules", nav:false, auth: true },
             { route: ['rule-sets', 'rule-sets/:period'], moduleId: "./rules/rule-sets", name:"manage-rule-sets", title: "Manage Rule Sets", nav:false, auth: true },
             { route: ['indicators', 'indicators/:period'], moduleId: "./indicators/indicators", name:"manage-indicators", title: "Manage Indicators", nav:false, auth: true }

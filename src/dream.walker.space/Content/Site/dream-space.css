@@ -44,6 +44,9 @@ body .has-success .form-control:focus {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
+body .no-border {
+  border: 0!important;
+}
 .btn {
   font-weight: normal;
   font-size: 13px;
@@ -671,6 +674,15 @@ form fieldset {
   margin-bottom: 25px;
   border-radius: 5px;
   border: 1px solid #DDD;
+}
+.side-navigation .side-navigation-add .glyphicon,
+.side-navigation .side-navigation-delete .glyphicon {
+  position: relative;
+  font-size: 13px;
+  top: 2px;
+}
+.side-navigation .side-navigation-add .glyphicon {
+  color: #008000;
 }
 .c_strategy {
   background-color: rgba(255, 255, 255, 0.7);

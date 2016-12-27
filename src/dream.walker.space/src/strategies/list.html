@@ -77,6 +77,28 @@
                            class="${summary.selected ? 'active' : ''} ${summary.active ? '' : 'disabled'}">${summary.title} Rules</a>
                     </li>
                 </ul>
+
+                <div if.bind="editMode">
+                    <h3>Add / Remove Strategies</h3>
+                    <ul>
+                        <li class="side-navigation-add">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            <a click.delegate="addStrategy()">Register New Strategy</a>
+                        </li>
+
+                        <li class="side-navigation-delete">
+                            <form>
+                                <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                                <a click.delegate="deleting = true">Delete Loaded Strategy</a>
+                                <div class="form-actions no-border" if.bind="deleting ">
+                                    <input class="btn btn-danger" type="button" click.delegate="deleteStrategy()" value="Delete">
+                                    <input class="btn btn-default" type="button" click.delegate="deleting = false" value="Cancel">
+                                </div>
+                            </form>
+                        </li>
+
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

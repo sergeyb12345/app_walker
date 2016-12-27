@@ -74,26 +74,17 @@ export class StrategyService {
         return exception;
     }
 
-    enable(strategyId) {
-        let self = this;
-        return this.getById(strategyId)
-            .then(strategy => {
-                if (strategy && strategy.deleted) {
-                    strategy.deleted = false;
-                    return self.update(strategy);
-                }
-            });
-    }
 
-    disable(strategyId) {
-        let self = this;
-        return this.getById(strategyId)
-            .then(strategy => {
-                if (strategy && !strategy.deleted) {
-                    strategy.deleted = true;
-                    return self.update(strategy);
-                }
-            });
+    deleteStrategy(strategyId) {
+        return this.http.fetch('strategy/'+ strategyId, {
+            method: 'delete'
+        })
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            this.handleError(error, "deleteStrategy");
+        });
     }
 
 }
