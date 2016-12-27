@@ -4,6 +4,7 @@
         <article-part-paragraph part.bind="part" if.bind="part.type === $parent.partType.paragraph"></article-part-paragraph>
         <article-part-heading part.bind="part" if.bind="part.type === $parent.partType.heading"></article-part-heading>
         <article-part-image part.bind="part" if.bind="part.type === $parent.partType.image"></article-part-image>
+        <article-part-list part.bind="part" if.bind="part.type === $parent.partType.list"></article-part-list>
         <article-part-new part.bind="part" if.bind="part.type === $parent.partType.unset"></article-part-new>
         <article-part-actions part.bind="part" if.bind="part.type !== $parent.partType.unset"></article-part-actions>
     </div>

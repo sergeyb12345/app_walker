@@ -19,8 +19,8 @@ export class App {
         config.addPipelineStep('authorize', AuthorizeStep);
         config.map([
             { route: ["account"], moduleId: "account/navigation", name:"account", title: "Login", nav: false },
-            { route: ["strategies"], moduleId: "strategies/navigation", name:"strategies", title: "Strategies", auth: true , nav:this.isAuthenticated },
             { route: ["studies"], moduleId: "studies/navigation", name:"studies", title: "Studies", nav:true },
+            { route: ["strategies"], moduleId: "strategies/navigation", name:"strategies", title: "Strategies", auth: true , nav:this.isAuthenticated },
             { route: '', redirect: this.homePage }
 
         ]);

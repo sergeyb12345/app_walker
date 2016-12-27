@@ -1,0 +1,24 @@
+﻿<template>
+
+    <form if.bind="part.editMode === true">
+        <h4>Define List Items</h4>
+        <fieldset>
+            <div repeat.for="item of part.items" class="form-group ${!item.valid ? 'has-error' : ''}">
+                <label class="col-sm-10">${$index + 1}.</label>
+                <div class="col-sm-12">
+                    <textarea rows="4" class="form-control" value.bind="item.text"></textarea>
+                    <span if.bind="!item.valid" class="help-block validation-message">Text cannot be blank.</span>
+
+                    <div class="form-actions">
+                        <button type="button" if.bind="$index+1 === $parent.part.items.length" click.delegate="$parent.addItem($index)" class="btn btn-success">New Item</button>
+                        <button type="button" click.delegate="$parent.deleteItem($index)" class="btn btn-danger">Delete Item</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <ol class="f" if.bind="!part.editMode && part.items && part.items.length > 0">
+        <li repeat.for="item of part.items">${item.text}</li>
+    </ol>
+</template>

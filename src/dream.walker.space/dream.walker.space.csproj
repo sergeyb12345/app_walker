@@ -487,6 +487,8 @@
     <Content Include="src\resources\elements\article-parts\article-part-actions.js" />
     <Content Include="src\resources\elements\article-parts\article-part-image.html" />
     <Content Include="src\resources\elements\article-parts\article-part-image.js" />
+    <Content Include="src\resources\elements\article-parts\article-part-list.html" />
+    <Content Include="src\resources\elements\article-parts\article-part-list.js" />
     <Content Include="src\resources\elements\article-parts\article-part-new.html" />
     <Content Include="src\resources\elements\article-parts\article-part-new.js" />
     <Content Include="src\resources\elements\article-parts\article-part-heading.html" />

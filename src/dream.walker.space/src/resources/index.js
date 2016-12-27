@@ -29,6 +29,7 @@ export function configure(config) {
         './elements/article-parts/article-part-heading',
         './elements/article-parts/article-part-actions',
         './elements/article-parts/article-part-image',
+        './elements/article-parts/article-part-list',
         './elements/article-parts/article-part-new'
     );
 }
