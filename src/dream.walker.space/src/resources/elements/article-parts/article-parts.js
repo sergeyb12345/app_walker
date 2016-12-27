@@ -39,8 +39,12 @@ export class ArticleParts {
     }
 
     partsChanged(newValue) {
-        if (newValue && !this.partsChangedSubscription) {
-            this.partsChangedSubscription = this.bindingEngine.collectionObserver(this.parts).subscribe(splices => this.onPartsChanged(splices));
+        if (newValue ) {
+            if( !this.partsChangedSubscription) {
+                this.partsChangedSubscription = this.bindingEngine.collectionObserver(this.parts).subscribe(splices => this.onPartsChanged(splices));
+            }   
+
+            this.renewPartsSubscriptions();
         }
     }
 
@@ -108,6 +112,9 @@ export class ArticleParts {
             case this.partAction.moveUp:
                 this.movePartUp();
             break;
+            case this.partAction.moveDown:
+                this.movePartDown();
+            break;
         default:
         }
     }
@@ -119,8 +126,22 @@ export class ArticleParts {
         }
     }
 
+
     movePartUp() {
-        
+        let index = this.parts.findIndex(p => p.action === this.partAction.moveUp);
+        if(index > 0) {
+            this.parts.splice(index - 1, 0, this.parts.splice(index, 1)[0]);
+            this.parts[index - 1].action = this.partAction.unset;
+        }
     }
+
+    movePartDown() {
+        let index = this.parts.findIndex(p => p.action === this.partAction.moveDown);
+        if(index > -1 && index < this.parts.length - 1) {
+            this.parts.splice(index + 1, 0, this.parts.splice(index, 1)[0]);
+            this.parts[index + 1].action = this.partAction.unset;
+        }
+    }
+
 
 }
