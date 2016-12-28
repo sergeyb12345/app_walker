@@ -1,6 +1,6 @@
 ﻿<template>
 
-    <compose repeat.for="menu of menus" model.bind="menu" view-model="../navigation/sub-nav"></compose>
+    <compose repeat.for="menu of menus" model.bind="menu" view-model="./categories/sub-navigation"></compose>
 
     <div class="container page-content">
         <router-view></router-view>
