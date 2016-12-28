@@ -3,8 +3,8 @@ import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {StrategyService} from '../services/strategy-service';
 import articleEvents from  "../resources/elements/article-parts/article-events";
-import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation"
-import {BootstrapFormRenderer} from "../common/bootstrap-form-renderer"
+import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation";
+import {BootstrapFormRenderer} from "../common/bootstrap-form-renderer";
 
 @inject(EventAggregator, StrategyService, "ErrorParser", "User", ValidationController)
 export class List {
@@ -26,7 +26,6 @@ export class List {
         this.summaries = [];
         this.strategy = {};
 
-        this.subscribe();
     }
 
     activate(params, routeConfig, navigationInstruction) {
@@ -204,29 +203,4 @@ export class List {
             });    
     }
 
-    subscribe() {
-        this.unsubscribe();
-    }
-
-
-    unsubscribe() {
-        if (this.subscriptions.length > 0) {
-            this.subscriptions.forEach(function(subscription) {
-                subscription.dispose();
-            });
-        }
-    }
-
-    detached() {
-        this.unsubscribe();
-    }
-
-    handleError(error) {
-        let self = this;
-
-        this.errorParser.parseError(error)
-            .then(errorInfo => {
-                self.errors.push(errorInfo);
-            });
-    }
 }

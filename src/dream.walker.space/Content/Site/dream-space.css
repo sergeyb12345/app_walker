@@ -586,6 +586,7 @@ form fieldset {
 .page-content {
   margin-top: 15px;
   padding-left: 30px;
+  padding-bottom: 50px;
 }
 .page-content header {
   margin-bottom: 15px;

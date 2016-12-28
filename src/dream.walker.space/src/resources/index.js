@@ -13,17 +13,6 @@ export function configure(config) {
     config.globalResources(['./value-converters/blob-to-url']);
     config.globalResources(['./value-converters/filelist-to-array']);
     config.globalResources(
-        './elements/article/article',
-        './elements/article/strategy',
-        './elements/article/article-block',
-        './elements/article//heading-block',
-        './elements/article//paragraph-block',
-        './elements/article/image-block',
-        './elements/article/ordered-list-block',
-        './elements/article/block-actions',
-        './elements/article/new-block'
-    );
-    config.globalResources(
         './elements/article-parts/article-parts',
         './elements/article-parts/article-part-paragraph',
         './elements/article-parts/article-part-heading',

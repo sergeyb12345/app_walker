@@ -38,20 +38,6 @@ export class ArticleService {
             });
     }
     
-    updateArticleOrder(articleId, orderId) {
-        let article = {
-            ArticleId: articleId,
-            OrderId: orderId
-        }
-
-        return this.http.fetch("article/"+articleId+"/order", {method: 'put', body:json(article)})
-            .then(response => {
-                return response.json();
-            })
-            .catch(error => {
-                return this.handleError(error, "updateArticleOrder");
-            });
-    }
 
     getArticleByUrl(categotyId, articleUrl) {
         return this.http.fetch("article/url/"+categotyId+"/"+articleUrl)

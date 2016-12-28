@@ -1,22 +1,36 @@
-﻿import {inject} from "aurelia-framework";
+﻿import * as toastr from "toastr";
+import {inject} from "aurelia-framework";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {ArticleService} from '../services/article-service';
 import {Navigation} from './navigation'
+import articleEvents from  "../resources/elements/article-parts/article-events";
+import {ValidationRules, ValidationController, validateTrigger} from "aurelia-validation";
+import {BootstrapFormRenderer} from "../common/bootstrap-form-renderer";
 
-@inject(EventAggregator, ArticleService, Navigation, "User")
+@inject(EventAggregator, ArticleService, Navigation, "User", ValidationController)
 export class Category {
 
-    constructor (eventAggregator, articleService, navigation, userContext) {
+    constructor (eventAggregator, articleService, navigation, userContext, validation) {
         this.powerUser = userContext.user.isAuthenticated;
         this.eventAggregator = eventAggregator;
+        this.articleEvents = articleEvents;
+
+        this.validation = validation;
+        this.validation.validateTrigger = validateTrigger.change;
+        this.validation.addRenderer(new BootstrapFormRenderer());
+
         this.articleService = articleService;
         this.subscriptions = [];
         this.editMode = false;
         this.navigation = navigation;
         this.article = {};
+        this.category = {};
+
     }
 
-    activate(params, routeconfig) {
+    activate(params, routeconfig, navigationInstruction) {
+        this.router = navigationInstruction.router;
+
         this.articleUrl = "default";
 
         if (!params.category) {
@@ -30,21 +44,11 @@ export class Category {
         this.loadCategory(params.category);
     }
 
-    loadArticle(categoryId, articleUrl) {
-
-        this.articleService.getArticleByUrl(categoryId, articleUrl)
-        .then(result => {
-            this.article = result;
-            this.setEditMode(false);
-            this.subscribe();
-        });
-    }
-
     loadArticles(categoryId) {
         this.articleService.getArticles(categoryId)
             .then(articles => {
                 this.articles = articles;
-                this.sortArticles();
+                this.selectSideNavigationItem();
             });
     }
 
@@ -58,66 +62,49 @@ export class Category {
                 if (this.category && this.category.categoryId > 0) {
                     this.navigation.selectMenuItem(category.url);
 
-                    this.loadArticle(this.category.categoryId, this.articleUrl);
-                    this.loadArticles(this.category.categoryId);
+                    this.articleService.getArticleByUrl(this.category.categoryId, this.articleUrl)
+                        .then(result => {
+                            this.article = result;
+                            this.setEditMode(false);
+                            this.loadArticles(this.category.categoryId);
+                        });
+
                 }
             });
-    }
-
-    getArticleUrl(article) {
-        return '/' + this.navigation.section.url + '/' + this.category.url + '/' + article.url;
     }
 
     setEditMode (editMode) {
         this.editMode = editMode;
         this.navigation.menu.editMode = editMode;
+        this.eventAggregator.publish(this.articleEvents.subscribed.onEditModeChanged, editMode);
     }
 
-    getUrl(menuItem) {
-        return '' + this.menu.section.url + '/' + menuItem.url;
-    }
-
-    
-    startEdit(flag) {
-        if (this.article && this.article.articleId) {
-            this.eventAggregator.publish('start-edit-article-' + this.article.articleId, true);
-        }
+    startEdit() {
+        this.originalArticle = Object.assign({}, this.article);
 
         this.setEditMode(true);
+
+        this.validationRules = ValidationRules
+                .ensure(u => u.title).displayName('Strategy name').required().withMessage(`\${$displayName} cannot be blank.`)
+                .ensure(u => u.summary).displayName('Summary').required().withMessage(`\${$displayName} cannot be blank.`)
+                .ensure(u => u.url).displayName('Strategy url').required().withMessage(`\${$displayName} cannot be blank.`)
+            .on(this.article);
+
     }
 
-    cancelEdit(flag) {
-        if (this.article && this.article.articleId) {
-            this.eventAggregator.publish('cancel-edit-article-' + this.article.articleId, true);
-        }
- 
+    cancelEdit() {
         this.setEditMode(false);
-    }
 
-    saveArticle(flag) {
-
-        if (this.article && this.article.articleId) {
-            this.eventAggregator.publish('save-article-' + this.article.articleId, true);
+        if(this.article.articleId > 0) {
+            this.article = this.originalArticle;
+            this.article.editMode = false;
+        } else {
+            this.article.deleted = true;
         }
+        this.validation.reset();
     }
 
-    onArticleSaved(flag) {
-        if (flag) {
-            this.setEditMode(false);
-
-            if (this.articles) {
-                this.articles.forEach(function(article) {
-                    if (article.changed === true) {
-                        if (article.IsDeleted) {
-                            self.removeArticle(article.articleId);
-                        } else {
-                            self.updateArticleOrder(article.articleId, article.orderId);
-                        }
-                    }
-                });
-            }
-        }
-    }
+  
 
     addArticle() {
         this.article = {
@@ -130,97 +117,92 @@ export class Category {
             orderId: this.maxOrderId(this.articles) + 1,
             blocks: []
         };
+
+        this.startEdit();
+        this.validation.validate();
     }
 
+    selectSideNavigationItem() {
+        let self = this;
 
-    deleteArticle(article) {
-        article.isDeleting = true;
-    }
-
-    cancelDeleteArticle(article) {
-        article.isDeleting = false;
-    }
-
-    confirmDeleteArticle(article) {
-        article.IsDeleted = true;
-    }    
-    
-    removeArticle(articleId) {
-        this.articleService.deleteArticle(articleId)
-            .then(response => {
+        if (this.articles && this.articles.length > 0) {
+            this.articles.forEach(function(item) {
+                item.selected = item.articleId === self.article.articleId;
             });
-    }
-
-    updateArticleOrder(articleId, orderId) {
-        this.articleService.updateArticleOrder(articleId, orderId)
-            .then(response => {
-            });
-    }
-
-    moveUpArticle(article) {
-        let order = article.orderId - 1;
-        let up = this.articles.find(x => x.orderId === order);
-        
-        if(up && up.orderId === order) {
-            up.orderId = article.orderId;
-            up.changed = true;
-            article.orderId = order;
-            article.changed = true;
-
-            this.sortArticles();
         }
     }
 
-    moveDownArticle(article) {
-        let order = article.orderId + 1;
-        let down = this.articles.find(x => x.orderId === order);
-        
-        if(down && down.orderId === order) {
-            down.orderId = article.orderId;
-            down.changed = true;
-            article.orderId = order;
-            article.changed = true;
-        
-            this.sortArticles();
+    navigateToArticle(url) {
+        if (url && url.length > 0) {
+            this.setEditMode(false);
+            let articleUrl =  '/' + this.navigation.section.url + '/' + this.category.url + '/' + url;
+            this.router.navigate(articleUrl);
         }
     }
 
-    sortArticles() {
-        if (this.articles) {
-            this.sortedArticles = this.articles
-                .filter(function(item) {
-                    return item.isDeleted !== true;
+    deleteArticle() {
+        let self = this;
+
+        if (this.article && this.article.articleId > 0) {
+            this.articleService.deleteArticle(this.article.articleId)
+                .then(response => {
+                    toastr.success('Article deleted successfully', 'Article Deleted');
+                    self.setEditMode(false);
+                    self.router.navigate('/studies' );
                 })
-                .slice(0)
-                .sort((a, b) => {
-                    return (a['orderId'] - b['orderId']);
-                });
+                .catch(error => {
+                    toastr.error('Failed to delete article', 'Delete Failed');
+                });   
+
         }
     }
 
+    trySaveArticle() {
+        this.validation.validate()
+            .then(response => {
+                let valid = false;
+                if(response.valid === true) {
+                    if (this.articlePartsValidate()) {
+                        valid = true;
+                    }
+                }
+                if (valid) {
+                    this.saveArticle();
 
-    subscribe() {
+                } else {
+                    toastr.warning('Please correct validation errors.', 'Validation Errors');
+                }
+            })
+            .catch(error => {
+                this.handleError(error);
+            });    
+    }
 
-        if (this.article && this.article.articleId) {
-            this.unsubscribe();
-
-            this.subscriptions.push(
-                    this.eventAggregator.subscribe('article-saved-' + this.article.articleId, flag => this.onArticleSaved(flag)));
-            
+    articlePartsValidate() {
+        if (this.article.blocks.length > 0) {
+            let index = this.article.blocks.findIndex(b => !b.valid);
+            return index === -1;
+        } else {
+            toastr.warning('Article is empty', 'Validation Errors');
+            return false;
         }
+    }
+    
+    saveArticle() {
+        
+        let self = this;
+        this.setEditMode(false);
 
+        this.articleService.saveArticle(this.article)
+            .then(data => {
+              
+                toastr.success(`Article staved successfully!`, 'Strategy saved');
+                self.navigateToArticle(this.article.url);
+            })
+            .catch(error => {
+                this.setEditMode(true);
+                toastr.error(`Failed to save article!`, 'Application Error');
+            });    
     }
 
-    unsubscribe() {
-        if (this.subscriptions.length > 0) {
-            this.subscriptions.forEach(function(subscription) {
-                subscription.dispose();
-            });
-        }
-
-    }
-
-    detached() {
-        this.unsubscribe();
-    }
 }

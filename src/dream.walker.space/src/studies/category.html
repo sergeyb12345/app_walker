@@ -2,8 +2,8 @@
     <div class="actions" if.bind="powerUser">
 
         <div if.bind="editMode !== true" class="btn-group" role="group">
-            <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Configure
+            <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Administration
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
@@ -23,39 +23,64 @@
     <div class="row">
 
         <div class="col-md-8 article">
-            <article article.bind="article"></article> 
+            <header>
+                <h3>${article.title}</h3>
+            </header>
+
+            <form if.bind="editMode === true">
+                <fieldset>
+                    <div class="form-group">
+                        <label>Article Name</label>
+                        <input type="text" class="form-control" value.bind="article.title & validate">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Article Url</label>
+                        <input type="text" class="form-control" value.bind="article.url & validate">
+                    </div>
+
+                </fieldset>
+
+                <h4>Article Parts</h4>
+            </form>
+
+            <div class="c_article_parts ${editMode ? 'edit-mode' : ''}">
+                <article-parts parts.bind="article.blocks"></article-parts>
+            </div>
+            
         </div>
 
         <div class="col-md-4">
             <div class="side-navigation">
                 <h3>${category.title}</h3>
                 <ul>
-                    <li repeat.for="item of sortedArticles" class="${$parent.editMode === true ? 'edit-mode': ''}" if.bind="item.isDeleted !== true">
-                        <div if.bind="editMode" class="block-actions">
-                            <div if.bind="item.isDeleting !== true" class="btn-group" role="group" aria-label="Actions">
-                                <button type="button" click.delegate="$parent.deleteArticle(item)" class="btn btn-danger btn-xs">Delete</button>
-                                <button type="button" click.delegate="$parent.moveUpArticle(item)" class="btn btn-default btn-xs">
-                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" click.delegate="$parent.moveDownArticle(item)" class="btn btn-default btn-xs">
-                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                                </button>
-                            </div>
-
-                            <div if.bind="item.isDeleting === true" class="btn-group" role="group" aria-label="Actions">
-                                <button type="button" click.delegate="$parent.confirmDeleteArticle(item)" class="btn btn-danger btn-xs">Confirm Delete</button>
-                                <button type="button" click.delegate="$parent.cancelDeleteArticle(item)" class="btn btn-default btn-xs">Cancel</button>
-                            </div>
-                        </div>
-
+                    <li repeat.for="summary of articles">
                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                        <a href.bind="$parent.getArticleUrl(item)" class="${item.articleId === article.articleId ? 'active' : ''}">${item.title}</a>
+                        <a click.delegate="$parent.navigateToArticle(summary.url)" title="${summary.summary}"
+                           class="${summary.selected ? 'active' : ''}">${summary.title} Rules</a>
                     </li>
                 </ul>
-                <div if.bind="editMode === true" class="block-actions">
-                    <div class="btn-group" role="group" aria-label="Actions">
-                        <button type="button" click.delegate="addArticle()" class="btn btn-primary btn-xs">Add New Article</button>
-                    </div>
+
+                <div if.bind="editMode">
+                    <h3>Add / Remove Articles</h3>
+                    <ul>
+                        <li class="side-navigation-add">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            <a click.delegate="addArticle()">Add New Article</a>
+                        </li>
+
+                        <li class="side-navigation-delete">
+                            <form>
+                                <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                                <a click.delegate="deleting = true">Delete Loaded Article</a>
+                                <div class="form-actions no-border" if.bind="deleting ">
+                                    <input class="btn btn-danger" type="button" click.delegate="deleteArticle()" value="Delete">
+                                    <input class="btn btn-default" type="button" click.delegate="deleting = false" value="Cancel">
+                                </div>
+                            </form>
+                        </li>
+
+                    </ul>
                 </div>
             </div>
         </div>
