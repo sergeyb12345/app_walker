@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using dream.walker.data.Entities.Strategies;
-using dream.walker.data.Helpers;
 using dream.walker.data.Models;
 using dream.walker.data.Repositories;
 using Newtonsoft.Json;
@@ -35,8 +34,8 @@ namespace dream.walker.data.Services
             using (var scope = _container.BeginLifetimeScope())
             {
                 var repository = scope.Resolve<IStrategyRepository>();
-                var records = await repository.GetByUrlAsync(url);
-                return records;
+                var record = await repository.GetByUrlAsync(url);
+                return new StrategyModel(record);
             }
         }
 
@@ -44,7 +43,7 @@ namespace dream.walker.data.Services
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                Strategy record = null;
+                Strategy record;
                 var repository = scope.Resolve<IStrategyRepository>();
 
                 if (model.StrategyId == 0)
@@ -58,7 +57,6 @@ namespace dream.walker.data.Services
 
                 if (record != null)
                 {
-                    //model.Url = Slug.Create(true, model.Title);
                     record.Name = model.Title;
                     record.Url = model.Url;
                     record.Deleted = model.Deleted;
@@ -98,5 +96,16 @@ namespace dream.walker.data.Services
                 }
             }
         }
+
+        public async Task<StrategySummary> GetSummaryByUrlAsync(string url)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IStrategyRepository>();
+                var record = await repository.GetByUrlAsync(url);
+                return new StrategySummary(record);
+            }
+        }
+
     }
 }

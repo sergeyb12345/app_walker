@@ -9,16 +9,7 @@
         </div>
 
         <div class="col-md-4 col-xs-12">
-            <div class="side-navigation">
-                <h3>Defined Strategies</h3>
-                <ul>
-                    <li repeat.for="summary of summaries">
-                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                        <a click.delegate="$parent.navigateToStrategy(summary.url)" title="${summary.summary}"
-                           class="${summary.selected ? 'active' : ''} ">${summary.title} Rules</a>
-                    </li>
-                </ul>
-            </div>
+            <side-navigation strategyurl.bind="strategyUrl"></side-navigation>
         </div>
     </div>
 

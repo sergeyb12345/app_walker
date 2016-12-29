@@ -16,6 +16,7 @@ namespace dream.walker.data.Services
         Task<List<RuleSetModel>> GetRuleSetsAsync(QuotePeriod period);
         Task<RuleSetModel> SaveRuleSetAsync(RuleSetModel model);
         Task DeleteRuleSetAsync(int id);
+        Task<List<vStrategyRuleSet>> GetStrategyRuleSetsAsync(int id);
     }
 
     public class RuleSetService : IRuleSetService
@@ -122,6 +123,16 @@ namespace dream.walker.data.Services
 
 
                 return model;
+            }
+        }
+
+        public async Task<List<vStrategyRuleSet>> GetStrategyRuleSetsAsync(int id)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IVStrategyRuleSetRepository>();
+                var records = await repository.GetRuleSetsAsync(id);
+                return records;
             }
         }
     }

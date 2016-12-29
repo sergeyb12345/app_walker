@@ -10,6 +10,7 @@ export function configure(config) {
     config.globalResources(['./elements/indicator/indicator']);
     config.globalResources(['./elements/strategy/strategy-admin']);
     config.globalResources(['./elements/strategy/strategy-navigation']);
+    config.globalResources(['./elements/strategy/side-navigation']);
     config.globalResources(['./attributes/first-letter-span']);
     config.globalResources(['./value-converters/blob-to-url']);
     config.globalResources(['./value-converters/filelist-to-array']);

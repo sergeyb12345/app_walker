@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using dream.walker.data.Entities.Strategies;
 using dream.walker.data.Enums;
 using dream.walker.data.Services;
 using dream.walker.data.Models;
@@ -55,6 +56,15 @@ namespace dream.walker.space.Controllers
         {
             await _service.DeleteRuleSetAsync(id);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("strategy/{id:int:min(1)}")]
+        [ResponseType(typeof(List<vStrategyRuleSet>))]
+        public async Task<IHttpActionResult> GetStrategyRuleSets(int id)
+        {
+            var records = await _service.GetStrategyRuleSetsAsync(id);
+            return Ok(records);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace dream.walker.data.Repositories
     {
         Strategy Get(int id);
         Task<List<Strategy>> GetAllAsync(bool includeDeleted);
-        Task<StrategyModel> GetByUrlAsync(string url);
+        Task<Strategy> GetByUrlAsync(string url);
         Strategy Add(Strategy strategy);
         Task<Strategy> GetAsync(int strategyId);
         Task CommitAsync();
@@ -36,10 +36,10 @@ namespace dream.walker.data.Repositories
             return records;
         }
 
-        public async Task<StrategyModel> GetByUrlAsync(string url)
+        public async Task<Strategy> GetByUrlAsync(string url)
         {
             var record = await Dbset.FirstOrDefaultAsync(r => r.Url.ToLower() == url.ToLower());
-            return new StrategyModel(record);
+            return record;
         }
 
         public async Task<Strategy> GetAsync(int strategyId)

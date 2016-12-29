@@ -1,12 +1,53 @@
 ﻿import {inject, bindable} from "aurelia-framework";
+import { Router } from 'aurelia-router';
+import {EventAggregator} from 'aurelia-event-aggregator';
 
+@inject(Router, EventAggregator)
 export class StrategyNavigation {
-    @bindable items;
+    @bindable strategychangedevent;
 
-    constructor () {
+    constructor (router, eventAggregator) {
+        this.router = router;
+        this.eventAggregator = eventAggregator;
+        this.subscription = null;
+        this.items = [];
     }
 
-    itemsChanged(newValue) {
-        let v = newValue;
-    }
+    strategychangedeventChanged(newValue) {
+        if (this.subscription) {
+            this.subscription.dispose();
+        }
+
+        this.subscription = this.eventAggregator.subscribe(newValue, url => this.onStrategyChanged(url));
+    }
+
+    detached() {
+        if (this.subscription) {
+            this.subscription.dispose();
+        }
+    }
+
+    onStrategyChanged (url) {
+        let currentModuleName = this.router.currentInstruction.config.name;
+        this.items = [];
+
+        let strategyMenuItem =
+        {
+            isActive: currentModuleName === 'strategy',
+            title: 'Strategy Article',
+            url: '/strategies/strategy/' + url,
+            name: 'strategy'
+        }
+
+        let rulesetsMenuItem = {
+            isActive: currentModuleName === 'strategy-rule-sets',
+            title: 'Strategy Rule Sets',
+            url: '/strategies/strategy-rule-sets/' + url,
+            name: 'rule-sets'
+        }
+
+        this.items.push(strategyMenuItem);
+        this.items.push(rulesetsMenuItem);
+    }
+
 }

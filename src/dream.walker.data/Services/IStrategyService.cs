@@ -12,5 +12,6 @@ namespace dream.walker.data.Services
         Task<StrategyModel> SaveStrategyAsync(StrategyModel model);
         Task<Strategy> GetStrategyAsync(int id);
         Task DeleteStrategyAsync(int id);
+        Task<StrategySummary> GetSummaryByUrlAsync(string url);
     }
 }

@@ -39,6 +39,17 @@ export class RuleSetService {
         });
     }
 
+    getRuleSetsForStrategy(strategyId) {
+
+        return this.http.fetch('ruleset/strategy/'+strategyId, {
+            method: 'get'
+        })
+        .then(response => response.json())
+        .catch(error => {
+            return this.handleError(error, "getRuleSetsForStrategy");
+        });
+    }
+
     deleteRuleSet(id) {
         return this.http.fetch("ruleset/"+id, {method: 'delete'})
             .then(response => {
@@ -59,6 +70,7 @@ export class RuleSetService {
             this.handleError(error, "saveRuleSet");
         });
     }
+
 
     handleError(error,  source) {
         let exception = {

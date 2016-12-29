@@ -39,6 +39,17 @@ export class StrategyService {
         .catch(error => {
             return this.handleError(error, "getByUrl");
         });
+    }    
+    
+    getSummaryByUrl(url) {
+
+        return this.http.fetch('strategy/getSummaryByUrl/'+url, {
+            method: 'get'
+            })
+        .then(response => response.json())
+        .catch(error => {
+            return this.handleError(error, "getSummaryByUrl");
+        });
     }
 
     getById(id) {
@@ -50,7 +61,7 @@ export class StrategyService {
         .catch(error => {
             return this.handleError(error, "getById");
         });
-    }
+    }    
 
     update(strategy) {
         return this.http.fetch('strategy', {

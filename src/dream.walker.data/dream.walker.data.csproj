@@ -98,6 +98,7 @@
     <Compile Include="Entities\Companies\CompanyRuleSet.cs" />
     <Compile Include="Entities\Indicators\MarketNHNL.cs" />
     <Compile Include="Entities\Strategies\vStrategy.cs" />
+    <Compile Include="Entities\Strategies\vStrategyRuleSet.cs" />
     <Compile Include="Enums\DataSourceType.cs" />
     <Compile Include="Entities\Strategies\RuleSet.cs" />
     <Compile Include="Entities\Strategies\RuleSetDetails.cs" />
@@ -241,6 +242,10 @@
     <Compile Include="Migrations\201612241333038_AltervStrategy.Designer.cs">
       <DependentUpon>201612241333038_AltervStrategy.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612291254010_CreatevStrategyRuleSet.cs" />
+    <Compile Include="Migrations\201612291254010_CreatevStrategyRuleSet.Designer.cs">
+      <DependentUpon>201612291254010_CreatevStrategyRuleSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\IndicatorCore.cs" />
@@ -270,6 +275,7 @@
     <Compile Include="MsSqlDbMigrator.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />
     <Compile Include="Repositories\CompanyRuleSetRepository.cs" />
+    <Compile Include="Repositories\VStrategyRuleSetRepository.cs" />
     <Compile Include="Repositories\VStrategyRepository.cs" />
     <Compile Include="Repositories\VRuleSetRepository.cs" />
     <Compile Include="Repositories\RuleSetDetailsRepository.cs" />
@@ -432,6 +438,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612241333038_AltervStrategy.resx">
       <DependentUpon>201612241333038_AltervStrategy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612291254010_CreatevStrategyRuleSet.resx">
+      <DependentUpon>201612291254010_CreatevStrategyRuleSet.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -95,6 +95,7 @@ namespace dream.walker.data
 
             modelBuilder.Entity<vRuleSet>().HasKey(t => new { t.RuleId, t.RuleSetId });
             modelBuilder.Entity<vStrategy>().HasKey(t => new { t.StrategyId, t.RuleSetId });
+            modelBuilder.Entity<vStrategyRuleSet>().HasKey(t => new { t.StrategyId, t.RuleSetId });
 
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
@@ -116,5 +117,6 @@ namespace dream.walker.data
         public DbSet<Section> Sections { get; set; }
         public virtual DbSet<vRuleSet> vRuleSets { get; set; }
         public virtual DbSet<vStrategy> vStrategies { get; set; }
+        public virtual DbSet<vStrategyRuleSet> vStrategyRuleSets { get; set; }
     }
 }

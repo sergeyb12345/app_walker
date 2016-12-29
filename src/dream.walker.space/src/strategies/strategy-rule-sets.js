@@ -2,97 +2,46 @@
 import {inject} from "aurelia-framework";
 import {Navigation} from "./navigation";
 import {StrategyService} from '../services/strategy-service';
+import {RuleSetService} from '../services/rule-set-service';
 
-@inject(Navigation, StrategyService)
+@inject(Navigation, StrategyService, RuleSetService)
 export class StrategyRuleSets {
     
-    constructor (strategyNavigation, strategyService) {
+    constructor (strategyNavigation, strategyService, ruleSetService) {
         this.strategyNavigation = strategyNavigation;
         this.strategyService = strategyService;
+        this.ruleSetService = ruleSetService;
 
-        this.summaries = [];
         this.strategy = {};
+        this.strategyUrl = '';
+        this.rulesets = [];
     }
-
+    
     activate(params, routeConfig, navigationInstruction) {
-        this.router = navigationInstruction.router;
+        if (params.strategyUrl) {
 
-        let self = this;
-        this.strategyService.getSummaries()
+            this.strategyService.getSummaryByUrl(params.strategyUrl)
+                .then(data => {
+                    if (data && data.strategyId) {
+                        this.strategy = data;
+                        this.strategyUrl = params.strategyUrl;
+                        this.strategyNavigation.configureNavigation(this.strategyUrl);
+
+                        this.loadRuleSets(this.strategy.strategyId);
+
+                    } else {
+                        toastr.error(`Failed to load summary for url ${params.strategyUrl}`, 'Load Summary Failed');
+                    }
+                });
+        }
+    }
+
+    loadRuleSets(strategyId) {
+
+        this.ruleSetService.getRuleSetsForStrategy(strategyId)
             .then(data => {
-                self.summaries = data;
-                self.loadRuleSets(params.strategyUrl);
-            })
-            .catch(error => {
-                toastr.error('Failed to load summaries', 'Load Summaries Failed');
-            });   
-    }
-
-    loadRuleSets(url) {
-        let self = this;
-        this.strategy = {};
-
-        if (url && url.length > 0) {
-
-            this.strategy = this.summaries.find(s => s.url.toLowerCase() === url.toLowerCase());
-            if (this.strategy) {
-                this.buildStrategyNavigation(url.toLowerCase());
-
-            } else {
-                self.navigateToDefaultStrategy();
-            }
-
-
-        } else {
-            this.navigateToDefaultStrategy();
-        }
-    }
-
-    setActiveStrategy() {
-        let self = this;
-
-        if (this.summaries) {
-            this.summaries.forEach(function(item) {
-                item.selected = item.strategyId === self.strategy.strategyId;
+                this.rulesets = data;
             });
-        }
     }
 
-    navigateToDefaultStrategy() {
-        if (this.summaries && this.summaries.length > 0) {
-            let strategyUrl = '/strategies/strategy-rule-sets/' + this.summaries[0].url;
-            this.router.navigate(strategyUrl);
-        } 
-    }
-
-    navigateToStrategy(url) {
-        if (url && url.length > 0) {
-            let strategyUrl = '/strategies/strategy-rule-sets/' + url;
-            this.router.navigate(strategyUrl);
-        }
-    }
-
-    buildStrategyNavigation (url) {
-        this.strategyNavigation.items = [];
-
-        let strategyMenuItem =
-        {
-            isActive: false,
-            title: 'Strategy Article',
-            url: '/strategies/strategy/' + url,
-            name: 'strategy'
-        }
-
-        let rulesetsMenuItem = {
-            isActive: true,
-            title: 'Strategy Rule Sets',
-            url: '/strategies/strategy-rule-sets/' + url,
-            name: 'rule-sets'
-        }
-
-        this.strategyNavigation.items.push(strategyMenuItem);
-        this.strategyNavigation.items.push(rulesetsMenuItem);
-
-        this.setActiveStrategy();
-    }
 }

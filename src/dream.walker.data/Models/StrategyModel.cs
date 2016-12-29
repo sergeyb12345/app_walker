@@ -35,7 +35,6 @@ namespace dream.walker.data.Models
                 Url = header.Url;
                 Deleted = header.Deleted;
                 Summary = header.StrategyDescription;
-                Blocks = JsonConvert.DeserializeObject<List<dynamic>>(header.JsonArticleBlocks);
 
                 foreach (var item in data.Where(r => r.StrategyId == strategyId))
                 {

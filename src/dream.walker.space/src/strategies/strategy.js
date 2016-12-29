@@ -29,28 +29,6 @@ export class Strategy {
         this.strategy = {};
     }
 
-    buildStrategyNavigation(strategyUrl) {
-        this.strategyNavigation.items = [];
-
-        let strategyMenuItem =
-        {
-            isActive: true,
-            title: 'Strategy Article',
-            url: '/strategies/strategy/' + strategyUrl,
-            name: 'strategy'
-        }
-
-        let rulesetsMenuItem = {
-            isActive: false,
-            title: 'Strategy Rule Sets',
-            url: '/strategies/strategy-rule-sets/' + strategyUrl,
-            name: 'rule-sets'
-        }
-
-        this.strategyNavigation.items.push(strategyMenuItem);
-        this.strategyNavigation.items.push(rulesetsMenuItem);
-    }
-
     activate(params, routeConfig, navigationInstruction) {
         this.router = navigationInstruction.router;
 
@@ -125,7 +103,6 @@ export class Strategy {
                             self.strategy.blocks = [];
                         }
                         self.selectActiveSummary(data.strategyId);
-                        self.buildStrategyNavigation(self.strategy.url);
                     } else {
                         self.navigateToDefaultStrategy();
                     }
@@ -140,6 +117,8 @@ export class Strategy {
         this.summaries.forEach(function(item) {
             item.selected = item.strategyId === id;
         });
+
+        this.strategyNavigation.configureNavigation(this.strategy.url);
     }
 
     navigateToDefaultStrategy() {
