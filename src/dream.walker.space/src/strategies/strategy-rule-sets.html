@@ -1,15 +1,72 @@
 ﻿<template>
     <strategy-admin></strategy-admin>
 
-    <div class="row">
-        <div class="col-md-8 col-xs-12 c_strategy">
-            <header>
-                <h3>Rule Sets - "${strategy.title}"</h3>
-            </header>
-        </div>
+    <div class="c_rule_sets-content">
+        <div class="row">
+            <div class="col-md-8 col-xs-12 c_rule_sets">
+                <header>
+                    <h3>${strategy.title}</h3>
+                </header>
 
-        <div class="col-md-4 col-xs-12">
-            <side-navigation strategyurl.bind="strategyUrl"></side-navigation>
+                <p>${strategy.summary}</p>
+                <h4>Attached Rule Sets</h4>
+
+                <div class="c_rule_set-list">
+                    <strategy-rule-set repeat.for="ruleset of rulesets" class="${$index === $parent.rulesets.length-1 && !editMode ? 'no-border': ''}" ruleset.bind="ruleset"></strategy-rule-set>
+
+                    <div class="c_rule_set c_rule_set-add" show.bind="editMode" >
+                        <div class="c_rule_set-header" click.delegate="addRuleSet()">
+                            <a>Attach Rule Set</a>
+                            <a class="chevron">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                            </a>
+                        </div>
+
+                        <div class="c_rule_set-details" show.bind="addingMode === true && editMode">
+                            <form>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label>Period</label>
+                                        <select class="form-control" value.bind="attachedRuleSet.period" change.delegate="onPeriodSelected()">
+                                            <option> - Select Period -</option>
+                                            <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Rule Set</label>
+                                        <select class="form-control" value.bind="attachedRuleSet.ruleSetId" change.delegate="onRuleSetSelected()">
+                                            <option> - Select Rule Set -</option>
+                                            <option repeat.for="periodRuleSet of periodRuleSets" model.bind="periodRuleSet.ruleSetId">${periodRuleSet.name}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" if.bind="attachedRuleSet.ruleSetId > 0">
+                                        <label>Description</label>
+                                        <p class="form-control" readonly>${attachedRuleSet.description}</p>
+                                    </div>
+                                </fieldset>
+
+                                <div class="c_rule-actions">
+                                    <button type="button" click.delegate="confirmAddRuleSet()" class="btn btn-warning">Attach</button>
+                                    <button type="button" click.delegate="cancelAddRuleSet()" class="btn btn-default">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="c_rule_set-actions">
+                    <button type="button" click.delegate="startEdit()" if.bind="!editMode" class="btn btn-danger">Edit</button>
+                    <button type="button" click.delegate="trySaveRuleSets()" if.bind="editMode" class="btn btn-danger">Save</button>
+                    <button type="button" click.delegate="cancelEdit()" if.bind="editMode" class="btn btn-default">Cancel</button>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 col-xs-12">
+                <side-navigation strategyurl.bind="strategyUrl"></side-navigation>
+            </div>
         </div>
     </div>
 

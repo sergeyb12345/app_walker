@@ -739,13 +739,17 @@ form fieldset {
 .c_rules-content .c_rule .c_rule-details h4 {
   border-bottom: 1px solid #e22004;
 }
+.c_rule_sets-content {
+  padding-bottom: 30px;
+}
 .c_rule_sets-content .c_rule_sets {
   background-color: rgba(255, 255, 255, 0.7);
+  padding-bottom: 15px;
 }
-.c_rule_sets-content .c_rule_set-list {
-  border: 1px solid rgba(204, 204, 204, 0.36);
-  padding: 0 10px;
-  margin-bottom: 15px;
+.c_rule_sets-content .c_rule_set-actions {
+  text-align: right;
+  border-top: 1px solid #e22004;
+  padding-top: 10px;
 }
 .c_rule_sets-content .c_rule_set {
   padding: 10px 10px;
@@ -759,11 +763,6 @@ form fieldset {
 .c_rule_sets-content .c_rule_set.c_rule_set-add .glyphicon,
 .c_rule_sets-content .c_rule_set .c_rule_set-add .glyphicon {
   color: green;
-}
-.c_rule_sets-content .c_rule_set .c_rule_set-actions {
-  text-align: right;
-  border-top: 1px solid #e22004;
-  padding-top: 10px;
 }
 .c_rule_sets-content .c_rule_set .c_rule_set-header {
   cursor: pointer;
@@ -810,6 +809,14 @@ form fieldset {
   margin-top: 25px;
   margin-left: 14px;
   border-bottom: 1px solid #e22004;
+}
+.c_rule_sets-content .c_rule_set-list {
+  border: 1px solid rgba(204, 204, 204, 0.36);
+  padding: 0 10px;
+  margin-bottom: 15px;
+}
+.c_rule_sets-content .c_rule_set-list .no-border .c_rule_set {
+  border-bottom: 0;
 }
 .c_indicators-content .c_indicators {
   background-color: rgba(255, 255, 255, 0.7);

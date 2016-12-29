@@ -1,19 +1,17 @@
 ﻿/// <reference path="../base/_variables" />
 
 .c_rule_sets-content {
+        padding-bottom: 30px;
 
     .c_rule_sets {
         background-color:@page-bg-content;
+        padding-bottom: 15px;
     }
 
-    .c_rule_set-list {
-        border: 1px solid @solid-border-color;
-        padding:0 10px;
-        margin-bottom: 15px;
-
-        h3 {
-            //visibility:hidden;
-        }
+    .c_rule_set-actions {
+        text-align: right;
+        border-top: 1px solid @h3-color;
+        padding-top:10px;
     }
 
     .c_rule_set {
@@ -27,12 +25,6 @@
             .glyphicon {
                 color:green;
             }
-        }
-
-        .c_rule_set-actions {
-            text-align: right;
-            border-top: 1px solid @h3-color;
-            padding-top:10px;
         }
 
         .c_rule_set-header {
@@ -89,6 +81,23 @@
                 margin-left:14px;
                 border-bottom: 1px solid @h3-color;
             }
+        }
+    }
+
+    .c_rule_set-list {
+        border: 1px solid @solid-border-color;
+        padding:0 10px;
+        margin-bottom: 15px;
+
+        .no-border {
+            .c_rule_set {
+                border-bottom: 0;
+            }
+        }
+
+
+        h3 {
+            //visibility:hidden;
         }
     }
 

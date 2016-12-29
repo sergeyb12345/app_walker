@@ -485,6 +485,8 @@
     <Content Include="src\resources\elements\strategy\strategy-navigation.js" />
     <Content Include="src\resources\elements\strategy\side-navigation.html" />
     <Content Include="src\resources\elements\strategy\side-navigation.js" />
+    <Content Include="src\resources\elements\strategy\strategy-rule-set.html" />
+    <Content Include="src\resources\elements\strategy\strategy-rule-set.js" />
     <Content Include="src\studies\categories\sub-navigation.html" />
     <Content Include="src\studies\categories\sub-navigation.js" />
     <Content Include="src\resources\elements\article-parts\article-part-actions.html" />
