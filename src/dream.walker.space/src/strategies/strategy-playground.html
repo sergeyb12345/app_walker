@@ -1,0 +1,19 @@
+﻿<template>
+    <strategy-admin></strategy-admin>
+
+    <div class="c_playground-content">
+        <div class="row">
+            <div class="col-md-8 col-xs-12 c_playground">
+                <header>
+                    <h3 first-letter-span>Strategy Playground</h3>
+                    <h5>${strategy.title}</h5>
+                    <p class="summary">${strategy.summary}</p>
+                </header>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <side-navigation strategyurl.bind="strategyUrl"></side-navigation>
+            </div>
+        </div>
+    </div>
+
+</template>

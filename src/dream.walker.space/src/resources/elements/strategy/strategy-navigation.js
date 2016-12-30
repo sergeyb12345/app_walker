@@ -46,8 +46,16 @@ export class StrategyNavigation {
             name: 'rule-sets'
         }
 
+        let playgroundMenuItem = {
+            isActive: currentModuleName === 'strategy-playground',
+            title: 'Playground',
+            url: '/strategies/strategy-playground/' + url,
+            name: 'strategy-playground'
+        }
+
         this.items.push(strategyMenuItem);
         this.items.push(rulesetsMenuItem);
+        this.items.push(playgroundMenuItem);
     }
 
 }
