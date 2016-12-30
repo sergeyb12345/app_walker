@@ -12,6 +12,10 @@ namespace dream.walker.data.Repositories
     {
         StrategyRuleSet Get(int strategyId, int ruleId);
         Task<List<StrategyRuleSet>> GetAsync(int strategyId, QuotePeriod period);
+        Task<List<StrategyRuleSet>> GetAsync(int strategyId);
+        void Delete(StrategyRuleSet entity);
+        Task CommitAsync();
+        StrategyRuleSet Add(StrategyRuleSet strategyRuleSet);
     }
 
 
@@ -41,6 +45,12 @@ namespace dream.walker.data.Repositories
                 new SqlParameter("@strategyId", strategyId),
                 new SqlParameter("@period", (int)period)).ToListAsync();
 
+            return records;
+        }
+
+        public async Task<List<StrategyRuleSet>> GetAsync(int strategyId)
+        {
+            var records = await Dbset.Where(r => r.StrategyId == strategyId).ToListAsync();
             return records;
         }
     }

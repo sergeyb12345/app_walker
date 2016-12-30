@@ -50,6 +50,20 @@ export class RuleSetService {
         });
     }
 
+    saveRuleSetsForStrategy(strategyId, rulesets) {
+
+        return this.http.fetch('ruleset/strategy/'+strategyId, {
+            method: 'post',
+            body:json(rulesets)
+        })
+        .then(response => {
+                return response;
+            })
+        .catch(error => {
+            return this.handleError(error, "saveRuleSetsForStrategy");
+        });
+    }
+
     deleteRuleSet(id) {
         return this.http.fetch("ruleset/"+id, {method: 'delete'})
             .then(response => {

@@ -1,20 +1,29 @@
 ﻿<template>
     <div class="c_rule_set" if.bind="ruleset.deleted !== true">
         <div class="c_rule_set-header" click.trigger="onExpanded()">
-            <button type="button" show.bind="ruleset.expanded !== true && ruleset.editMode === true" click.delegate="startDelete()" class="btn btn-danger btn-xs">Delete</button>
+            <button type="button" show.bind="ruleset.expanded !== true && ruleset.editMode === true" click.delegate="startDelete()" class="btn btn-warning btn-xs">Detach</button>
             <span>${ruleset.ruleSetName}</span>
 
-            <a class="chevron">
+            <div class="chevron">
                 <span if.bind="ruleset.expanded === true" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
                 <span if.bind="ruleset.expanded !== true" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-            </a>
+                <div class="btn-group-vertical" role="group" aria-label="..." show.bind="ruleset.editMode === true">
+                    <button type="button" class="btn btn-xs btn-default" click.trigger="onMoveUp()">
+                        <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-xs btn-default" click.trigger="onMoveDown()">
+                        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+
         </div>
         <div class="c_rule_set-details" if.bind="ruleset.expanded === true">
             <form if.bind="ruleset.deleteMode !== true">
                 <fieldset disabled.bind="ruleset.editMode !== true">
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea rows="4" class="form-control" readonly value.bind="ruleset.ruleSetDescription"></textarea>
+                        <p class="form-control" readonly>${ruleset.ruleSetDescription}</p>
                     </div>
                     <div class="form-inline">
                         <div class="form-group">
@@ -23,6 +32,18 @@
                                 <option repeat.for="period of periods" model.bind="period.id">${period.name}</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label>RuleSet Optional: </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" aria-label="..." value="${ruleset.ruleSetOptional ? 'Optional' : 'Required'}">
+                                <div class="input-group-btn" if.bind="ruleset.editMode">
+                                    <button type="button" click.delegate="setOptionalStatus(true)" if.bind="!ruleset.ruleSetOptional" class="btn btn-danger">Make Optional</button>
+                                    <button type="button" click.delegate="setOptionalStatus(false)" if.bind="ruleset.ruleSetOptional" class="btn btn-danger">Make Required</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </fieldset>
             </form>
@@ -32,7 +53,7 @@
                     Rule set will be detached from the rule set. You can add it later at any time.
                     <br />
                 </p>
-                <button type="button" click.delegate="confirmDelete()" class="btn btn-danger">Delete</button>
+                <button type="button" click.delegate="confirmDelete()" class="btn btn-warning">Detach</button>
                 <button type="button" click.delegate="cancelDelete()" class="btn btn-default">Cancel</button>
             </div>
         </div>

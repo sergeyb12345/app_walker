@@ -3,12 +3,14 @@ import {inject} from "aurelia-framework";
 import {Navigation} from "./navigation";
 import {StrategyService} from '../services/strategy-service';
 import {RuleSetService} from '../services/rule-set-service';
+import {EventAggregator} from 'aurelia-event-aggregator';
 
-@inject(Navigation, StrategyService, RuleSetService, "Settings")
+@inject(EventAggregator, Navigation, StrategyService, RuleSetService, "Settings")
 export class StrategyRuleSets {
     
-    constructor (strategyNavigation, strategyService, ruleSetService, settings) {
+    constructor (eventAggregator, strategyNavigation, strategyService, ruleSetService, settings) {
         this.strategyNavigation = strategyNavigation;
+        this.eventAggregator = eventAggregator;
         this.strategyService = strategyService;
         this.ruleSetService = ruleSetService;
         this.periods = settings.periods;
@@ -18,8 +20,51 @@ export class StrategyRuleSets {
         this.rulesets = [];
         this.editMode = false;
         this.periodRuleSets = [];
+        this.subscriptions = [];
+
+        this.subscribe();
     }
     
+    subscribe() {
+        this.subscriptions.push(
+            this.eventAggregator.subscribe('strategy-rule-set-up', ruleSetId => this.moveRuleSetUp(ruleSetId)));
+
+        this.subscriptions.push(
+            this.eventAggregator.subscribe('strategy-rule-set-down', ruleSetId => this.moveRuleSetDown(ruleSetId)));
+
+        this.subscriptions.push(
+            this.eventAggregator.subscribe('strategy-rule-set-detach', ruleSetId => this.detachRuleSet(ruleSetId)));
+    }
+
+    detached() {
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach(function(subscription) {
+                subscription.dispose();
+            });
+        }
+    }
+
+    moveRuleSetUp(ruleSetId) {
+        let index = this.rulesets.findIndex(item => item.ruleSetId === ruleSetId);
+        if(index > 0) {
+            this.rulesets.splice(index - 1, 0, this.rulesets.splice(index, 1)[0]);
+        }
+    }
+
+    moveRuleSetDown(ruleSetId) {
+        let index = this.rulesets.findIndex(item => item.ruleSetId === ruleSetId);
+        if(index > -1 && index < this.rulesets.length - 1) {
+            this.rulesets.splice(index + 1, 0, this.rulesets.splice(index, 1)[0]);
+        }
+    }
+
+    detachRuleSet(ruleSetId) {
+        let index = this.rulesets.findIndex(item => item.ruleSetId === ruleSetId);
+        if(index !== -1) {
+            this.rulesets.splice(index, 1);
+        }
+    }
+
     activate(params, routeConfig, navigationInstruction) {
         if (params.strategyUrl) {
 
@@ -134,7 +179,30 @@ export class StrategyRuleSets {
     }
 
     trySaveRuleSets() {
-        
+        if (this.rulesets && this.rulesets.length > 0) {
+            this.saveRuleSets();
+        } else {
+            toastr.warning(`At least 1 rule set must be attached`, 'Validation Error');
+        }
     }
 
+    saveRuleSets() {
+        let orderId = 1;
+        let strategyId = this.strategy.strategyId;
+
+        this.rulesets.forEach(function(item) {
+            item.ruleSetOrderId = orderId;
+            item.strategyId = strategyId;
+
+            orderId = orderId + 1;
+        });
+
+        this.ruleSetService.saveRuleSetsForStrategy(this.strategy.strategyId, this.rulesets)
+            .then(data => {
+                if (data.ok) {
+                    this.setEditMode(false);
+                    toastr.success('Rule Sets are successfully saved', 'Rule Sets Attached');
+                }
+            });
+    }
 }

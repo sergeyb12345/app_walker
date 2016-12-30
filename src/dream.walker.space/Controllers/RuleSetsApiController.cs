@@ -66,5 +66,15 @@ namespace dream.walker.space.Controllers
             var records = await _service.GetStrategyRuleSetsAsync(id);
             return Ok(records);
         }
+
+        [HttpPost]
+        [Route("strategy/{id:int:min(1)}")]
+        public async Task<IHttpActionResult> SaveStrategyRuleSets(int id, [FromBody] List<vStrategyRuleSet> ruleSets)
+        {
+
+            await _service.SaveStrategyRuleSets(id, ruleSets);
+
+            return Ok();
+        }
     }
 }

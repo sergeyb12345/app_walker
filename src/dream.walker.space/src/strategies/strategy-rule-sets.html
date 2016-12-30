@@ -5,11 +5,11 @@
         <div class="row">
             <div class="col-md-8 col-xs-12 c_rule_sets">
                 <header>
-                    <h3>${strategy.title}</h3>
+                    <h3 first-letter-span>Strategy Rule Sets</h3>
+                    <h5>${strategy.title}</h5>
+                    <p class="summary">${strategy.summary}</p>
                 </header>
 
-                <p>${strategy.summary}</p>
-                <h4>Attached Rule Sets</h4>
 
                 <div class="c_rule_set-list">
                     <strategy-rule-set repeat.for="ruleset of rulesets" class="${$index === $parent.rulesets.length-1 && !editMode ? 'no-border': ''}" ruleset.bind="ruleset"></strategy-rule-set>

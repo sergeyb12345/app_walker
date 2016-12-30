@@ -17,6 +17,7 @@ namespace dream.walker.data.Services
         Task<RuleSetModel> SaveRuleSetAsync(RuleSetModel model);
         Task DeleteRuleSetAsync(int id);
         Task<List<vStrategyRuleSet>> GetStrategyRuleSetsAsync(int id);
+        Task SaveStrategyRuleSets(int strategyId, List<vStrategyRuleSet> ruleSets);
     }
 
     public class RuleSetService : IRuleSetService
@@ -133,6 +134,34 @@ namespace dream.walker.data.Services
                 var repository = scope.Resolve<IVStrategyRuleSetRepository>();
                 var records = await repository.GetRuleSetsAsync(id);
                 return records;
+            }
+        }
+
+        public async Task SaveStrategyRuleSets(int strategyId, List<vStrategyRuleSet> ruleSets)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IStrategyRuleSetRepository>();
+                var items = await repository.GetAsync(strategyId);
+                if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                        repository.Delete(item);                        
+                    }
+                    await repository.CommitAsync();
+                }
+
+                foreach (var ruleSet in ruleSets)
+                {
+                    var item = repository.Add(new StrategyRuleSet());
+                    item.StrategyId = strategyId;
+                    item.RuleSetId = ruleSet.RuleSetId;
+                    item.OrderId = ruleSet.RuleSetOrderId;
+                    item.Optional = ruleSet.RuleSetOptional;
+
+                    await repository.CommitAsync();
+                }
             }
         }
     }

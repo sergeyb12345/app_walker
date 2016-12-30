@@ -8,22 +8,8 @@ export class StrategyRuleSet {
 
     constructor (eventAggregator, settings) {
         this.periods = settings.periods;
-        //this.eventAggregator = eventAggregator;
+        this.eventAggregator = eventAggregator;
     }
-
-    //attached () {
-    //    this.subscription = this.eventAggregator.subscribe('onStrategyRuleSetEditModeChanged', mode => this.onEditModeChanged(mode));        
-    //}
-
-    //detached () {
-    //    if (this.subscription) {
-    //        this.subscription.dispose();
-    //    }
-    //}
-
-    //onEditModeChanged(mode) {
-    //    this.editMode = mode;
-    //}
 
     rulesetChanged(newValue) {
         if (newValue) {
@@ -44,4 +30,19 @@ export class StrategyRuleSet {
         this.ruleset.expanded = true;
     }
 
+    setOptionalStatus(flag) {
+        this.ruleset.ruleSetOptional = flag;
+    }
+
+    onMoveUp() {
+        this.eventAggregator.publish('strategy-rule-set-up', this.ruleset.ruleSetId);
+    }
+
+    onMoveDown() {
+        this.eventAggregator.publish('strategy-rule-set-down', this.ruleset.ruleSetId);
+    }
+
+    confirmDelete() {
+        this.eventAggregator.publish('strategy-rule-set-detach', this.ruleset.ruleSetId);
+    }
 }

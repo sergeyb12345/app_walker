@@ -74,6 +74,9 @@ body .no-border {
   background-color: rgba(201, 48, 44, 0.05);
   border-color: #c9302c;
 }
+.btn-danger {
+  background-color: #e22004;
+}
 .dropdown-menu > li > a {
   font-family: 'Open Sans', sans-serif;
 }
@@ -130,6 +133,10 @@ h4 {
   border-bottom: 1px solid #e22004;
   margin-bottom: 15px;
 }
+.h5,
+h5 {
+  font-size: 15px;
+}
 h3[first-letter-span],
 h4[first-letter-span] {
   color: #2d4945;
@@ -137,6 +144,16 @@ h4[first-letter-span] {
 h3[first-letter-span] span,
 h4[first-letter-span] span {
   color: #e22004;
+}
+header p.summary {
+  padding: 0 20px 10px 20px;
+  color: rgba(51, 51, 51, 0.74);
+}
+header h5 {
+  border-bottom: 1px solid rgba(204, 204, 204, 0.36);
+  margin: 10px;
+  padding-bottom: 6px;
+  margin-top: 20px;
 }
 ul li,
 ol li {
