@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Autofac;
-using dream.walker.data.Entities;
 using dream.walker.data.Entities.Companies;
 using dream.walker.data.Managers;
 using dream.walker.data.Models;
@@ -145,6 +145,27 @@ namespace dream.walker.data.Services
 
                     repository.Commit();
                 }
+            }
+        }
+
+        public async Task<Company> GetAsync(string ticker)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICompanyRepository>();
+                var company = await repository.GetAsync(ticker);
+
+                return company;
+            }
+        }
+
+        public async Task<List<CompanyDetails>> SearchAsync(CompanySearchRequest request)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<ICompanyRepository>();
+                var companies = await repository.SearchAsync(request.Ticker, request.MaxCount);
+                return companies;
             }
         }
 

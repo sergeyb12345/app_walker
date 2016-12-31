@@ -1,21 +1,37 @@
 ﻿import * as toastr from "toastr";
+import moment from 'moment';
 import {inject} from "aurelia-framework";
 import {Navigation} from "./navigation";
 import {StrategyService} from '../services/strategy-service';
+import {CompanyService} from '../services/company-service';
 
-@inject(Navigation, StrategyService, "Settings")
+@inject(Navigation, StrategyService, CompanyService, "Settings")
 export class StrategyPlayground {
     
-    constructor (strategyNavigation, strategyService, settings) {
+    constructor (strategyNavigation, strategyService, companyService, settings) {
+
         this.strategyNavigation = strategyNavigation;
         this.strategyService = strategyService;
+        this.companyService = companyService;
         this.periods = settings.periods;
 
         this.strategy = {};
+        this.company = {};
         this.strategyUrl = '';
+        this.searchCriteria = '';
+        this.companies= [];
     }
 
     activate(params, routeConfig, navigationInstruction) {
+        this.router = navigationInstruction.router;
+
+        if (params.ticker) {
+            this.companyService.getCompany(params.ticker)
+                .then(company => {
+                    this.company = company;
+                });
+        }
+
         if (params.strategyUrl) {
 
             this.strategyService.getSummaryByUrl(params.strategyUrl)
@@ -32,6 +48,37 @@ export class StrategyPlayground {
                     }
                 });
         }
+    }
+
+
+    searchCompanies() {
+        this.companyService.searchCompanies(this.searchCriteria, 15)
+                .then(result => {
+                    this.companies = result;
+                });
+    }
+
+    selectCompany(company) {
+        let url = '/strategies/strategy-playground/' + this.strategy.url + '/' + company.ticker.toLowerCase();
+        company.expanded = false;
+        this.searchMode = false;
+        this.router.navigate(url);
+    }
+
+    formatDate(date) {
+        let date1 = moment(date);
+        let date2 = moment(new Date());
+
+        let diff = date2.diff(date1);
+        let duration = moment.duration(diff); 
+        let days = duration.asDays();
+
+        //let m = moment(date).format('DD/MM/YYYY');
+        return Math.round(days) + ' days ago';
+    }
+
+    updateCompany(ticker) {
+        
     }
 
     loadPlayground() {

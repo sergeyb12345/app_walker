@@ -84,6 +84,7 @@ namespace dream.walker.space.IoC
             builder.RegisterType<ArticleStorageService>().As<IArticleStorageService>();
             builder.RegisterType<IndicatorService>().As<IIndicatorService>();
             builder.RegisterType<RuleSetService>().As<IRuleSetService>();
+            builder.RegisterType<CompanyManagerService>().As<ICompanyService>();
 
         }
 

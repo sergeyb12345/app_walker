@@ -247,6 +247,7 @@
       <DependentUpon>201612291254010_CreatevStrategyRuleSet.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\BlobContainer.cs" />
+    <Compile Include="Models\CompanyDetails.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\IndicatorCore.cs" />
     <Compile Include="Models\RuleModel.cs" />
@@ -288,6 +289,7 @@
     <Compile Include="Repositories\RuleRepository.cs" />
     <Compile Include="Repositories\StrategyRepository.cs" />
     <Compile Include="Repositories\StrategyRuleSetRepository.cs" />
+    <Compile Include="Requests\CompanySearchRequest.cs" />
     <Compile Include="Requests\FindCompaniesForUpdateRequest.cs" />
     <Compile Include="Migrations\201604291700223_CompanyTable.cs" />
     <Compile Include="Migrations\201604291700223_CompanyTable.Designer.cs">

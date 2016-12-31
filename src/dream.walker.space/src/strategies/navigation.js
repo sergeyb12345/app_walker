@@ -18,7 +18,7 @@ export class Navigation {
             { route: ['rules','rules/:period'], moduleId: "./rules/rules", name:"manage-rules", title: "Manage Rules", nav:false, auth: true },
             { route: ['rule-sets', 'rule-sets/:period'], moduleId: "./rules/rule-sets", name:"manage-rule-sets", title: "Manage Rule Sets", nav:false, auth: true },
             { route: ['strategy-rule-sets', 'strategy-rule-sets/:strategyUrl'], moduleId: "./strategy-rule-sets", name:"strategy-rule-sets", title: "Strategy Rule Sets", nav:false, auth: true },
-            { route: ['strategy-playground', 'strategy-playground/:strategyUrl'], moduleId: "./strategy-playground", name:"strategy-playground", title: "Strategy Playground", nav:false, auth: true },
+            { route: ['strategy-playground', 'strategy-playground/:strategyUrl', 'strategy-playground/:strategyUrl/:ticker'], moduleId: "./strategy-playground", name:"strategy-playground", title: "Strategy Playground", nav:false, auth: true },
             { route: ['indicators', 'indicators/:period'], moduleId: "./indicators/indicators", name:"manage-indicators", title: "Manage Indicators", nav:false, auth: true }
         ]);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using dream.walker.data.Entities;
 using dream.walker.data.Entities.Companies;
 using dream.walker.data.Managers;
@@ -19,6 +20,9 @@ namespace dream.walker.data.Services
         void SetLastCalculated(string ticker);
         void UpdateMetrics(UpdateMetricsRequest updateMetricsRequest);
         void UpdateMetricsFailed(UpdateMetricsFailedRequest updateMetricsFailedRequest);
+
+        Task<List<CompanyDetails>> SearchAsync(CompanySearchRequest request);
+        Task<Company> GetAsync(string ticker);
     }
 
     public interface ICompanyManagerService 

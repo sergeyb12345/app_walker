@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using dream.walker.data.Entities.Companies;
 using dream.walker.data.Models;
 
@@ -12,6 +14,8 @@ namespace dream.walker.data.Repositories
         List<CompanyToUpdate> FindCompaniesForUpdate(TimeSpan fromTimeAgo, int count);
         List<CompanyToProcess> FindCompaniesToProcess(TimeSpan fromTimeAgo, int count);
         List<CompanyToProcess> FindCompaniesToCalculate(int maxCompanyCount);
+        Task<List<CompanyDetails>> SearchAsync(string ticker, int maxCount);
+        Task<Company> GetAsync(string ticker);
     }
 
 
@@ -82,6 +86,39 @@ namespace dream.walker.data.Repositories
                 }).ToList();
 
             return companies;
+        }
+
+        public async Task<List<CompanyDetails>> SearchAsync(string ticker, int maxCount)
+        {
+            var records = await Dbset
+                            .Where(c => c.Filtered && c.Ticker.StartsWith(ticker))
+                            .OrderBy(c => c.Ticker)
+                            .Take(maxCount)
+                            .Select(c =>
+                                new CompanyDetails
+                                {
+                                    Ticker = c.Ticker,
+                                    Name = c.Name,
+                                    LastUpdated = c.LastUpdated,
+                                    Sector = c.Sector,
+                                    Industry = c.Industry,
+                                    SummaryUrl = c.SummaryUrl,
+                                    Volume = c.Volume,
+                                    Price = c.Price,
+                                    HighestPrice52 = c.HighestPrice52,
+                                    LowestPrice52 = c.LowestPrice52,
+                                    ChaosPercentage = c.ChaosPercentage,
+                                    UpdateSuccessful = c.UpdateSuccessful
+                            })
+                            .ToListAsync();
+
+            return records;
+        }
+
+        public async Task<Company> GetAsync(string ticker)
+        {
+            var record = await Dbset.FirstOrDefaultAsync(r => r.Ticker == ticker);
+            return record;
         }
     }
 }
