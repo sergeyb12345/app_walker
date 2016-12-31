@@ -18,11 +18,20 @@
                         <div class="form-group">
                             <label>Selected Company</label>
                             <div class="input-group">
-                                <p class="form-control" readonly>${company.ticker} - ${company.name}</p>
+                                <p class="form-control pointer" click.trigger="company.show = !!!company.show" readonly>${company.ticker} - ${company.name}</p>
                                 <div class="input-group-btn">
                                     <button type="button" click.delegate="searchMode = !!!searchMode" class="btn ${searchMode ? 'btn-default' : 'btn-danger'}">${searchMode ? 'Cancel' : 'Search'}</button>
                                 </div>
                             </div>
+
+                            <div class="c_company-details" if.bind="company.show">
+                                <company-details company.bind="company"></company-details>
+
+                                <div class="c_company-actions">
+                                    <button type="button" click.delegate="updateCompany(company.ticker)" class="btn btn-danger">Update</button>
+                                </div>
+                            </div>
+
                         </div>
                     </fieldset>
                 </form>
@@ -55,69 +64,11 @@
                                 </span>                                
                             </div>
                             <div class="c_company-details" if.bind="company.expanded">
-                                <form>
-                                    <fieldset disabled>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Sector</label>
-                                                    <p class="form-control" readonly>${company.sector}</p>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Industry</label>
-                                                    <p class="form-control" readonly>${company.industry}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Price</label>
-                                                    <p class="form-control" readonly>${company.price}</p>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Volume</label>
-                                                    <p class="form-control" readonly>${company.volume}</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Lowest 52</label>
-                                                    <p class="form-control" readonly>${company.lowestPrice52}</p>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Chaos</label>
-                                                    <p class="form-control" readonly>${company.chaosPercentage}%</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Highest 52</label>
-                                                    <p class="form-control" readonly>${company.highestPrice52}</p>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Last Time Updated</label>
-                                                    <p class="form-control" readonly>${$parent.formatDate(company.lastUpdated)}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-
-                                    <div class="c_company-actions">
-                                        <button type="button" click.delegate="updateCompany(company.ticker)" class="btn btn-danger">Update</button>
-                                        <button type="button" click.trigger="selectCompany(company)" class="btn btn-default">Select</button>
-                                    </div>
-                                </form>
+                                <company-details company.bind="company"></company-details>
+                                <div class="c_company-actions">
+                                    <button type="button" click.delegate="updateCompany(company.ticker)" class="btn btn-danger">Update</button>
+                                    <button type="button" click.trigger="selectCompany(company)" class="btn btn-default">Select</button>
+                                </div>
                             </div>
                         </div>
                     </div>

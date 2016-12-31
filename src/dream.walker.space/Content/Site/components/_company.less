@@ -1,8 +1,9 @@
 ﻿/// <reference path="../base/_variables" />
 
 .c_companies-content {
-
-    .c_company_list {
+ }
+ 
+   .c_company_list {
         border: 1px solid @solid-border-color;
         padding:0 10px;
         margin-bottom: 15px;
@@ -25,11 +26,7 @@
             }
         }
 
-        .c_company-actions {
-            text-align: right;
-            border-top: 1px solid @h3-color;
-            padding-top:10px;
-        }
+
 
         .c_company-header {
             cursor: pointer;
@@ -44,25 +41,39 @@
                 z-index: 100;
             }
         }
+    }
+    
+.c_company-details {
+    padding-top: 10px;
 
-        .c_company-details {
-            padding-top: 10px;
+    form {
+        //border-top: 1px solid @h3-color;
+        padding-top: 10px;
 
-            form {
-                border-top: 1px solid @h3-color;
-                padding-top: 10px;
-
-                fieldset {
-                    padding-bottom: 10px;
-                }
-            }
-
-            h4 {
-                //visibility:visible;
-                border-bottom: 1px solid @h3-color;
-            }
+        fieldset {
+            padding-bottom: 10px;
         }
     }
 
+    h4 {
+        //visibility:visible;
+        border-bottom: 1px solid @h3-color;
+    }
+        
+    .c_company-actions {
+        text-align: right;
+        border-top: 1px solid @h3-color;
+        padding-top:10px;
+    }
+}
+
+
+
+.form-group {
+    .c_company-details {
+        padding: 15px;
+        border: 1px solid @solid-border-color;
+        border-top: 0;
+    }
 }
 

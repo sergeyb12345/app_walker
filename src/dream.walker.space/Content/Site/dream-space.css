@@ -53,6 +53,9 @@ body .right {
 body .uppercase {
   text-transform: uppercase;
 }
+body .pointer {
+  cursor: pointer!important;
+}
 .btn {
   font-weight: normal;
   font-size: 13px;
@@ -902,50 +905,54 @@ form fieldset {
   background-color: rgba(255, 255, 255, 0.7);
   padding-bottom: 15px;
 }
-.c_companies-content .c_company_list {
+.c_company_list {
   border: 1px solid rgba(204, 204, 204, 0.36);
   padding: 0 10px;
   margin-bottom: 15px;
 }
-.c_companies-content .c_company {
+.c_company {
   padding: 10px 10px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.36);
 }
-.c_companies-content .c_company.c_company-add,
-.c_companies-content .c_company .c_company-add {
+.c_company.c_company-add,
+.c_company .c_company-add {
   cursor: pointer;
   border-bottom: 0px solid rgba(204, 204, 204, 0.36);
 }
-.c_companies-content .c_company.c_company-add .glyphicon,
-.c_companies-content .c_company .c_company-add .glyphicon {
+.c_company.c_company-add .glyphicon,
+.c_company .c_company-add .glyphicon {
   color: green;
 }
-.c_companies-content .c_company .c_company-actions {
+.c_company .c_company-header {
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.c_company .c_company-header .chevron {
+  float: right;
+}
+.c_company .c_company-header .btn {
+  margin-right: 10px;
+  z-index: 100;
+}
+.c_company-details {
+  padding-top: 10px;
+}
+.c_company-details form {
+  padding-top: 10px;
+}
+.c_company-details form fieldset {
+  padding-bottom: 10px;
+}
+.c_company-details h4 {
+  border-bottom: 1px solid #e22004;
+}
+.c_company-details .c_company-actions {
   text-align: right;
   border-top: 1px solid #e22004;
   padding-top: 10px;
 }
-.c_companies-content .c_company .c_company-header {
-  cursor: pointer;
-  text-transform: capitalize;
-}
-.c_companies-content .c_company .c_company-header .chevron {
-  float: right;
-}
-.c_companies-content .c_company .c_company-header .btn {
-  margin-right: 10px;
-  z-index: 100;
-}
-.c_companies-content .c_company .c_company-details {
-  padding-top: 10px;
-}
-.c_companies-content .c_company .c_company-details form {
-  border-top: 1px solid #e22004;
-  padding-top: 10px;
-}
-.c_companies-content .c_company .c_company-details form fieldset {
-  padding-bottom: 10px;
-}
-.c_companies-content .c_company .c_company-details h4 {
-  border-bottom: 1px solid #e22004;
+.form-group .c_company-details {
+  padding: 15px;
+  border: 1px solid rgba(204, 204, 204, 0.36);
+  border-top: 0;
 }

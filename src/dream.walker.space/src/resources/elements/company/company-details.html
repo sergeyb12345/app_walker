@@ -1,0 +1,60 @@
+﻿<template>
+    <form>
+        <fieldset disabled>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Sector</label>
+                        <p class="form-control" readonly>${company.sector}</p>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Industry</label>
+                        <p class="form-control" readonly>${company.industry}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Price</label>
+                        <p class="form-control" readonly>${company.price}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Volume</label>
+                        <p class="form-control" readonly>${company.volume}</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Lowest 52</label>
+                        <p class="form-control" readonly>${company.lowestPrice52}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Chaos</label>
+                        <p class="form-control" readonly>${company.chaosPercentage}%</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Highest 52</label>
+                        <p class="form-control" readonly>${company.highestPrice52}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Time Updated</label>
+                        <p class="form-control" readonly>${formatDate(company.lastUpdated)}</p>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</template>

@@ -484,6 +484,8 @@
     <Content Include="src\navigation\index.js" />
     <Content Include="src\navigation\sub-menu.html" />
     <Content Include="src\navigation\sub-menu.js" />
+    <Content Include="src\resources\elements\company\company-details.html" />
+    <Content Include="src\resources\elements\company\company-details.js" />
     <Content Include="src\resources\elements\strategy\strategy-navigation.html" />
     <Content Include="src\resources\elements\strategy\strategy-navigation.js" />
     <Content Include="src\resources\elements\strategy\side-navigation.html" />
