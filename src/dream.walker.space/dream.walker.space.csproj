@@ -346,8 +346,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
-    <Content Include="jspm_packages\npm\npm-anystock%401.0.0.js" />
-    <Content Include="jspm_packages\npm\npm-anystock%401.0.0\anystock.min.js" />
+    <Content Include="jspm_packages\npm\npm-anystock%407.12.0.js" />
+    <Content Include="jspm_packages\npm\npm-anystock%407.12.0\anystock.min.js" />
     <Content Include="node_modules\npm-anystock\anystock.min.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
@@ -430,13 +430,13 @@
     <Content Include="Content\Site\components\_rule.less" />
     <Content Include="Content\Site\elements\_button.less" />
     <Content Include="package.json" />
-    <Content Include="jspm_packages\npm\npm-anystock%401.0.0\package.json" />
-    <Content Include="jspm_packages\npm\npm-anystock%401.0.0\README.md" />
     <Content Include="Content\Site\elements\_validation.less" />
     <Content Include="Content\Site\components\_indicator.less" />
     <Content Include="Content\Site\components\_rule-set.less" />
     <Content Include="Content\Site\components\_playground.less" />
     <Content Include="Content\Site\components\_company.less" />
+    <Content Include="jspm_packages\npm\npm-anystock%407.12.0\package.json" />
+    <Content Include="jspm_packages\npm\npm-anystock%407.12.0\README.md" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />

@@ -31,7 +31,7 @@ System.config({
     "core-js": "npm:core-js@1.2.7",
     "jquery": "npm:jquery@3.1.1",
     "moment": "npm:moment@2.17.1",
-    "npm-anystock": "npm:npm-anystock@1.0.0",
+    "npm-anystock": "npm:npm-anystock@7.12.0",
     "toastr": "github:CodeSeven/toastr@2.1.3",
     "github:CodeSeven/toastr@2.1.3": {
       "css": "github:systemjs/plugin-css@0.1.32",

@@ -1,1 +1,0 @@
-module.exports = require("npm:npm-anystock@1.0.0/anystock.min.js");
