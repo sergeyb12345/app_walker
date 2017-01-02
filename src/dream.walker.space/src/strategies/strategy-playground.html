@@ -18,8 +18,9 @@
                         <div class="form-group">
                             <label>Selected Company</label>
                             <div class="input-group">
-                                <p class="form-control pointer" click.trigger="company.show = !!!company.show" readonly>${company.ticker} - ${company.name}</p>
+                                <p class="form-control" readonly>${company.ticker} - ${company.name}</p>
                                 <div class="input-group-btn">
+                                    <button type="button" if.bind="!company.show && !searchMode" click.delegate="company.show = true" class="btn btn-default">Show Details</button>
                                     <button type="button" click.delegate="searchMode = !!!searchMode" class="btn ${searchMode ? 'btn-default' : 'btn-danger'}">${searchMode ? 'Cancel' : 'Search'}</button>
                                 </div>
                             </div>
@@ -29,6 +30,7 @@
 
                                 <div class="c_company-actions">
                                     <button type="button" click.delegate="updateCompany(company.ticker)" class="btn btn-danger">Update</button>
+                                    <button type="button" click.delegate="company.show = false" class="btn btn-default">Hide</button>
                                 </div>
                             </div>
 
@@ -65,10 +67,6 @@
                             </div>
                             <div class="c_company-details" if.bind="company.expanded">
                                 <company-details company.bind="company"></company-details>
-                                <!--<div class="c_company-actions">
-                                    <button type="button" click.delegate="updateCompany(company.ticker)" class="btn btn-danger">Update</button>
-                                    <button type="button" click.trigger="selectCompany(company)" class="btn btn-default">Select</button>
-                                </div>-->
                             </div>
                         </div>
                     </div>
