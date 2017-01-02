@@ -1,4 +1,5 @@
 using System;
+using dream.walker.data.Entities.Companies;
 using dream.walker.data.Models;
 using dream.walker.stock.Enums;
 
@@ -9,6 +10,7 @@ namespace dream.walker.stock.Requests
         //private const int MaxHistoryPeriodInMonths = 12;
 
         public GetStockHistoryRequest() { }
+
 
         public GetStockHistoryRequest(CompanyToUpdate company)
         {

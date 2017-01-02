@@ -8,6 +8,10 @@ using System.Web.Mvc;
 using Autofac.Integration.WebApi;
 using dream.walker.data.Azure;
 using dream.walker.data.Services;
+using dream.walker.reader;
+using dream.walker.reader.Validators;
+using dream.walker.stock;
+using dream.walker.stock.Yahoo.Client;
 
 namespace dream.walker.space.IoC
 {
@@ -85,6 +89,12 @@ namespace dream.walker.space.IoC
             builder.RegisterType<IndicatorService>().As<IIndicatorService>();
             builder.RegisterType<RuleSetService>().As<IRuleSetService>();
             builder.RegisterType<CompanyManagerService>().As<ICompanyService>();
+            builder.RegisterType<FileReaderConfiguration>().SingleInstance();
+
+            builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
+            builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
+            builder.RegisterType<QuotesFileReader>().As<IQuotesFileReader>().InstancePerDependency();
+            builder.RegisterType<FileReaderValidator>().As<IFileReaderValidator>().InstancePerDependency();
 
         }
 

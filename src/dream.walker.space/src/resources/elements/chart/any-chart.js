@@ -76,7 +76,7 @@ var series = chart.plot(1).line(mapping);
 series.name("Euro to Dollar Rate");
             */
 
-
+            
             // setting the chart title
             chart.title('AnyStock Basic Sample');
 

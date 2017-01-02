@@ -63,6 +63,12 @@ namespace dream.walker.data.Services
                 if (company != null)
                 {
                     company.HistoryQuotesJson = request.JsonQuotes;
+                    company.Volume = request.Volume;
+                    company.Price = request.Price;
+                    company.ChaosPercentage = request.ChaosPercentage;
+                    company.HighestPrice52 = request.HighestHigh52;
+                    company.LowestPrice52 = request.LowestLow52;
+                    company.LastCalculated = request.CalculatedTime;
                     company.LastUpdated = DateTime.UtcNow;
                     company.UpdateSuccessful = string.IsNullOrWhiteSpace(request.ErrorMessage);
                     company.UpdateError = request.ErrorMessage;
@@ -107,25 +113,6 @@ namespace dream.walker.data.Services
                 {
                     company.LastCalculated = company.LastUpdated;
 
-                    repository.Commit();
-                }
-            }
-        }
-
-        public void UpdateMetrics(UpdateMetricsRequest request)
-        {
-            using (var scope = _container.BeginLifetimeScope())
-            {
-                var repository = scope.Resolve<ICompanyRepository>();
-                var company = repository.Get(request.Ticker);
-                if (company != null)
-                {
-                    company.Volume = request.Volume;
-                    company.Price = request.Price;
-                    company.ChaosPercentage = request.ChaosPercentage;
-                    company.HighestPrice52 = request.High52;
-                    company.LowestPrice52 = request.Low52;
-                    company.LastCalculated = request.CalculatedTime;
                     repository.Commit();
                 }
             }

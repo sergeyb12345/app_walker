@@ -4,26 +4,30 @@ import {inject} from "aurelia-framework";
 import {Navigation} from "./navigation";
 import {StrategyService} from '../services/strategy-service';
 import {CompanyService} from '../services/company-service';
+import {StockService} from '../services/stock-service';
 
-@inject(Navigation, StrategyService, CompanyService, "Settings")
+@inject(Navigation, StrategyService, CompanyService, StockService, "Settings")
 export class StrategyPlayground {
     
-    constructor (strategyNavigation, strategyService, companyService, settings) {
+    constructor (strategyNavigation, strategyService, companyService, stockService, settings) {
 
         this.strategyNavigation = strategyNavigation;
         this.strategyService = strategyService;
         this.companyService = companyService;
         this.periods = settings.periods;
+        this.stockService = stockService;
 
         this.strategy = {};
         this.company = {};
         this.strategyUrl = '';
         this.searchCriteria = '';
         this.companies= [];
+        this.chartWeeklyContainer = 'weekly-container';
     }
 
     activate(params, routeConfig, navigationInstruction) {
         this.router = navigationInstruction.router;
+        this.playgroundLoaded = false;
 
         if (params.ticker) {
             this.companyService.getCompany(params.ticker)
@@ -40,8 +44,6 @@ export class StrategyPlayground {
                         this.strategy = data;
                         this.strategyUrl = params.strategyUrl;
                         this.strategyNavigation.configureNavigation(this.strategyUrl);
-
-                        this.loadPlayground(this.strategy.strategyId);
 
                     } else {
                         toastr.error(`Failed to load summary for url ${params.strategyUrl}`, 'Load Summary Failed');
@@ -62,15 +64,28 @@ export class StrategyPlayground {
         let url = '/strategies/strategy-playground/' + this.strategy.url + '/' + company.ticker.toLowerCase();
         company.expanded = false;
         this.searchMode = false;
+        this.playgroundLoaded = false;
+
         this.router.navigate(url);
     }
 
 
     updateCompany(ticker) {
-        
+        let self = this;
+
+        this.stockService.updateQuotes(ticker)
+            .then(result => {
+                if (result.ok) {
+                    this.companyService.getCompany(ticker)
+                       .then(company => {
+                            company.show = true;
+                            self.company = company;
+                        });                                       
+                }
+            });
     }
 
     loadPlayground() {
-        
+        this.playgroundLoaded = true;
     }
 }

@@ -65,15 +65,26 @@
                             </div>
                             <div class="c_company-details" if.bind="company.expanded">
                                 <company-details company.bind="company"></company-details>
-                                <div class="c_company-actions">
+                                <!--<div class="c_company-actions">
                                     <button type="button" click.delegate="updateCompany(company.ticker)" class="btn btn-danger">Update</button>
                                     <button type="button" click.trigger="selectCompany(company)" class="btn btn-default">Select</button>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div if.bind="strategy.strategyId && company.ticker && !playgroundLoaded">
+                    <div class="right">
+                        <button type="button" click.delegate="loadPlayground()" class="btn btn-danger">Load Playground</button>
+                    </div>
+                </div>
+
+                <div if.bind="playgroundLoaded">
+                    <div class="o_chart">
+                        <any-chart container.bind="chartWeeklyContainer"></any-chart>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4 col-xs-12">
                 <side-navigation strategyurl.bind="strategyUrl"></side-navigation>

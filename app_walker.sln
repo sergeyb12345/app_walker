@@ -22,6 +22,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.indicators", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.calculators", "src\dream.walker.calculators\dream.walker.calculators.csproj", "{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dream.WebJob.Quotes", "src\Dream.WebJob.Quotes\Dream.WebJob.Quotes.csproj", "{DCA50742-DF76-4149-9F3B-A5B07B0A4240}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebJobs", "WebJobs", "{22C34818-8989-4B1F-8C77-11D16323B589}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{843071D9-0F8B-459E-8120-9C04AAB076A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,8 +62,16 @@ Global
 		{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCA50742-DF76-4149-9F3B-A5B07B0A4240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCA50742-DF76-4149-9F3B-A5B07B0A4240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCA50742-DF76-4149-9F3B-A5B07B0A4240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCA50742-DF76-4149-9F3B-A5B07B0A4240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DC550AD2-78E7-456E-BA7E-D92D46AD13CA} = {843071D9-0F8B-459E-8120-9C04AAB076A5}
+		{DCA50742-DF76-4149-9F3B-A5B07B0A4240} = {22C34818-8989-4B1F-8C77-11D16323B589}
 	EndGlobalSection
 EndGlobal

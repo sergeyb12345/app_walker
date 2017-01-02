@@ -262,6 +262,7 @@
     <Compile Include="Controllers\CompaniesApiController.cs" />
     <Compile Include="Controllers\RuleSetsApiController.cs" />
     <Compile Include="Controllers\RulesApiController.cs" />
+    <Compile Include="Controllers\StockApiController.cs" />
     <Compile Include="Filters\NoStackExceptionFilterAttribute.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -493,6 +494,7 @@
     <Content Include="src\resources\elements\strategy\strategy-rule-set.html" />
     <Content Include="src\resources\elements\strategy\strategy-rule-set.js" />
     <Content Include="src\services\company-service.js" />
+    <Content Include="src\services\stock-service.js" />
     <Content Include="src\strategies\strategy-playground.html" />
     <Content Include="src\strategies\strategy-playground.js" />
     <Content Include="src\studies\categories\sub-navigation.html" />
