@@ -438,6 +438,7 @@
     <Content Include="Content\Site\components\_company.less" />
     <Content Include="jspm_packages\npm\npm-anystock%407.12.0\package.json" />
     <Content Include="jspm_packages\npm\npm-anystock%407.12.0\README.md" />
+    <Content Include="Content\Site\objects\_chart.less" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />
@@ -485,6 +486,8 @@
     <Content Include="src\navigation\index.js" />
     <Content Include="src\navigation\sub-menu.html" />
     <Content Include="src\navigation\sub-menu.js" />
+    <Content Include="src\resources\elements\chart\stock-chart.html" />
+    <Content Include="src\resources\elements\chart\stock-chart.js" />
     <Content Include="src\resources\elements\company\company-details.html" />
     <Content Include="src\resources\elements\company\company-details.js" />
     <Content Include="src\resources\elements\strategy\strategy-navigation.html" />
