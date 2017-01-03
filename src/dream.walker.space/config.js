@@ -29,6 +29,7 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "bootstrap": "github:twbs/bootstrap@3.3.7",
     "core-js": "npm:core-js@1.2.7",
+    "heruan/aurelia-breadcrumbs": "github:heruan/aurelia-breadcrumbs@0.2.6",
     "jquery": "npm:jquery@3.1.1",
     "moment": "npm:moment@2.17.1",
     "npm-anystock": "npm:npm-anystock@7.12.0",
