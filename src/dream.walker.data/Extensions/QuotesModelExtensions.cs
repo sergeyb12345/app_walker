@@ -75,6 +75,15 @@ namespace dream.walker.data.Extensions
             return result;
         }
 
+        public static List<QuotesModel> TakeLast(this List<QuotesModel> quotes, int items)
+        {
+            if (quotes != null && quotes.Any())
+            {
+                return quotes.Skip(Math.Max(0, quotes.Count() - items)).ToList();
+            }
+            return new List<QuotesModel>();
+        }
+
         public static List<QuotesModel> ToWeeekly(this List<QuotesModel>quotes)
         {
             var result = new List<QuotesModel>();

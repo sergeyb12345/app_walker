@@ -29,7 +29,7 @@ namespace dream.walker.tests.Controllers
 
             var weekly = quotes.ToWeeekly();
 
-            quotes.Skip(Math.Max(0, quotes.Count() - 250));
+            
         }
     }
 }
