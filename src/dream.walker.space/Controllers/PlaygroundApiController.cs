@@ -19,8 +19,8 @@ namespace dream.walker.space.Controllers
 
         private IDataCache _cache;
 
-        private List<QuotesModel> _quotes;
-        private List<Indicator> _idicators;
+        public List<QuotesModel> _quotes;
+        public List<Indicator> _idicators;
 
         public PlaygroundApiController(IStrategyService strategyService, IPlaygroundService playgroundService, IDataCache cache)
         {

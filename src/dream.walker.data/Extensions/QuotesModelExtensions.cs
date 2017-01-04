@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using dream.walker.data.Enums;
 using dream.walker.reader.Models;
@@ -74,54 +75,33 @@ namespace dream.walker.data.Extensions
             return result;
         }
 
-        public static List<QuotesModel> ConvertToPeriod(this List<QuotesModel> dailyQuotes, QuotePeriod quotePeriod)
+        public static List<QuotesModel> ToWeeekly(this List<QuotesModel>quotes)
         {
-            if (quotePeriod == QuotePeriod.Weekly)
+            var result = new List<QuotesModel>();
+
+            Func<DateTime, int> weekProjector = date => date.Year * 100 + CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            var weeks = from quote in quotes group quote by weekProjector(quote.Date);
+
+            foreach (var week in weeks)
             {
-                if (dailyQuotes.Any())
+                if (week.Any())
                 {
-                    var weeklyQuotes = new List<QuotesModel>();
-                    var queue = new Queue<QuotesModel>(dailyQuotes);
-
-                    if (queue.Peek().Date.Hour > 1)
+                    var weeklyQuote = new QuotesModel
                     {
-                        weeklyQuotes.Add(queue.Dequeue());
-                    }
+                        Open = week.First().Open,
+                        Close = week.Last().Close,
+                        Volume = week.Sum(w => w.Volume),
+                        Date = week.Last().Date,
+                        High = week.Max(w => w.High),
+                        Low = week.Min(w => w.Low)
+                    };
 
-                    var startDate = queue.Peek().Date;
-                    var quotes = new List<QuotesModel>();
-
-                    foreach (var item in queue)
-                    {
-                        if (quotes.Any() && startDate.AddDays(-7) <= item.Date)
-                        {
-                            var weeklyQuote = new QuotesModel
-                            {
-                                Date = startDate,
-                                Open = quotes.First().Open,
-                                Close = quotes.Last().Close,
-                                Low = quotes.Lowest(),
-                                High = quotes.Highest()
-                            };
-
-                            weeklyQuotes.Add(weeklyQuote);
-
-                            startDate = startDate.AddDays(-7);
-                            quotes = new List<QuotesModel>();
-                        }
-                        else
-                        {
-                            quotes.Add(item);
-                        }
-                    }
-
-                    return weeklyQuotes;
+                    result.Add(weeklyQuote);
                 }
-                return new List<QuotesModel>();
-
             }
 
-            return dailyQuotes;
+            return result;
         }
+
     }
 }

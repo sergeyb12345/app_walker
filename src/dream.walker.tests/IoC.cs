@@ -6,6 +6,10 @@ using dream.walker.data.Repositories;
 using dream.walker.data.Services;
 using dream.walker.reader.Validators;
 using dream.walker.space.Services;
+using dream.walker.reader;
+using dream.walker.space.Controllers;
+using dream.walker.stock.Yahoo.Client;
+using dream.walker.stock;
 
 namespace dream.walker.tests
 {
@@ -45,6 +49,9 @@ namespace dream.walker.tests
             builder.RegisterType<RuleSetRepository>().As<IRuleSetRepository>().InstancePerDependency();
             builder.RegisterType<StrategyRuleSetRepository>().As<IStrategyRuleSetRepository>().InstancePerDependency();
             builder.RegisterType<CompanyRuleSetRepository>().As<ICompanyRuleSetRepository>().InstancePerDependency();
+            builder.RegisterType<RuleSetDetailsRepository>().As<IRuleSetDetailsRepository>().InstancePerDependency();
+            builder.RegisterType<VRuleSetRepository>().As<IVRuleSetRepository>().InstancePerDependency();
+            builder.RegisterType<VStrategyRuleSetRepository>().As<IVStrategyRuleSetRepository>().InstancePerDependency();
 
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
 
@@ -59,6 +66,18 @@ namespace dream.walker.tests
 
             builder.RegisterType<AzureStorageClient>().As<IStorageClient>();
             builder.RegisterType<ArticleStorageService>().As<IArticleStorageService>();
+            builder.RegisterType<IndicatorService>().As<IIndicatorService>();
+            builder.RegisterType<RuleSetService>().As<IRuleSetService>();
+            builder.RegisterType<PlaygroundService>().As<IPlaygroundService>();
+            builder.RegisterType<CompanyManagerService>().As<ICompanyService>();
+            builder.RegisterType<FileReaderConfiguration>().SingleInstance();
+            builder.RegisterType<DataCache>().As<IDataCache>().SingleInstance();
+
+            builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
+            builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
+            builder.RegisterType<QuotesFileReader>().As<IQuotesFileReader>().InstancePerDependency();
+            builder.RegisterType<FileReaderValidator>().As<IFileReaderValidator>().InstancePerDependency();
+            builder.RegisterType<PlaygroundApiController>();
 
 
 

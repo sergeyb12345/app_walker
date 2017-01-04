@@ -57,7 +57,7 @@ namespace dream.walker.space.IoC
 
         }
 
-        private void RegisterServices(ContainerBuilder builder)
+        public void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<CompanyRepository>().As<ICompanyRepository>().InstancePerDependency();
             builder.RegisterType<ArticleRepository>().As<IArticleRepository>().InstancePerDependency();
