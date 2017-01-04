@@ -262,7 +262,6 @@
     <Compile Include="Controllers\IDataCache.cs" />
     <Compile Include="Controllers\IndicatorsApiController.cs" />
     <Compile Include="Controllers\CompaniesApiController.cs" />
-    <Compile Include="Controllers\IPlaygroundService.cs" />
     <Compile Include="Controllers\PlaygroundApiController.cs" />
     <Compile Include="Controllers\RuleSetsApiController.cs" />
     <Compile Include="Controllers\RulesApiController.cs" />

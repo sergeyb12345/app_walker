@@ -6,8 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using System.Runtime.Caching;
 using dream.walker.reader.Models;
 using dream.walker.data.Entities.Indicators;
 
@@ -18,7 +16,11 @@ namespace dream.walker.space.Controllers
     {
         private IStrategyService _strategyService;
         private IPlaygroundService _playgroundService;
+
         private IDataCache _cache;
+
+        private List<QuotesModel> _quotes;
+        private List<Indicator> _idicators;
 
         public PlaygroundApiController(IStrategyService strategyService, IPlaygroundService playgroundService, IDataCache cache)
         {
@@ -33,10 +35,10 @@ namespace dream.walker.space.Controllers
         public async Task<IHttpActionResult> LoadPlayground(string ticker, int strategyId)
         {
 
-            List<QuotesModel> quotes = await _cache.Get(ticker, 
+            _quotes = await _cache.Get(ticker, 
                 () => _playgroundService.LoadHistoryAsync(ticker));
 
-            List<Indicator> idicators = await _cache.Get("indicators", 
+            _idicators = await _cache.Get($"indicators-{strategyId}", 
                 () => _playgroundService.LoadIndicatorsAsync(strategyId));
 
 

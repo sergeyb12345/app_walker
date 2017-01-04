@@ -1,6 +1,4 @@
 using System;
-using dream.walker.data.Entities.Companies;
-using dream.walker.data.Models;
 using dream.walker.stock.Enums;
 
 namespace dream.walker.stock.Requests
@@ -12,11 +10,10 @@ namespace dream.walker.stock.Requests
         public GetStockHistoryRequest() { }
 
 
-        public GetStockHistoryRequest(CompanyToUpdate company)
+        public GetStockHistoryRequest(string ticker, DateTime lastUpdated)
         {
-            Ticker = company.Ticker;
+            Ticker = ticker;
 
-            var lastUpdated = company.LastUpdated.Date;
             if (lastUpdated.AddYears(2) < DateTime.Today)
             {
                 lastUpdated = DateTime.Today.AddYears(-2);

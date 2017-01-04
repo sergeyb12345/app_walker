@@ -313,6 +313,7 @@
     <Compile Include="Services\ICompanyIndicatorService.cs" />
     <Compile Include="Services\ICompanyService.cs" />
     <Compile Include="Services\IIndicatorService.cs" />
+    <Compile Include="Services\IPlaygroundService.cs" />
     <Compile Include="Services\IRuleService.cs" />
     <Compile Include="Services\IRuleSetService.cs" />
     <Compile Include="Services\IStrategyService.cs" />
@@ -330,6 +331,10 @@
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
       <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>
       <Name>dream.walker.reader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.stock\dream.walker.stock.csproj">
+      <Project>{eb65cea0-bc6f-4b02-beb3-2571d1edf06c}</Project>
+      <Name>dream.walker.stock</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -52,12 +52,6 @@
     <Compile Include="Yahoo\Client\YahooFinanceClientConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">
-      <Project>{EB10172D-559A-4E59-BC95-EEE805F1A19B}</Project>
-      <Name>dream.walker.data</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

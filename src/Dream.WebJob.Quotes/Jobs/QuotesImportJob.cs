@@ -81,7 +81,7 @@ namespace Dream.WebJob.Quotes.Jobs
                 company.LastUpdated = DateTime.Today.AddYears(-1);
             }
 
-            var historyRequest = new GetStockHistoryRequest(company);
+            var historyRequest = new GetStockHistoryRequest(company.Ticker, company.LastUpdated);
 
             var quotes = new List<QuotesModel>();
             var errorMessage = string.Empty;

@@ -6,6 +6,7 @@ using dream.walker.data.Entities;
 using dream.walker.data.Entities.Indicators;
 using System.Data.Entity;
 using dream.walker.data.Enums;
+using System.Data.SqlClient;
 
 namespace dream.walker.data.Repositories
 {
@@ -20,6 +21,7 @@ namespace dream.walker.data.Repositories
         Task CommitAsync();
         Task<List<Indicator>> GetAllAsync(QuotePeriod period);
         Task<List<Indicator>> GetAllAsync();
+        Task<List<Indicator>> GetByStrategyIdAsync(int id);
     }
 
 
@@ -57,6 +59,30 @@ namespace dream.walker.data.Repositories
         {
             var record = await Dbset.FirstOrDefaultAsync(r => r.IndicatorId == id);
             return record;
+        }
+
+        public async Task<List<Indicator>> GetByStrategyIdAsync(int id)
+        {
+            var query = @"
+                SELECT DISTINCT I.*
+                FROM [dbo].[Indicator] I
+	                INNER JOIN (
+		                SELECT [DataSeriesV1] AS IndicatorId, [RuleId]
+		                FROM [dbo].[Rule]
+		                WHERE [DataSourceV1] = 0
+		                UNION
+
+		                SELECT [DataSeriesV2], [RuleId]
+		                FROM [dbo].[Rule]
+		                WHERE [DataSourceV2] = 0
+	                ) R ON I.IndicatorId = R.IndicatorId
+	                INNER JOIN [dbo].[RuleSetDetails] RS ON RS.RuleId = R.RuleId
+	                INNER JOIN [dbo].[StrategyRuleSet] S ON S.RuleSetId = RS.RuleSetId
+                WHERE I.Deleted = 0 AND S.StrategyId = @strategyId
+            ";
+
+            var records = await Dbset.SqlQuery(query, new[] { new SqlParameter("@strategyId", id) }).ToListAsync();
+            return records;
         }
     }
 }

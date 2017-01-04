@@ -47,7 +47,7 @@ namespace dream.walker.space.Controllers
                     update.LastUpdated = DateTime.Today.AddYears(-1);
                 }
 
-                var request = new GetStockHistoryRequest(update);
+                var request = new GetStockHistoryRequest(update.Ticker, update.LastUpdated);
 
                 var csvQuotes = await _stockClient.GetStockHistory(request);
                 var quotes = _fileReader.Read(csvQuotes);

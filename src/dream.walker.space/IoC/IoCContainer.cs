@@ -12,6 +12,7 @@ using dream.walker.reader;
 using dream.walker.reader.Validators;
 using dream.walker.stock;
 using dream.walker.stock.Yahoo.Client;
+using dream.walker.space.Controllers;
 
 namespace dream.walker.space.IoC
 {
@@ -88,8 +89,10 @@ namespace dream.walker.space.IoC
             builder.RegisterType<ArticleStorageService>().As<IArticleStorageService>();
             builder.RegisterType<IndicatorService>().As<IIndicatorService>();
             builder.RegisterType<RuleSetService>().As<IRuleSetService>();
+            builder.RegisterType<PlaygroundService>().As<IPlaygroundService>();
             builder.RegisterType<CompanyManagerService>().As<ICompanyService>();
             builder.RegisterType<FileReaderConfiguration>().SingleInstance();
+            builder.RegisterType<DataCache>().As<IDataCache>().SingleInstance();
 
             builder.Register(c => new YahooFinanceClientConfig() { Proxy = "" }).SingleInstance();
             builder.RegisterType<YahooFinanceClient>().As<IMarketStockClient>();
