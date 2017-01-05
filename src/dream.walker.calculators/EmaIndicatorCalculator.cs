@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using dream.walker.data.Enums;
-using dream.walker.data.Extensions;
 using dream.walker.indicators;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
@@ -44,12 +43,6 @@ namespace dream.walker.calculators
             if (param == null || param.Value == 0)
             {
                 throw new ArgumentException($"Period parameter value is not set. Params: {indicator.JsonParams}");
-            }
-
-            _transformedQuotes = quotes.ConvertToPeriod(indicator.Period);
-            if (_transformedQuotes.Count < param.Value)
-            {
-                throw new ArgumentException($"Not enougn data to process indicator '{indicator.Name}' with params: '{indicator.JsonParams}'");
             }
 
             _period = param.Value;

@@ -631,9 +631,17 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dream.walker.calculators\dream.walker.calculators.csproj">
+      <Project>{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}</Project>
+      <Name>dream.walker.calculators</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">
       <Project>{eb10172d-559a-4e59-bc95-eee805f1a19b}</Project>
       <Name>dream.walker.data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.indicators\dream.walker.indicators.csproj">
+      <Project>{d3dd96e0-079e-4a28-acc3-aa5b2ea39c01}</Project>
+      <Name>dream.walker.indicators</Name>
     </ProjectReference>
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
       <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>

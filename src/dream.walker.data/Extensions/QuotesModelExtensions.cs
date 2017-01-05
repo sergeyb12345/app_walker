@@ -7,6 +7,14 @@ using dream.walker.reader.Models;
 
 namespace dream.walker.data.Extensions
 {
+    public static class DateTimeExtentions
+    {
+        public static int ToInt(this DateTime date)
+        {
+            return date.Year * 10000 + date.Month * 100 + date.Day;
+        }
+    }
+
     public static class QuotesModelExtensions
     {
         public static decimal Lowest(this List<QuotesModel> quotes)

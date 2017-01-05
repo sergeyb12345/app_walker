@@ -81,6 +81,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dream.walker.calculators\dream.walker.calculators.csproj">
+      <Project>{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}</Project>
+      <Name>dream.walker.calculators</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">
       <Project>{eb10172d-559a-4e59-bc95-eee805f1a19b}</Project>
       <Name>dream.walker.data</Name>
