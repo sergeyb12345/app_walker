@@ -117,8 +117,8 @@ namespace dream.walker.data.Repositories
 
         public async Task<CompanyHeader> GetAsync(string ticker)
         {
-            var record = await Dbset.Where(r => r.Ticker == ticker).Select(c => new CompanyHeader(c)).FirstOrDefaultAsync();
-            return record;
+            var record = await Dbset.Where(r => r.Ticker == ticker).FirstOrDefaultAsync();
+            return new CompanyHeader(record);
         }
 
     }

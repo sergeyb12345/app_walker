@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Entities.Indicators;
+using dream.walker.data.Extensions;
 using dream.walker.data.Models;
 using dream.walker.playground.Models;
 using dream.walker.reader.Models;
@@ -30,6 +33,15 @@ namespace dream.walker.playground
             HistoricalData = historicalData;
             Indicators = indicators;
             ChartData = new ChartDataModel();
+            ChartData.Daily.Company.Name = Company.FullName;
+            ChartData.Weekly.Company.Name = Company.FullName;
+        }
+
+        public void Reset(int bars, DateTime date)
+        {
+            var weeklyQuotes = HistoricalData.Where(q => q.Date <= date || date == DateTime.MinValue).ToList().ToWeeekly().TakeLast(bars);
+            var dailyQuotes = HistoricalData.Where(q => q.Date <= weeklyQuotes.First().Date).Take(bars).ToList();
+
         }
     }
 }

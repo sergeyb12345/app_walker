@@ -5,6 +5,7 @@ namespace dream.walker.data.Models
 {
     public class CompanyHeader
     {
+ 
         public CompanyHeader(Company company)
         {
             Ticker = company.Ticker;
@@ -26,6 +27,7 @@ namespace dream.walker.data.Models
             LastUpdated = DateTime.Today.AddMonths(-1);
         }
 
+        public string FullName => $"{Ticker} - {Name}";
         public string Ticker { get; set; }
         public string Name { get; set; }
         public string Sector { get; set; }

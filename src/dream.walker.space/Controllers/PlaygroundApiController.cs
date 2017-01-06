@@ -1,9 +1,9 @@
 ﻿using dream.walker.data.Services;
 using System.Threading.Tasks;
 using System.Web.Http;
-using dream.walker.data.Enums;
+using dream.walker.data.Extensions;
+using dream.walker.data.Requests;
 using dream.walker.playground;
-using dream.walker.playground.Models;
 
 namespace dream.walker.space.Controllers
 {
@@ -14,7 +14,7 @@ namespace dream.walker.space.Controllers
         private readonly IPlaygroundService _playgroundService;
 
         private IDataCache _cache;
-        private readonly PlaygroundProcessor _playgroundProcessor;
+        public readonly PlaygroundProcessor _playgroundProcessor;
         private readonly ICompanyService _companyService;
 
 
@@ -35,13 +35,22 @@ namespace dream.walker.space.Controllers
         [Route("{ticker}/{strategyId:int:min(1)}")]
         public async Task<IHttpActionResult> LoadPlayground(string ticker, int strategyId)
         {
-            var historicalData = await _cache.Get(ticker,
-                () => _playgroundService.LoadHistoryAsync(ticker));
+           
+            var historicalData = _cache.Get(ticker,
+                () => _companyService.GetQuotes(ticker));
+
+            if (historicalData.Count < 500)
+            {
+                historicalData = await _playgroundService.LoadHistoryAsync(ticker);
+                _companyService.UpdateQuotes(new UpdateQuotesRequest(ticker, historicalData));
+
+                _cache.Set(ticker, historicalData);
+            }
 
             var indicators = await _cache.Get($"indicators-{strategyId}",
                 () => _playgroundService.LoadIndicatorsAsync(strategyId));
 
-            var company = _companyService.GetAsync(ticker);
+            var company = await _companyService.GetAsync(ticker);
 
             _playgroundProcessor.Initialize(company, historicalData, indicators);
 
@@ -51,28 +60,24 @@ namespace dream.walker.space.Controllers
 
         public void Reset(int bars, int date)
         {
-            _initialQuotes = _quotes.Where(q => q.Date.ToInt() <= date).ToList().TakeLast(bars * 5);
-            _weekly = _initialQuotes.ToWeeekly();
-
-            //_chartDataModel.Daily
-            CalculateIndicators();
+            _playgroundProcessor.Reset(bars, date.ToDate());
         }
 
-        private void CalculateIndicators()
-        {
-            foreach (var indicator in _idicators)
-            {
-                var calc = _indicatorProcessorFactory.Create(indicator);
-                if (calc != null)
-                {
+        //private void CalculateIndicators()
+        //{
+        //    foreach (var indicator in _idicators)
+        //    {
+        //        var calc = _indicatorProcessorFactory.Create(indicator);
+        //        if (calc != null)
+        //        {
                     
-                    var quotes = indicator.Period == QuotePeriod.Daily ? _initialQuotes : _weekly;
-                    var indicatorResult = calc.Calculate(indicator, quotes);
+        //            var quotes = indicator.Period == QuotePeriod.Daily ? _initialQuotes : _weekly;
+        //            var indicatorResult = calc.Calculate(indicator, quotes);
 
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         public void Next()
         {

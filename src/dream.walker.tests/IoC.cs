@@ -5,6 +5,7 @@ using dream.walker.data;
 using dream.walker.data.Azure;
 using dream.walker.data.Repositories;
 using dream.walker.data.Services;
+using dream.walker.playground;
 using dream.walker.reader.Validators;
 using dream.walker.space.Services;
 using dream.walker.reader;
@@ -80,7 +81,7 @@ namespace dream.walker.tests
             builder.RegisterType<QuotesFileReader>().As<IQuotesFileReader>().InstancePerDependency();
             builder.RegisterType<FileReaderValidator>().As<IFileReaderValidator>().InstancePerDependency();
             builder.RegisterType<PlaygroundApiController>();
-
+            builder.RegisterType<PlaygroundProcessor>();
 
 
             return builder.Build();

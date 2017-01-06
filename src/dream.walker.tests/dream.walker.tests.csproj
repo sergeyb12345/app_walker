@@ -72,6 +72,7 @@
     <Compile Include="Controllers\PlaygroundApiControllerTests.cs" />
     <Compile Include="IndicatorTests.cs" />
     <Compile Include="IoC.cs" />
+    <Compile Include="Playground\PlaygroundProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ChartDataServiceTests.cs" />
     <Compile Include="Services\RuleServiceTests.cs" />
@@ -88,6 +89,14 @@
     <ProjectReference Include="..\dream.walker.data\dream.walker.data.csproj">
       <Project>{eb10172d-559a-4e59-bc95-eee805f1a19b}</Project>
       <Name>dream.walker.data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.indicators\dream.walker.indicators.csproj">
+      <Project>{d3dd96e0-079e-4a28-acc3-aa5b2ea39c01}</Project>
+      <Name>dream.walker.indicators</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.playground\dream.walker.playground.csproj">
+      <Project>{62210fc3-021c-4f94-a494-f781bbe87a2c}</Project>
+      <Name>dream.walker.playground</Name>
     </ProjectReference>
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
       <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>

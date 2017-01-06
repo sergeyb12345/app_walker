@@ -25,9 +25,7 @@ namespace dream.walker.tests.Controllers
         public async Task LoadPlayground()
         {
             await _controller.LoadPlayground("A", 3);
-            var quotes = _controller._quotes;
 
-            var weekly = quotes.ToWeeekly();
 
             
         }

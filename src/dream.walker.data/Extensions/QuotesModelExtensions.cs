@@ -13,6 +13,21 @@ namespace dream.walker.data.Extensions
         {
             return date.Year * 10000 + date.Month * 100 + date.Day;
         }
+
+        public static DateTime ToDate(this int date)
+        {
+            var sDate = date.ToString();
+            if (sDate.Length == 8)
+            {
+                DateTime d;
+                if (DateTime.TryParseExact(sDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out d))
+                {
+                    return d;
+                }
+            }
+
+            return DateTime.MinValue;
+        }
     }
 
     public static class QuotesModelExtensions

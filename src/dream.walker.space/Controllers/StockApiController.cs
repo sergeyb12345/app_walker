@@ -33,25 +33,26 @@ namespace dream.walker.space.Controllers
         public async Task<IHttpActionResult> UpdateQuotes(string ticker)
         {
             var company = await _companyService.GetAsync(ticker);
+
             if (company != null)
             {
                 var update = new CompanyToUpdate
                 {
                     Ticker = company.Ticker,
                     LastUpdated = company.LastUpdated,
-                    HistoryQuotes = company.HistoryQuotes
+                    HistoryQuotes = _companyService.GetQuotes(ticker)
                 };
 
-                if (!company.HistoryQuotes.Any())
+                if (!update.HistoryQuotes.Any())
                 {
-                    update.LastUpdated = DateTime.Today.AddYears(-1);
+                    update.LastUpdated = DateTime.Today.AddYears(-5);
                 }
 
                 var request = new GetStockHistoryRequest(update.Ticker, update.LastUpdated);
 
                 var csvQuotes = await _stockClient.GetStockHistory(request);
                 var quotes = _fileReader.Read(csvQuotes);
-                quotes = quotes.Merge(company.HistoryQuotes).Where(q => q.Date > DateTime.Today.AddYears(-1)).ToList();
+                quotes = quotes.Merge(update.HistoryQuotes).Where(q => q.Date > DateTime.Today.AddYears(-1)).ToList();
 
                 _companyService.UpdateQuotes(new UpdateQuotesRequest(company.Ticker, quotes));
             }
