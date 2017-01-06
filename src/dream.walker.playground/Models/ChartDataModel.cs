@@ -10,5 +10,6 @@ namespace dream.walker.playground.Models
 
         public ChartData Weekly { get; set; }
         public ChartData Daily { get; set; }
+        public int Bars { get; set; }
     }
 }
