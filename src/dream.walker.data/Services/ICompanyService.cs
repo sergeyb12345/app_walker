@@ -20,7 +20,7 @@ namespace dream.walker.data.Services
         void UpdateMetricsFailed(UpdateMetricsFailedRequest updateMetricsFailedRequest);
 
         Task<List<CompanyDetails>> SearchAsync(CompanySearchRequest request);
-        Task<Company> GetAsync(string ticker);
+        Task<CompanyHeader> GetAsync(string ticker);
     }
 
     public interface ICompanyManagerService 

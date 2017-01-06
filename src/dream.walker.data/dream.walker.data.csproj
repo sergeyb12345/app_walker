@@ -248,6 +248,7 @@
     </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\CompanyDetails.cs" />
+    <Compile Include="Models\CompanyHeader.cs" />
     <Compile Include="Models\FileCategory.cs" />
     <Compile Include="Models\IndicatorCore.cs" />
     <Compile Include="Models\RuleModel.cs" />

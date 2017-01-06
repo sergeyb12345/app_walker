@@ -15,7 +15,7 @@ namespace dream.walker.data.Repositories
         List<CompanyToProcess> FindCompaniesToProcess(TimeSpan fromTimeAgo, int count);
         List<CompanyToProcess> FindCompaniesToCalculate(int maxCompanyCount);
         Task<List<CompanyDetails>> SearchAsync(string ticker, int maxCount);
-        Task<Company> GetAsync(string ticker);
+        Task<CompanyHeader> GetAsync(string ticker);
     }
 
 
@@ -115,10 +115,11 @@ namespace dream.walker.data.Repositories
             return records;
         }
 
-        public async Task<Company> GetAsync(string ticker)
+        public async Task<CompanyHeader> GetAsync(string ticker)
         {
-            var record = await Dbset.FirstOrDefaultAsync(r => r.Ticker == ticker);
+            var record = await Dbset.Where(r => r.Ticker == ticker).Select(c => new CompanyHeader(c)).FirstOrDefaultAsync();
             return record;
         }
+
     }
 }

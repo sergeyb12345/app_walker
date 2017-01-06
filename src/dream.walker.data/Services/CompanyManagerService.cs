@@ -135,7 +135,7 @@ namespace dream.walker.data.Services
             }
         }
 
-        public async Task<Company> GetAsync(string ticker)
+        public async Task<CompanyHeader> GetAsync(string ticker)
         {
             using (var scope = _container.BeginLifetimeScope())
             {

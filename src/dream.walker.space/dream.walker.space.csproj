@@ -643,6 +643,10 @@
       <Project>{d3dd96e0-079e-4a28-acc3-aa5b2ea39c01}</Project>
       <Name>dream.walker.indicators</Name>
     </ProjectReference>
+    <ProjectReference Include="..\dream.walker.playground\dream.walker.playground.csproj">
+      <Project>{62210fc3-021c-4f94-a494-f781bbe87a2c}</Project>
+      <Name>dream.walker.playground</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
       <Project>{3d49dde8-e00e-429c-9f3b-cfe2db6e2de5}</Project>
       <Name>dream.walker.reader</Name>
