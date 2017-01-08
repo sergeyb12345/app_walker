@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.4.0.0\lib\net451\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPlaygroundService.cs" />
     <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\ChartDataModel.cs" />
     <Compile Include="Models\CommpanyChartData.cs" />
@@ -64,6 +68,10 @@
     <ProjectReference Include="..\dream.walker.reader\dream.walker.reader.csproj">
       <Project>{3D49DDE8-E00E-429C-9F3B-CFE2DB6E2DE5}</Project>
       <Name>dream.walker.reader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dream.walker.stock\dream.walker.stock.csproj">
+      <Project>{EB65CEA0-BC6F-4B02-BEB3-2571D1EDF06C}</Project>
+      <Name>dream.walker.stock</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

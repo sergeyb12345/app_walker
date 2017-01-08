@@ -314,7 +314,6 @@
     <Compile Include="Services\ICompanyIndicatorService.cs" />
     <Compile Include="Services\ICompanyService.cs" />
     <Compile Include="Services\IIndicatorService.cs" />
-    <Compile Include="Services\IPlaygroundService.cs" />
     <Compile Include="Services\IRuleService.cs" />
     <Compile Include="Services\IRuleSetService.cs" />
     <Compile Include="Services\IStrategyService.cs" />

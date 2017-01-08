@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using dream.walker.data.Entities.Indicators;
-using dream.walker.reader.Models;
 using Autofac;
+using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Repositories;
+using dream.walker.reader;
+using dream.walker.reader.Models;
 using dream.walker.stock;
 using dream.walker.stock.Requests;
-using dream.walker.reader;
 
-namespace dream.walker.data.Services
+namespace dream.walker.playground
 {
     public interface IPlaygroundService
     {
