@@ -31,12 +31,21 @@ namespace dream.walker.playground.Models
             var weeklyQuotes = _historicalData.Where(q => q.Date <= date || date == DateTime.MinValue).ToList().ToWeeekly().TakeLast(bars);
             var dailyQuotes = _historicalData.Where(q => q.Date <= weeklyQuotes.First().Date).Take(bars).ToList();
 
+            var dailyHist = new HistoricalQuotes(dailyQuotes);
+            var weeklyHist = new HistoricalQuotes(weeklyQuotes);
+
             Daily = new ChartData
             {
                 Company =
                 {
                     Name = _company.FullName,
-                    Quotes = new HistoricalQuotes(dailyQuotes)
+                    Quotes = dailyHist
+                },
+
+                Indicators = new IndicatorsChartData(_indicatorProcessorFactory)
+                {
+                    Quotes = dailyHist,
+                    Indicators = _indicators.Where(i => i.Period == QuotePeriod.Daily).ToList()
                 }
             };
 
@@ -45,11 +54,18 @@ namespace dream.walker.playground.Models
                 Company =
                 {
                     Name = _company.FullName,
-                    Quotes = new HistoricalQuotes(weeklyQuotes)
+                    Quotes = weeklyHist
+                },
+
+                Indicators = new IndicatorsChartData(_indicatorProcessorFactory)
+                {
+                    Quotes = weeklyHist,
+                    Indicators = _indicators.Where(i => i.Period == QuotePeriod.Weekly).ToList()
                 }
             };
 
-            CalculateIndicators();
+            Daily.Indicators.ReCalculate();
+            Weekly.Indicators.ReCalculate();
 
             return new ChartDataModel
             {
@@ -64,7 +80,10 @@ namespace dream.walker.playground.Models
             foreach (var quotes in nextQuotes)
             {
                 Daily.Company.Quotes.Next(quotes);
+                Daily.Indicators.ReCalculate(Daily.Company.Quotes, Daily.Company.Quotes.Replace);
+
                 Weekly.Company.Quotes.Next(quotes);
+                Weekly.Indicators.ReCalculate(Weekly.Company.Quotes, Weekly.Company.Quotes.Replace);
             }
             return null;
         }

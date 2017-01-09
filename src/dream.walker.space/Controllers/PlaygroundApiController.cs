@@ -63,7 +63,7 @@ namespace dream.walker.space.Controllers
             _playgroundProcessor.Reset(bars, date.ToDate());
         }
 
-        //private void CalculateIndicators()
+        //private void ReCalculate()
         //{
         //    foreach (var indicator in _idicators)
         //    {
