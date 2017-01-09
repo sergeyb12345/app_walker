@@ -48,6 +48,7 @@
     <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\ChartDataModel.cs" />
     <Compile Include="Models\CommpanyChartData.cs" />
+    <Compile Include="Models\HistoricalQuotes.cs" />
     <Compile Include="Models\IndicatorChartData.cs" />
     <Compile Include="PlaygroundProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

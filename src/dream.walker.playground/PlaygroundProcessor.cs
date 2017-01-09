@@ -38,16 +38,18 @@ namespace dream.walker.playground
             ChartData.Weekly.Company.Name = Company.FullName;
         }
 
-        public void Reset(int bars, DateTime date)
+        public ChartDataModel Reset(int bars, DateTime date)
         {
             var weeklyQuotes = HistoricalData.Where(q => q.Date <= date || date == DateTime.MinValue).ToList().ToWeeekly().TakeLast(bars);
-            var dailyQuotes = HistoricalData.Where(q => q.Date <= weeklyQuotes.First().Date).Take(bars+50).ToList();
+            var dailyQuotes = HistoricalData.Where(q => q.Date <= weeklyQuotes.First().Date).Take(bars).ToList();
 
-            ChartData.Daily.Company.Quotes = dailyQuotes;
-            ChartData.Weekly.Company.Quotes = weeklyQuotes;
+            ChartData.Daily.Company.Quotes = new HistoricalQuotes(dailyQuotes);
+            ChartData.Weekly.Company.Quotes = new HistoricalQuotes(weeklyQuotes);
             ChartData.Bars = bars;
 
             CalculateIndicators();
+
+            return ChartData;
         }
 
         private void CalculateIndicators()
@@ -77,7 +79,25 @@ namespace dream.walker.playground
                     }
                 }
             }
-            ChartData.Daily.Company.Quotes = ChartData.Daily.Company.Quotes.Take(ChartData.Bars).ToList();
+        }
+
+        private void CalculateIndicators(QuotesModel quotes)
+        {
+            
+        }
+
+        public void Next()
+        {
+            var lastDate = ChartData.Daily.Company.Quotes.First().Date;
+            if (HistoricalData.Any(q => q.Date > lastDate))
+            {
+                var nextQuotes = HistoricalData.First(q => q.Date > lastDate);
+
+                ChartData.Weekly.Company.Quotes.Add(nextQuotes);
+                ChartData.Daily.Company.Quotes.Add(nextQuotes);
+
+                CalculateIndicators(nextQuotes);
+            }
         }
     }
 }

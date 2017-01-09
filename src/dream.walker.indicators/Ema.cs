@@ -47,6 +47,20 @@ namespace dream.walker.indicators
             return result;
         }
 
+        public IndicatorModel Calculate(QuotesModel quotes, List<IndicatorModel> values, int period)
+        {
+            if (quotes.Date == values[0].Date)
+            {
+                values.RemoveAt(0);
+            }
+
+            return new IndicatorModel()
+            {
+                Date = quotes.Date,
+                Value = CalculateEma(quotes.Close, period, values[0].Value)
+            };
+        }
+
         private bool Validate(List<QuotesModel> quotes, int period)
         {
             if (period < 2 || quotes == null || quotes.Count <= period)

@@ -12,8 +12,6 @@ namespace dream.walker.calculators
     public class EmaIndicatorCalculator : IIndicatorCalculator
     {
         private readonly Ema _calculator;
-        private List<QuotesModel> _transformedQuotes;
-        private int _period;
 
         public EmaIndicatorCalculator()
         {
@@ -29,7 +27,14 @@ namespace dream.walker.calculators
         {
             Validate(indicator, quotes);
 
-            return _calculator.Calculate(_transformedQuotes, _period);
+            return _calculator.Calculate(quotes, ExtractPeriod(indicator));
+        }
+
+        public IndicatorModel Calculate(Indicator indicator, List<IndicatorModel> values, QuotesModel quotes)
+        {
+            Validate(indicator, values,  quotes);
+
+            return _calculator.Calculate(quotes, values, ExtractPeriod(indicator));
         }
 
         public void Validate(Indicator indicator, List<QuotesModel> quotes)
@@ -44,8 +49,31 @@ namespace dream.walker.calculators
             {
                 throw new ArgumentException($"Period parameter value is not set. Params: {indicator.JsonParams}");
             }
+        }
 
-            _period = param.Value;
+        public void Validate(Indicator indicator, List<IndicatorModel> values, QuotesModel quotes)
+        {
+            if (!CanCalculate(indicator))
+            {
+                throw new NotSupportedException($"Calculator '{_calculator.Name}' does not support indicator '{indicator.Name}'");
+            }
+
+            if (!values.Any())
+            {
+                throw new ArgumentException($"Indicator values list is empty");
+            }
+
+            var param = indicator.Params.FirstOrDefault(p => p.ParamName == IndicatorParamName.Period.ToString());
+            if (param == null || param.Value == 0)
+            {
+                throw new ArgumentException($"Period parameter value is not set. Params: {indicator.JsonParams}");
+            }
+        }
+
+        private int ExtractPeriod(Indicator indicator)
+        {
+            var param = indicator.Params.First(p => p.ParamName == IndicatorParamName.Period.ToString());
+            return param.Value;
         }
     }
 }
