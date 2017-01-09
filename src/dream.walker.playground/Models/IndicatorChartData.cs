@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using dream.walker.data.Entities.Indicators;
@@ -32,5 +33,17 @@ namespace dream.walker.playground.Models
         public string ChartType { get; set; }
         public string Name { get; set; }
         public List<IndicatorModel> Values { get; set; }
+
+        public IndicatorChartData Get(DateTime date)
+        {
+            return new IndicatorChartData
+            {
+                Name = Name,
+                CompanyPlot = CompanyPlot,
+                ChartType = ChartType,
+                ChartColor = ChartColor,
+                Values = Values.Where(v => v.Date == date).ToList()
+            };
+        }
     }
 }

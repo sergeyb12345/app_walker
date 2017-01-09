@@ -4,7 +4,6 @@ using System.Linq;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Enums;
-using dream.walker.data.Extensions;
 using dream.walker.data.Models;
 using dream.walker.playground.Models;
 using dream.walker.reader.Models;
@@ -17,39 +16,18 @@ namespace dream.walker.playground
         public PlaygroundProcessor(IndicatorProcessorFactory indicatorProcessorFactory)
         {
             _indicatorProcessorFactory = indicatorProcessorFactory;
-
-            HistoricalData = new List<QuotesModel>();
-            Indicators = new List<Indicator>();
-            Company = new CompanyHeader();
         }
 
-        public List<QuotesModel> HistoricalData { get; set; }
-        public List<Indicator> Indicators { get; set; }
-        public CompanyHeader Company { get; set; }
-        public ChartDataModel ChartData { get; set; }
+        public ChartDataProcessor ChartData { get; set; }
 
         public void Initialize(CompanyHeader company, List<QuotesModel> historicalData, List<Indicator> indicators)
         {
-            Company = company;
-            HistoricalData = historicalData;
-            Indicators = indicators;
-            ChartData = new ChartDataModel();
-            ChartData.Daily.Company.Name = Company.FullName;
-            ChartData.Weekly.Company.Name = Company.FullName;
+            ChartData = new ChartDataProcessor(historicalData, indicators, company);
         }
 
-        public ChartDataModel Reset(int bars, DateTime date)
+        public void Reset(int bars, DateTime date)
         {
-            var weeklyQuotes = HistoricalData.Where(q => q.Date <= date || date == DateTime.MinValue).ToList().ToWeeekly().TakeLast(bars);
-            var dailyQuotes = HistoricalData.Where(q => q.Date <= weeklyQuotes.First().Date).Take(bars).ToList();
-
-            ChartData.Daily.Company.Quotes = new HistoricalQuotes(dailyQuotes);
-            ChartData.Weekly.Company.Quotes = new HistoricalQuotes(weeklyQuotes);
-            ChartData.Bars = bars;
-
-            CalculateIndicators();
-
-            return ChartData;
+            ChartData.Initialize(bars, date);
         }
 
         private void CalculateIndicators()
@@ -83,21 +61,19 @@ namespace dream.walker.playground
 
         private void CalculateIndicators(QuotesModel quotes)
         {
-            
+
         }
 
-        public void Next()
+
+        public ChartDataProcessor Next()
         {
-            var lastDate = ChartData.Daily.Company.Quotes.First().Date;
-            if (HistoricalData.Any(q => q.Date > lastDate))
-            {
-                var nextQuotes = HistoricalData.First(q => q.Date > lastDate);
-
-                ChartData.Weekly.Company.Quotes.Add(nextQuotes);
-                ChartData.Daily.Company.Quotes.Add(nextQuotes);
-
-                CalculateIndicators(nextQuotes);
-            }
+            //var lastDate = this.ChartData.Daily.Company.Quotes.First().Date;
+            //if (HistoricalData.Any(q => q.Date > lastDate))
+            //{
+            //    var nextQuotes = HistoricalData.First(q => q.Date > lastDate);
+            //    return ChartData.Next(nextQuotes);
+            //}
+            return null;
         }
     }
 }

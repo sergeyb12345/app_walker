@@ -43,6 +43,7 @@ namespace dream.walker.playground.Models
             var first = this.First();
             var period = ExtractPeriod();
 
+            Replace = false;
             if (quotes.Date > first.Date)
             {
                 if (period == QuotePeriod.Daily)
@@ -60,14 +61,19 @@ namespace dream.walker.playground.Models
                         first.Close = quotes.Close;
                         first.Low = Math.Min(first.Low, quotes.Low);
                         first.High = Math.Min(first.High, quotes.High);
+
+                        Replace = true;
                     }
                     else
                     {
+                        base.RemoveAt(Count - 1);
                         base.Insert(0, quotes);
                     }
                 }
             }
         }
+
+        public bool Replace { get; private set; }
 
     }
 }
