@@ -9,6 +9,9 @@ namespace dream.walker.playground.Models
 {
     public class HistoricalQuotes : List<QuotesModel>
     {
+        public bool Replace { get; private set; }
+
+
         public HistoricalQuotes()
         {
             
@@ -38,7 +41,7 @@ namespace dream.walker.playground.Models
             }
         }
 
-        public new void Add(QuotesModel quotes)
+        public void Next(QuotesModel quotes)
         {
             var first = this.First();
             var period = ExtractPeriod();
@@ -55,7 +58,7 @@ namespace dream.walker.playground.Models
                 {
                     Func<DateTime, int> weekProjector = date => date.Year * 100 + CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
-                    if (weekProjector(this.First().Date) == weekProjector(quotes.Date))
+                    if (weekProjector(first.Date) == weekProjector(quotes.Date))
                     {
                         first.Date = quotes.Date;
                         first.Close = quotes.Close;
@@ -73,7 +76,40 @@ namespace dream.walker.playground.Models
             }
         }
 
-        public bool Replace { get; private set; }
 
+        public void Prev(QuotesModel quotes)
+        {
+            var last = this.Last();
+            var period = ExtractPeriod();
+
+            Replace = false;
+            if (quotes.Date < last.Date)
+            {
+                if (period == QuotePeriod.Daily)
+                {
+                    base.RemoveAt(0);
+                    base.Add(quotes);
+                }
+                else
+                {
+                    Func<DateTime, int> weekProjector = date => date.Year * 100 + CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+
+                    if (weekProjector(last.Date) == weekProjector(quotes.Date))
+                    {
+                        last.Date = quotes.Date;
+                        last.Open = quotes.Open;
+                        last.Low = Math.Min(last.Low, quotes.Low);
+                        last.High = Math.Min(last.High, quotes.High);
+
+                        Replace = true;
+                    }
+                    else
+                    {
+                        base.RemoveAt(0);
+                        base.Add(quotes);
+                    }
+                }
+            }
+        }
     }
 }
