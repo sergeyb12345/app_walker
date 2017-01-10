@@ -6,6 +6,7 @@ using dream.walker.data;
 using dream.walker.data.Repositories;
 using System.Web.Mvc;
 using Autofac.Integration.WebApi;
+using dream.walker.cache;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Azure;
 using dream.walker.data.Services;

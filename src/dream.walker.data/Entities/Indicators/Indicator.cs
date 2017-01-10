@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using dream.walker.data.Enums;
 using dream.walker.data.Models;
 using Newtonsoft.Json;
@@ -30,5 +31,17 @@ namespace dream.walker.data.Entities.Indicators
         }
 
         public ChartType ChartType { get; set; }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrWhiteSpace(JsonParams))
+            {
+                return base.ToString();
+            }
+            else
+            {
+                return $"{Name.ToUpper()}({string.Join(",", Params.Select(p => p.Value).ToArray())})";
+            }
+        }
     }
 }

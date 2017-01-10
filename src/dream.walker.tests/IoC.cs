@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using Autofac;
+using dream.walker.cache;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data;
 using dream.walker.data.Azure;

@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{843071D9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.playground", "src\dream.walker.playground\dream.walker.playground.csproj", "{62210FC3-021C-4F94-A494-F781BBE87A2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dream.walker.cache", "src\dream.walker.cache\dream.walker.cache.csproj", "{A37D9D98-8D82-4786-9163-A0D16B524C1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{62210FC3-021C-4F94-A494-F781BBE87A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62210FC3-021C-4F94-A494-F781BBE87A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62210FC3-021C-4F94-A494-F781BBE87A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A37D9D98-8D82-4786-9163-A0D16B524C1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A37D9D98-8D82-4786-9163-A0D16B524C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A37D9D98-8D82-4786-9163-A0D16B524C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A37D9D98-8D82-4786-9163-A0D16B524C1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

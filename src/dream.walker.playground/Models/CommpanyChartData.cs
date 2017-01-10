@@ -20,13 +20,5 @@ namespace dream.walker.playground.Models
         public string Name { get; set; }
         public HistoricalQuotes Quotes { get; set; }
 
-        public CommpanyChartData Get(DateTime date)
-        {
-            return new CommpanyChartData
-            {
-                Name = Name,
-                Quotes = Quotes.Get(date)
-            };
-        }
     }
 }

@@ -259,7 +259,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
-    <Compile Include="Controllers\IDataCache.cs" />
     <Compile Include="Controllers\IndicatorsApiController.cs" />
     <Compile Include="Controllers\CompaniesApiController.cs" />
     <Compile Include="Controllers\PlaygroundApiController.cs" />
@@ -631,6 +630,10 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dream.walker.cache\dream.walker.cache.csproj">
+      <Project>{A37D9D98-8D82-4786-9163-A0D16B524C1D}</Project>
+      <Name>dream.walker.cache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dream.walker.calculators\dream.walker.calculators.csproj">
       <Project>{3E257FC8-37EF-4BB5-BDFD-977BD3754A2C}</Project>
       <Name>dream.walker.calculators</Name>

@@ -1,7 +1,7 @@
 ﻿using dream.walker.data.Services;
 using System.Threading.Tasks;
 using System.Web.Http;
-using dream.walker.data.Extensions;
+using dream.walker.cache;
 using dream.walker.data.Requests;
 using dream.walker.playground;
 
@@ -52,7 +52,6 @@ namespace dream.walker.space.Controllers
 
             var company = await _companyService.GetAsync(ticker);
 
-            _playgroundProcessor.Initialize(company, historicalData, indicators);
 
             return Ok();
         }
@@ -60,24 +59,8 @@ namespace dream.walker.space.Controllers
 
         public void Reset(int bars, int date)
         {
-            _playgroundProcessor.Reset(bars, date.ToDate());
         }
 
-        //private void ReCalculate()
-        //{
-        //    foreach (var indicator in _idicators)
-        //    {
-        //        var calc = _indicatorProcessorFactory.Create(indicator);
-        //        if (calc != null)
-        //        {
-                    
-        //            var quotes = indicator.Period == QuotePeriod.Daily ? _initialQuotes : _weekly;
-        //            var indicatorResult = calc.Calculate(indicator, quotes);
-
-
-        //        }
-        //    }
-        //}
 
         public void Next()
         {

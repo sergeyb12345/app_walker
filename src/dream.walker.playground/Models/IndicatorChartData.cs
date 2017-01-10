@@ -1,49 +1,33 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using dream.walker.calculators;
 using dream.walker.data.Entities.Indicators;
 using dream.walker.indicators.Models;
+using dream.walker.reader.Models;
 
 namespace dream.walker.playground.Models
 {
     public class IndicatorChartData
     {
-        public IndicatorChartData()
+        private readonly IIndicatorCalculator _calculator;
+        private readonly Indicator _indicator;
+
+        public IndicatorChartData(IIndicatorCalculator calculator, Indicator indicator)
         {
-            Values = new List<IndicatorModel>();    
+            _calculator = calculator;
+            _indicator = indicator;
         }
 
-        public IndicatorChartData(Indicator indicator)
-            :this()
-        {
-            Name = $"{indicator.Name.ToUpper()} ({string.Join(",", indicator.Params.Select(p => p.Value).ToArray())})";
-            ChartType = indicator.ChartType.ToString().ToLower();
-            ChartColor = indicator.ChartColor;
-            CompanyPlot = indicator.ChartPlotNumber == 0;
-        }
-
-        public IndicatorChartData(Indicator indicator, List<IndicatorModel> values)
-            :this(indicator)
-        {
-            Values = values;
-        }
-
-        public bool CompanyPlot { get; set; }
-        public string ChartColor { get; set; }
-        public string ChartType { get; set; }
-        public string Name { get; set; }
         public List<IndicatorModel> Values { get; set; }
 
-        public IndicatorChartData Get(DateTime date)
+
+        public void Calculate(List<QuotesModel> quotes)
         {
-            return new IndicatorChartData
-            {
-                Name = Name,
-                CompanyPlot = CompanyPlot,
-                ChartType = ChartType,
-                ChartColor = ChartColor,
-                Values = Values.Where(v => v.Date == date).ToList()
-            };
+            Values = _calculator.Calculate(_indicator, quotes);
         }
+    }
+
+    public class IndicatorsChartData : Dictionary<int, IndicatorChartData>
+    {
     }
 }
