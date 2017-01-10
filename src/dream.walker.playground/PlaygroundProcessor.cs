@@ -19,7 +19,10 @@ namespace dream.walker.playground
         {
             _indicators = indicators;
             _playgroundModel = new PlaygroundModel(company, indicatorProcessorFactory);
+            HistoryDays = company.HistoryQuotes.Count;
         }
+
+        public int HistoryDays { get; private set; }
 
 
         public void Initialize(int bars, DateTime date)
@@ -37,7 +40,6 @@ namespace dream.walker.playground
         {
             _playgroundModel.MovePrev(bars);
         }
-
 
     }
 }

@@ -25,7 +25,7 @@ namespace dream.walker.tests.Playground
         [Test]
         public void Reset_ShouldCreateQuotes()
         {
-            //_processor.Reset(100, DateTime.MinValue);
+            Assert.That(_processor.HistoryDays > 300);
         }
     }
 }

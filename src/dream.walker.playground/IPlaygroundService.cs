@@ -6,6 +6,8 @@ using dream.walker.cache;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Repositories;
+using dream.walker.data.Requests;
+using dream.walker.data.Services;
 using dream.walker.reader;
 using dream.walker.reader.Models;
 using dream.walker.stock;
@@ -64,16 +66,32 @@ namespace dream.walker.playground
             }
         }
 
-        public Task<PlaygroundProcessor> LoadPlaygroundAsync(string ticker, int strategyId, bool refreshCache)
+        public async Task<PlaygroundProcessor> LoadPlaygroundAsync(string ticker, int strategyId, bool refreshCache)
         {
-            var key = $"{ticker}-{strategyId}";
+            var key = $"LoadPlaygroundAsync-{ticker}-{strategyId}";
 
             if (refreshCache)
             {
                 _cache.Delete(key);    
             }
 
-            return  _cache.Get(key, async () => await LoadPlayground(ticker, strategyId));
+            var processor = await _cache.Get(key, async () => await LoadPlayground(ticker, strategyId));
+            if (processor.HistoryDays < 300)
+            {
+                var historicalData = await LoadHistoryAsync(ticker);
+                if (historicalData.Count > 300)
+                {
+                    using (var scope = _container.BeginLifetimeScope())
+                    {
+                        var companyService = scope.Resolve<ICompanyService>();
+                        companyService.UpdateQuotes(new UpdateQuotesRequest(ticker, historicalData));
+                    }
+
+                    return await LoadPlaygroundAsync(ticker, strategyId, true);
+                }
+            }
+
+            return processor;
         }
 
         private async Task<PlaygroundProcessor> LoadPlayground(string ticker, int strategyId)
