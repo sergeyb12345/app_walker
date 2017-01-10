@@ -17,6 +17,7 @@ namespace dream.walker.playground
     {
         Task<List<QuotesModel>> LoadHistoryAsync(string ticker);
         Task<List<Indicator>> LoadIndicatorsAsync(int strategyId);
+        Task<PlaygroundProcessor> LoadPlaygroundAsync(string ticker, int strategyId, bool refreshCache);
     }
 
     public class PlaygroundService : IPlaygroundService
@@ -63,7 +64,7 @@ namespace dream.walker.playground
             }
         }
 
-        public async Task<PlaygroundProcessor> LoadPlayground(string ticker, int strategyId, bool refreshCache)
+        public Task<PlaygroundProcessor> LoadPlaygroundAsync(string ticker, int strategyId, bool refreshCache)
         {
             var key = $"{ticker}-{strategyId}";
 
@@ -72,7 +73,7 @@ namespace dream.walker.playground
                 _cache.Delete(key);    
             }
 
-            return await _cache.Get(key, () => LoadPlayground(ticker, strategyId));
+            return  _cache.Get(key, async () => await LoadPlayground(ticker, strategyId));
         }
 
         private async Task<PlaygroundProcessor> LoadPlayground(string ticker, int strategyId)

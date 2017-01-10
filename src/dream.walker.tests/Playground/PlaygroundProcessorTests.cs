@@ -17,10 +17,8 @@ namespace dream.walker.tests.Playground
         {
             if (_processor == null)
             {
-                var controller = IoCContainer.Instance.Resolve<PlaygroundApiController>();
-                await controller.LoadPlayground("A", 3);
-
-                _processor = controller._playgroundProcessor;
+                var controller = IoCContainer.Instance.Resolve<IPlaygroundService>();
+                _processor = await controller.LoadPlaygroundAsync("A", 3, true);
             }
         }
 
