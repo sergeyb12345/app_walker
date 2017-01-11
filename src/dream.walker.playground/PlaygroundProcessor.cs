@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Entities.Indicators;
-using dream.walker.data.Models;
 using dream.walker.playground.Models;
-using dream.walker.reader.Models;
 using dream.walker.data.Entities.Companies;
 
 namespace dream.walker.playground
@@ -25,21 +23,23 @@ namespace dream.walker.playground
         public int HistoryDays { get; private set; }
 
 
-        public void Initialize(int bars, DateTime date)
+        public PlaygroundChartModel Initialize(int bars, DateTime date)
         {
             _playgroundModel.Initialize(bars, date, _indicators);
-            _playgroundModel.Build();
+            return _playgroundModel.Build();
         }
 
 
-        public void Next(int bars)
+        public PlaygroundChartModel Next(int bars)
         {
             _playgroundModel.MoveNext(bars);
+            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Append, bars));
         }
 
-        public void Prev(int bars)
+        public PlaygroundChartModel Prev(int bars)
         {
             _playgroundModel.MovePrev(bars);
+            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Insert, bars));
         }
 
 

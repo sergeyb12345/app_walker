@@ -14,6 +14,7 @@ namespace dream.walker.playground.Models
     public class PlaygroundModel
     {
         private readonly List<QuotesModel> _quotes;
+        private readonly Company _company;
         private readonly IndicatorProcessorFactory _indicatorProcessor;
         private bool _initialized = false;
 
@@ -24,6 +25,7 @@ namespace dream.walker.playground.Models
         public PlaygroundModel(Company company, IndicatorProcessorFactory indicatorProcessor)
         {
             _quotes = company.HistoryQuotes;
+            _company = company;
             _indicatorProcessor = indicatorProcessor;
 
             Charts = new Dictionary<QuotePeriod, ChartModel>();
@@ -109,14 +111,23 @@ namespace dream.walker.playground.Models
         }
 
 
-        public PlaygroundChartModel Build()
+        public PlaygroundChartModel Build(ChartUpdateMode mode = null)
         {
-            return null;
-        }
+            var charts = new List<PlaygroundChartModel.ChartInfo>();
+            foreach (QuotePeriod period in Enum.GetValues(typeof(QuotePeriod)))
+            {
+                var chart = new PlaygroundChartModel.ChartInfo(period, Charts[period], mode);
+                charts.Add(chart);
+            }
 
-        public PlaygroundChartModel Build(int bars)
-        {
-            throw new NotImplementedException();
+            return new PlaygroundChartModel
+            {
+                Company = new PlaygroundChartModel.CompanyInfo()
+                {
+                    Name = $"{_company.Ticker} - {_company.Name}"
+                },
+                Periods = charts
+            };
         }
     }
 

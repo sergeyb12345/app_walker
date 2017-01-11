@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Enums;
@@ -57,11 +58,19 @@ namespace dream.walker.playground.Models
 
         public class ChartInfo
         {
-            public ChartInfo(QuotePeriod period, List<QuotesModel> quotes)
+
+            public ChartInfo(QuotePeriod period, ChartModel model, ChartUpdateMode mode)
             {
                 Id = (int) period;
                 Name = period.ToString();
-                Quotes = quotes;
+                Quotes = model.Company.Quotes;
+                Update = mode ?? new ChartUpdateMode(ChartUpdateMode.UpdateMode.Reset, 0);
+                Indicators = new List<IndicatorInfo>();
+
+                foreach (var indicator in model.Indicators)
+                {
+                    Indicators.Add(new IndicatorInfo(indicator.Value, Update));    
+                }
             }
 
             public int Id { get; set; }
@@ -76,34 +85,16 @@ namespace dream.walker.playground.Models
         {
             public string Name { get; set; }
         }
-        public class ChartUpdateMode
-        {
-            public ChartUpdateMode(UpdateMode mode, int bars)
-            {
-                Mode = mode.ToString().ToLower();
-                Bars = bars;
 
-            }
-
-            public string Mode { get; set; }
-            public int Bars { get; set; }
-        }
-
-        public enum UpdateMode
-        {
-            Reset,
-            Insert,
-            Append
-        }
 
         public class IndicatorInfo
         {
-            public IndicatorInfo(Indicator indicator)
+            public IndicatorInfo(IndicatorChartData chart, ChartUpdateMode update)
             {
-                Name = indicator.ToString();
-                ChartType = indicator.ChartType.ToString().ToLower();
-                Values = new List<IndicatorModel>();
-                Id = indicator.IndicatorId;
+                Name = chart.Indicator.ToString();
+                ChartType = chart.Indicator.ChartType.ToString().ToLower();
+                Values = chart.GetValues(update);
+                Id = chart.Indicator.IndicatorId;
             }
 
             public int Id { get; set; }
@@ -122,4 +113,27 @@ namespace dream.walker.playground.Models
             public List<IndicatorModel> Values { get; set; }
         }
     }
+    public class ChartUpdateMode
+    {
+        public enum UpdateMode
+        {
+            Reset,
+            Insert,
+            Append
+        }
+
+        public ChartUpdateMode(UpdateMode mode, int bars)
+        {
+            Mode = mode.ToString().ToLower();
+            ModeType = mode;
+            Bars = bars;
+
+        }
+
+        public UpdateMode ModeType { get; set; }
+
+        public string Mode { get; set; }
+        public int Bars { get; set; }
+    }
+
 }

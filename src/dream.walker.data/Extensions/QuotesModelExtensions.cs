@@ -98,13 +98,13 @@ namespace dream.walker.data.Extensions
             return result;
         }
 
-        public static List<QuotesModel> TakeLast(this List<QuotesModel> quotes, int items)
+        public static List<T> TakeLast<T>(this List<T> items, int count)
         {
-            if (quotes != null && quotes.Any())
+            if (items != null && items.Any())
             {
-                return quotes.Skip(Math.Max(0, quotes.Count() - items)).ToList();
+                return items.Skip(Math.Max(0, items.Count() - count)).ToList();
             }
-            return new List<QuotesModel>();
+            return new List<T>();
         }
 
         public static List<QuotesModel> ToWeeekly(this List<QuotesModel>quotes)
