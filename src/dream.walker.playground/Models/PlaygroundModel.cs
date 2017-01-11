@@ -109,5 +109,15 @@ namespace dream.walker.playground.Models
         }
 
 
+        public PlaygroundChartModel Build()
+        {
+            return null;
+        }
+
+        public PlaygroundChartModel Build(int bars)
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }

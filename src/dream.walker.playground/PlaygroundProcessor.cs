@@ -28,6 +28,7 @@ namespace dream.walker.playground
         public void Initialize(int bars, DateTime date)
         {
             _playgroundModel.Initialize(bars, date, _indicators);
+            _playgroundModel.Build();
         }
 
 
@@ -40,6 +41,7 @@ namespace dream.walker.playground
         {
             _playgroundModel.MovePrev(bars);
         }
+
 
     }
 }

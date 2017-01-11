@@ -4,6 +4,40 @@ import {bindable} from 'aurelia-framework';
 export class StockChart {
     
     constructor () {
+        this.data2 = {
+            company: {
+                name: 'A - ACMA'
+            },
+            periods: [
+                {
+                    id: 1,
+                    name: 'weekly',
+                    quotes: [],
+                    indicators: [
+                        {
+                            name: 'EMA(13)',
+                            values: []
+                        }
+                    ],
+                    update: {
+                        mode: 'reset',
+                        bars: 0
+                    }
+                },
+                {
+                    id: 0,
+                    name: 'daily',
+                    quotes: [],
+                    indicators: [],
+                    update: {
+                        mode: 'insert | append',
+                        bars: 2
+                    }
+                }
+            ]
+        };
+
+
         this.data = {
             company: {
                 name: 'ACME Corp.',

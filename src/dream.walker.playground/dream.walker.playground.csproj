@@ -34,6 +34,7 @@
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.4.0.0\lib\net451\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPlaygroundService.cs" />
+    <Compile Include="Models\PlaygroundChartModel.cs" />
     <Compile Include="PlaygroundProcessor.cs" />
     <Compile Include="Models\ChartModel.cs" />
     <Compile Include="Models\CommpanyChartData.cs" />

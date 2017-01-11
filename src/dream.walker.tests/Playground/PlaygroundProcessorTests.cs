@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Autofac;
 using dream.walker.playground;
-using dream.walker.space.Controllers;
 using NUnit.Framework;
 
 namespace dream.walker.tests.Playground
