@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using Autofac;
 using dream.walker.cache;
+using dream.walker.calculators;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data;
 using dream.walker.data.Azure;
@@ -83,6 +84,9 @@ namespace dream.walker.tests
             builder.RegisterType<FileReaderValidator>().As<IFileReaderValidator>().InstancePerDependency();
             builder.RegisterType<PlaygroundApiController>();
             builder.RegisterType<PlaygroundProcessor>();
+
+            //Calculators
+            builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
 
 
             return builder.Build();

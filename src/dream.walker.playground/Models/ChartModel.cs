@@ -8,18 +8,15 @@ namespace dream.walker.playground.Models
 {
     public class ChartModel
     {
-        private readonly HistoricalQuotes _quotes;
+        public HistoricalQuotes Quotes { get; private set; }
 
         public ChartModel(List<QuotesModel> quotes)
         {
-            _quotes = new HistoricalQuotes(quotes);
-
-            Company = new CommpanyChartData();
+            Quotes = new HistoricalQuotes(quotes);
             Indicators = new IndicatorsChartData();
         }
 
 
-        public CommpanyChartData Company { get; set; }
         public IndicatorsChartData Indicators { get; set; }
 
 
@@ -31,46 +28,40 @@ namespace dream.walker.playground.Models
                 Indicators.Add(indicator.IndicatorId, new IndicatorChartData(calculator, indicator));
             }
 
-            Indicators[indicator.IndicatorId].Calculate(_quotes);
+            Indicators[indicator.IndicatorId].Calculate(Quotes);
         }
 
         private void MoveNext(QuotesModel quotes)
         {
-            _quotes.Next(quotes);
+            Quotes.Next(quotes);
 
             foreach (var indicator in Indicators)
             {
-                indicator.Value.Calculate(_quotes);
+                indicator.Value.Calculate(Quotes);
             }
         }
 
         private void MovePrev(QuotesModel quotes)
         {
-            _quotes.Prev(quotes);
+            Quotes.Prev(quotes);
 
             foreach (var indicator in Indicators)
             {
-                indicator.Value.Calculate(_quotes);
+                indicator.Value.Calculate(Quotes);
             }
         }
 
 
-        public void MoveNext(int bars)
+        public void MoveNext(IEnumerable<QuotesModel> quotes)
         {
-            var first = _quotes.First();
-            var quotes = _quotes.Where(q => q.Date > first.Date).Take(bars);
-
             foreach (var quote in quotes)
             {
                 MoveNext(quote);
             }
         }
 
-        public void MovePrev(int bars)
+        public void MovePrev(List<QuotesModel> quotes)
         {
-            var last = _quotes.Last();
-            var quotes = _quotes.Where(q => q.Date < last.Date).Take(bars);
-
             foreach (var quote in quotes)
             {
                 MovePrev(quote);

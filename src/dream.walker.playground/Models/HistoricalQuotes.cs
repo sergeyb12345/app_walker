@@ -52,7 +52,15 @@ namespace dream.walker.playground.Models
                 if (period == QuotePeriod.Daily)
                 {
                     base.RemoveAt(Count - 1);
-                    base.Insert(0, quotes);
+                    base.Insert(0, new QuotesModel
+                    {
+                        Date = quotes.Date,
+                        Open = quotes.Open,
+                        Close = quotes.Close,
+                        High = quotes.High,
+                        Low = quotes.Low,
+                        Volume = quotes.Volume
+                    });
                 }
                 else
                 {
@@ -70,7 +78,15 @@ namespace dream.walker.playground.Models
                     else
                     {
                         base.RemoveAt(Count - 1);
-                        base.Insert(0, quotes);
+                        base.Insert(0, new QuotesModel
+                        {
+                            Date = quotes.Date,
+                            Open = quotes.Open,
+                            Close = quotes.Close,
+                            High = quotes.High,
+                            Low = quotes.Low,
+                            Volume = quotes.Volume
+                        });
                     }
                 }
             }

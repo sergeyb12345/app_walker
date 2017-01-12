@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Enums;
 using dream.walker.indicators.Models;
@@ -63,8 +64,10 @@ namespace dream.walker.playground.Models
             {
                 Id = (int) period;
                 Name = period.ToString();
-                Quotes = model.Company.Quotes;
+
                 Update = mode ?? new ChartUpdateMode(ChartUpdateMode.UpdateMode.Reset, 0);
+                Quotes = GetQuotes(model.Quotes, Update);
+
                 Indicators = new List<IndicatorInfo>();
 
                 foreach (var indicator in model.Indicators)
@@ -72,6 +75,24 @@ namespace dream.walker.playground.Models
                     Indicators.Add(new IndicatorInfo(indicator.Value, Update));    
                 }
             }
+
+            private List<QuotesModel> GetQuotes(HistoricalQuotes quotes, ChartUpdateMode update)
+            {
+                if (update.ModeType == ChartUpdateMode.UpdateMode.Reset)
+                {
+                    return quotes;
+                }
+
+                if (update.ModeType == ChartUpdateMode.UpdateMode.Append)
+                {
+                    var startDate = quotes.First().Date.AddDays(-update.Bars);
+                    return quotes.Where(q => q.Date >= startDate).ToList();
+                }
+
+                var endDate = quotes.Last().Date.AddDays(update.Bars);
+                return quotes.Where(q => q.Date <= endDate).ToList();
+            }
+
 
             public int Id { get; set; }
             public string Name { get; set; }
