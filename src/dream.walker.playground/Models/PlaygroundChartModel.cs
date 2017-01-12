@@ -59,9 +59,17 @@ namespace dream.walker.playground.Models
 
         public class ChartInfo
         {
+            private readonly QuotePeriod _period;
 
+            /// <summary>
+            /// TODO: change constructor to return start date, otherwise unable to calc weeks offset
+            /// </summary>
+            /// <param name="period"></param>
+            /// <param name="model"></param>
+            /// <param name="mode"></param>
             public ChartInfo(QuotePeriod period, ChartModel model, ChartUpdateMode mode)
             {
+                _period = period;
                 Id = (int) period;
                 Name = period.ToString();
 
@@ -76,6 +84,7 @@ namespace dream.walker.playground.Models
                 }
             }
 
+            /// TODO: change constructor to return start date, otherwise unable to calc weeks offset
             private List<QuotesModel> GetQuotes(HistoricalQuotes quotes, ChartUpdateMode update)
             {
                 if (update.ModeType == ChartUpdateMode.UpdateMode.Reset)
@@ -85,8 +94,16 @@ namespace dream.walker.playground.Models
 
                 if (update.ModeType == ChartUpdateMode.UpdateMode.Append)
                 {
-                    var startDate = quotes.First().Date.AddDays(-update.Bars);
-                    return quotes.Where(q => q.Date >= startDate).ToList();
+                    if (_period == QuotePeriod.Daily)
+                    {
+                        var startDate = quotes.Skip(update.Bars).First().Date;
+                        return quotes.Where(q => q.Date >= startDate).ToList();
+                    }
+                    else
+                    {
+                        //change constructor to return start date
+                        //otherwise unable to calc weeks offset
+                    }
                 }
 
                 var endDate = quotes.Last().Date.AddDays(update.Bars);
