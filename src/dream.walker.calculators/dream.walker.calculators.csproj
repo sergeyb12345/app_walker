@@ -49,7 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmaIndicatorCalculator.cs" />
+    <Compile Include="ImpulseSystemCalculator.cs" />
+    <Compile Include="MacdCalculator.cs" />
+    <Compile Include="ForceIndexCalculator.cs" />
+    <Compile Include="EmaCalculator.cs" />
     <Compile Include="IIndicatorCalculator.cs" />
     <Compile Include="IndicatorProcessor\IIndicatorProcessor.cs" />
     <Compile Include="IndicatorProcessor\IndicatorProcessorFactory.cs" />

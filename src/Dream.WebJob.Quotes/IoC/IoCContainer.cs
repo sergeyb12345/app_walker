@@ -52,7 +52,7 @@ namespace Dream.WebJob.Quotes.IoC
             builder.RegisterType<QuotesImportJob>().As<IJob>().As<IQuotesImportJob>();
             builder.RegisterType<CompanyImportJob>().As<IJob>().As<ICompanyImportJob>();
             builder.RegisterType<HealthCheckJob>().As<IJob>().As<IHealthCheckJob>();
-            builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<EmaCalculator>().As<IIndicatorCalculator>();
             builder.RegisterType<IndicatorProcessor>().As<IIndicatorProcessor>();
             builder.RegisterType<IndicatorProcessorFactory>().SingleInstance();
 

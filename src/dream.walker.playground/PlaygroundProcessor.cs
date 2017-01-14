@@ -32,14 +32,14 @@ namespace dream.walker.playground
 
         public PlaygroundChartModel Next(int bars)
         {
-            _playgroundModel.MoveNext(bars);
-            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Append, bars));
+            var appendedQuotes = _playgroundModel.MoveNext(bars);
+            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Append, appendedQuotes));
         }
 
         public PlaygroundChartModel Prev(int bars)
         {
-            _playgroundModel.MovePrev(bars);
-            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Insert, bars));
+            var insertedQuotes = _playgroundModel.MovePrev(bars);
+            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Insert, insertedQuotes));
         }
 
 

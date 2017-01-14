@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using dream.walker.data.Entities.Indicators;
 using dream.walker.data.Enums;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
@@ -62,7 +61,6 @@ namespace dream.walker.playground.Models
             private readonly QuotePeriod _period;
 
             /// <summary>
-            /// TODO: change constructor to return start date, otherwise unable to calc weeks offset
             /// </summary>
             /// <param name="period"></param>
             /// <param name="model"></param>
@@ -73,7 +71,7 @@ namespace dream.walker.playground.Models
                 Id = (int) period;
                 Name = period.ToString();
 
-                Update = mode ?? new ChartUpdateMode(ChartUpdateMode.UpdateMode.Reset, 0);
+                Update = mode ?? new ChartUpdateMode(ChartUpdateMode.UpdateMode.Reset, null);
                 Quotes = GetQuotes(model.Quotes, Update);
 
                 Indicators = new List<IndicatorInfo>();
@@ -84,30 +82,24 @@ namespace dream.walker.playground.Models
                 }
             }
 
-            /// TODO: change constructor to return start date, otherwise unable to calc weeks offset
             private List<QuotesModel> GetQuotes(HistoricalQuotes quotes, ChartUpdateMode update)
             {
-                if (update.ModeType == ChartUpdateMode.UpdateMode.Reset)
+                switch (update.ModeType)
                 {
-                    return quotes;
-                }
+                    case ChartUpdateMode.UpdateMode.Reset:
+                        return quotes;
 
-                if (update.ModeType == ChartUpdateMode.UpdateMode.Append)
-                {
-                    if (_period == QuotePeriod.Daily)
-                    {
-                        var startDate = quotes.Skip(update.Bars).First().Date;
+                    case ChartUpdateMode.UpdateMode.Insert:
+                        var endDate = update.Quotes.Last().Date;
+                        return quotes.Where(q => q.Date <= endDate).ToList();
+
+                    case ChartUpdateMode.UpdateMode.Append:
+                        var startDate = update.Quotes.First().Date;
                         return quotes.Where(q => q.Date >= startDate).ToList();
-                    }
-                    else
-                    {
-                        //change constructor to return start date
-                        //otherwise unable to calc weeks offset
-                    }
-                }
 
-                var endDate = quotes.Last().Date.AddDays(update.Bars);
-                return quotes.Where(q => q.Date <= endDate).ToList();
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
 
@@ -160,13 +152,15 @@ namespace dream.walker.playground.Models
             Append
         }
 
-        public ChartUpdateMode(UpdateMode mode, int bars)
+        public ChartUpdateMode(UpdateMode mode, List<QuotesModel> quotes)
         {
             Mode = mode.ToString().ToLower();
             ModeType = mode;
-            Bars = bars;
-
+            Bars = (quotes ?? new List<QuotesModel>()).Count;
+            Quotes = quotes;
         }
+
+        public List<QuotesModel> Quotes { get; set; }
 
         public UpdateMode ModeType { get; set; }
 

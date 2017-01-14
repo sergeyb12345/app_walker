@@ -32,6 +32,12 @@ export class Indicator {
                 {paramName:'FastEmaPeriod', value: 12},
                 {paramName:'SlowEmaPeriod', value: 26},
                 {paramName:'SignalEmaPeriod', value: 9}
+            ]},            
+            {name:'ImpulseSystem', defaults: [
+                {paramName:'FastEmaPeriod', value: 12},
+                {paramName:'SlowEmaPeriod', value: 26},
+                {paramName:'SignalEmaPeriod', value: 9},
+                {paramName:'EmaPeriod', value: 13}
             ]},
             {name:'ForceIndex', defaults: [
                     {paramName:'Period', value: 13}

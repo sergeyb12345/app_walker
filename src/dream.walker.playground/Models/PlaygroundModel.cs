@@ -83,7 +83,7 @@ namespace dream.walker.playground.Models
             return _initialized;
         }
 
-        public void MoveNext(int bars)
+        public List<QuotesModel> MoveNext(int bars)
         {
             Validate(bars);
 
@@ -95,9 +95,11 @@ namespace dream.walker.playground.Models
             {
                 Charts[period].MoveNext(quotes);
             }
+
+            return quotes;
         }
 
-        public void MovePrev(int bars)
+        public List<QuotesModel> MovePrev(int bars)
         {
             Validate(bars);
 
@@ -109,6 +111,8 @@ namespace dream.walker.playground.Models
             {
                 Charts[period].MovePrev(quotes);
             }
+
+            return quotes;
         }
 
         private void Validate(int bars)

@@ -86,7 +86,10 @@ namespace dream.walker.tests
             builder.RegisterType<PlaygroundProcessor>();
 
             //Calculators
-            builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<EmaCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<ForceIndexCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<MacdCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<ImpulseSystemCalculator>().As<IIndicatorCalculator>();
 
 
             return builder.Build();

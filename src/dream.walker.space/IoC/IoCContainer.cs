@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-using System.Reflection;
 using Autofac;
 using Autofac.Integration.Mvc;
 using dream.walker.data;
@@ -16,7 +15,6 @@ using dream.walker.reader;
 using dream.walker.reader.Validators;
 using dream.walker.stock;
 using dream.walker.stock.Yahoo.Client;
-using dream.walker.space.Controllers;
 
 namespace dream.walker.space.IoC
 {
@@ -106,7 +104,10 @@ namespace dream.walker.space.IoC
             builder.RegisterType<FileReaderValidator>().As<IFileReaderValidator>().InstancePerDependency();
 
             //Calculators
-            builder.RegisterType<EmaIndicatorCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<EmaCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<ForceIndexCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<MacdCalculator>().As<IIndicatorCalculator>();
+            builder.RegisterType<ImpulseSystemCalculator>().As<IIndicatorCalculator>();
 
         }
 

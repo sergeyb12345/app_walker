@@ -2,6 +2,10 @@
 {
     public enum IndicatorParamName
     {
-        Period
+        Period,
+        FastEmaPeriod,
+        SlowEmaPeriod,
+        SignalEmaPeriod,
+        EmaPeriod
     }
 }

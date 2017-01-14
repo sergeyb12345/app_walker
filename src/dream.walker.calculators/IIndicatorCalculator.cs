@@ -9,6 +9,6 @@ namespace dream.walker.calculators
     {
         bool CanCalculate(Indicator indicator);
         List<IndicatorModel> Calculate(Indicator indicator, List<QuotesModel> quotes);
-        IndicatorModel Calculate(Indicator indicator, List<IndicatorModel> values, QuotesModel quotes);
+        //IndicatorModel Calculate(Indicator indicator, List<IndicatorModel> values, QuotesModel quotes);
     }
 }

@@ -9,13 +9,13 @@ using dream.walker.data.Entities.Indicators;
 
 namespace dream.walker.calculators
 {
-    public class EmaIndicatorCalculator : IIndicatorCalculator
+    public class ForceIndexCalculator : IIndicatorCalculator
     {
-        private readonly Ema _calculator;
+        private readonly ForceIndex _calculator;
 
-        public EmaIndicatorCalculator()
+        public ForceIndexCalculator()
         {
-            _calculator = new Ema();
+            _calculator = new ForceIndex();
         }
 
         public bool CanCalculate(Indicator indicator)
@@ -30,12 +30,6 @@ namespace dream.walker.calculators
             return _calculator.Calculate(quotes, ExtractPeriod(indicator));
         }
 
-        public IndicatorModel Calculate(Indicator indicator, List<IndicatorModel> values, QuotesModel quotes)
-        {
-            Validate(indicator, values,  quotes);
-
-            return _calculator.Calculate(quotes, values, ExtractPeriod(indicator));
-        }
 
         public void Validate(Indicator indicator, List<QuotesModel> quotes)
         {
