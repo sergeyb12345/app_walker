@@ -85,14 +85,21 @@
             </div>
         </div>
 
-        <div class="row o_chart-content">
-            <div if.bind="playgroundLoaded">
+        <div class="row o_chart-content" if.bind="playgroundLoaded">
+            <div class="col-md-8 col-xs-12 c_playground">
+                <header>
+                    <h3>Technical Analisys</h3>
+                </header>
                 <div class="o_chart">
                     <stock-chart model.bind="playgroundModel"></stock-chart>
-                    <!--<any-chart container.bind="chartWeeklyContainer"></any-chart>-->
                 </div>
             </div>
-        </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="side-navigation">
+                    <h3>Strategy Rules State</h3>
+                </div>
+            </div>
+
     </div>
 
 </template>
