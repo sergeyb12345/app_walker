@@ -15,8 +15,10 @@ namespace dream.walker.data.Entities.Strategies
     public class vStrategyRule
     {
         public int StrategyId { get; set; }
+        public bool Optional { get; set; }
         public int RuleSetId { get; set; }
         public string RuleSetName { get; set; }
+        public int OrderId { get; set; }
         public int RuleId { get; set; }
         public string RuleName { get; set; }
         public QuotePeriod Period { get; set; }

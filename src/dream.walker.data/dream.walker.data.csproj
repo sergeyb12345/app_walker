@@ -251,6 +251,10 @@
     <Compile Include="Migrations\201701192039216_CreateVStrategyRule.Designer.cs">
       <DependentUpon>201701192039216_CreateVStrategyRule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701192104150_AlterVStrategyRule.cs" />
+    <Compile Include="Migrations\201701192104150_AlterVStrategyRule.Designer.cs">
+      <DependentUpon>201701192104150_AlterVStrategyRule.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\CompanyDetails.cs" />
     <Compile Include="Models\CompanyHeader.cs" />
@@ -282,6 +286,7 @@
     <Compile Include="MsSqlDbMigrator.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />
     <Compile Include="Repositories\CompanyRuleSetRepository.cs" />
+    <Compile Include="Repositories\VStrategyRuleRepository.cs" />
     <Compile Include="Repositories\VStrategyRuleSetRepository.cs" />
     <Compile Include="Repositories\VStrategyRepository.cs" />
     <Compile Include="Repositories\VRuleSetRepository.cs" />
@@ -456,6 +461,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701192039216_CreateVStrategyRule.resx">
       <DependentUpon>201701192039216_CreateVStrategyRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701192104150_AlterVStrategyRule.resx">
+      <DependentUpon>201701192104150_AlterVStrategyRule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
