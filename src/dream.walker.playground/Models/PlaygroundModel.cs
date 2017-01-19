@@ -21,7 +21,6 @@ namespace dream.walker.playground.Models
         private Dictionary<QuotePeriod, ChartModel> Charts { get; set; }
 
 
-
         public PlaygroundModel(Company company, IndicatorProcessorFactory indicatorProcessor)
         {
             _quotes = company.HistoryQuotes;
@@ -66,7 +65,6 @@ namespace dream.walker.playground.Models
                 }
             }
         }
-
 
 
         private void Validate(List<Indicator> indicators)

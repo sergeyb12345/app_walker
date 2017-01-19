@@ -89,7 +89,7 @@ export class StrategyPlayground {
 
     loadPlayground() {
 
-        this.playgroundService.loadPlayground(this.company.ticker, this.strategy.strategyId, 130)
+        this.playgroundService.loadPlayground(this.company.ticker, this.strategy.strategyId, 100)
                 .then(data => {
                     if (data && data.company) {
                         this.playgroundModel = data;

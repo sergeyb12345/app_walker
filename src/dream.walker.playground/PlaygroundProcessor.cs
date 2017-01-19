@@ -13,7 +13,9 @@ namespace dream.walker.playground
         private readonly PlaygroundModel _playgroundModel;
 
 
-        public PlaygroundProcessor(Company company, List<Indicator> indicators, IndicatorProcessorFactory indicatorProcessorFactory)
+        public PlaygroundProcessor(Company company, List<Indicator> indicators, 
+            IndicatorProcessorFactory indicatorProcessorFactory
+            )
         {
             _indicators = indicators;
             _playgroundModel = new PlaygroundModel(company, indicatorProcessorFactory);
@@ -33,13 +35,18 @@ namespace dream.walker.playground
         public PlaygroundChartModel Next(int bars)
         {
             var appendedQuotes = _playgroundModel.MoveNext(bars);
-            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Append, appendedQuotes));
+            var model = _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Append, appendedQuotes));
+
+            return model;
         }
+
 
         public PlaygroundChartModel Prev(int bars)
         {
             var insertedQuotes = _playgroundModel.MovePrev(bars);
-            return _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Insert, insertedQuotes));
+            var model = _playgroundModel.Build(new ChartUpdateMode(ChartUpdateMode.UpdateMode.Insert, insertedQuotes));
+
+            return model;
         }
 
 

@@ -97,6 +97,7 @@
     <Compile Include="Entities\Companies\CompanyNHNL.cs" />
     <Compile Include="Entities\Companies\CompanyRuleSet.cs" />
     <Compile Include="Entities\Indicators\MarketNHNL.cs" />
+    <Compile Include="Entities\Strategies\vStrategyRule.cs" />
     <Compile Include="Entities\Strategies\vStrategy.cs" />
     <Compile Include="Entities\Strategies\vStrategyRuleSet.cs" />
     <Compile Include="Enums\DataSourceType.cs" />
@@ -245,6 +246,10 @@
     <Compile Include="Migrations\201612291254010_CreatevStrategyRuleSet.cs" />
     <Compile Include="Migrations\201612291254010_CreatevStrategyRuleSet.Designer.cs">
       <DependentUpon>201612291254010_CreatevStrategyRuleSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701192039216_CreateVStrategyRule.cs" />
+    <Compile Include="Migrations\201701192039216_CreateVStrategyRule.Designer.cs">
+      <DependentUpon>201701192039216_CreateVStrategyRule.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\BlobContainer.cs" />
     <Compile Include="Models\CompanyDetails.cs" />
@@ -448,6 +453,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612291254010_CreatevStrategyRuleSet.resx">
       <DependentUpon>201612291254010_CreatevStrategyRuleSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701192039216_CreateVStrategyRule.resx">
+      <DependentUpon>201701192039216_CreateVStrategyRule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

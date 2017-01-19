@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using dream.walker.data.Entities.Articles;
 using dream.walker.data.Entities.Companies;
@@ -97,6 +96,8 @@ namespace dream.walker.data
             modelBuilder.Entity<vStrategy>().HasKey(t => new { t.StrategyId, t.RuleSetId });
             modelBuilder.Entity<vStrategyRuleSet>().HasKey(t => new { t.StrategyId, t.RuleSetId });
 
+            modelBuilder.Entity<vStrategyRule>().HasKey(t => new { t.StrategyId, t.RuleSetId, t.RuleId });
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
         }
@@ -118,5 +119,6 @@ namespace dream.walker.data
         public virtual DbSet<vRuleSet> vRuleSets { get; set; }
         public virtual DbSet<vStrategy> vStrategies { get; set; }
         public virtual DbSet<vStrategyRuleSet> vStrategyRuleSets { get; set; }
+        public virtual DbSet<vStrategyRule> vStrategyRules { get; set; }
     }
 }

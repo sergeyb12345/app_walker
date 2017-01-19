@@ -102,6 +102,9 @@ namespace dream.walker.playground
             {
                 var indicatorProcessorFactory = scope.Resolve<IndicatorProcessorFactory>();
                 var companyRepository = scope.Resolve<ICompanyRepository>();
+                var strategyService = scope.Resolve<IStrategyService>();
+
+                var ruleSets = await strategyService.GetStrategyAsync(strategyId);
                 var company = companyRepository.Get(ticker);
 
                 return new PlaygroundProcessor(company, indicators, indicatorProcessorFactory);

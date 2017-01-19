@@ -94,11 +94,47 @@
                     <stock-chart model.bind="playgroundModel"></stock-chart>
                 </div>
             </div>
+
             <div class="col-md-4 col-xs-12">
                 <div class="side-navigation">
-                    <h3>Strategy Rules State</h3>
+                    <h3>Strategy Runner</h3>
+
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">Start</button>
+                            <button class="btn btn-default" type="button">Prev</button>
+                            <button class="btn btn-default" type="button">Next</button>
+                            <button class="btn btn-danger" type="button">Reset</button>
+                        </span>
+                    </div>
+
+                    <form>
+                        <fieldset>
+                            <h4>Runner Options</h4>
+
+                            <div class="form-group">
+                                <label>Stop when rules met</label>
+                                <div class="btn-group" role="group" aria-label="Default button group">
+                                    <button type="button" class="btn btn-success">ON</button>
+                                    <button type="button" class="btn btn-default">OFF</button>
+                                </div>
+                            </div>
+
+                            <h4>Runner Progress</h4>
+
+                            <div class="form-group" repeat.for="ruleset of playgroundModel.ruleSets">
+                                <label>${ruleset.name}</label>
+                                
+                                <div class="btn-group" role="group" aria-label="Default button group">
+                                    <button type="button" class="btn ${ruleset.valid ? 'btn-success' : 'btn-default'}">VALID</button>
+                                    <button type="button" class="btn ${ruleset.valid ? 'btn-default' : 'btn-danger'}">INVALID</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
+        </div>
 
     </div>
 
