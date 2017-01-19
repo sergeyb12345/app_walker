@@ -500,6 +500,7 @@
     <Content Include="src\resources\elements\strategy\strategy-rule-set.js" />
     <Content Include="src\services\company-service.js" />
     <Content Include="src\services\stock-service.js" />
+    <Content Include="src\services\playground-service.js" />
     <Content Include="src\strategies\strategy-playground.html" />
     <Content Include="src\strategies\strategy-playground.js" />
     <Content Include="src\studies\categories\sub-navigation.html" />

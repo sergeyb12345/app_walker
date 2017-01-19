@@ -24,7 +24,7 @@ namespace dream.walker.tests.Controllers
         [Test]
         public async Task LoadPlayground()
         {
-            await _controller.LoadPlayground("A", 3);
+            await _controller.LoadPlayground("A", 3, 100);
 
 
             

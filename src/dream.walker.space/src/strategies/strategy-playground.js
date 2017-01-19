@@ -5,18 +5,20 @@ import {Navigation} from "./navigation";
 import {StrategyService} from '../services/strategy-service';
 import {CompanyService} from '../services/company-service';
 import {StockService} from '../services/stock-service';
+import {PlaygroundService} from '../services/playground-service';
 
-@inject(Navigation, StrategyService, CompanyService, StockService, "Settings")
+@inject(Navigation, StrategyService, CompanyService, StockService, PlaygroundService, "Settings")
 export class StrategyPlayground {
     
-    constructor (strategyNavigation, strategyService, companyService, stockService, settings) {
+    constructor (strategyNavigation, strategyService, companyService, stockService, playgroundService, settings) {
 
+        this.playgroundService = playgroundService;
         this.strategyNavigation = strategyNavigation;
         this.strategyService = strategyService;
         this.companyService = companyService;
         this.periods = settings.periods;
         this.stockService = stockService;
-
+        this.playgroundModel = {};
         this.strategy = {};
         this.company = {};
         this.strategyUrl = '';
@@ -86,6 +88,17 @@ export class StrategyPlayground {
     }
 
     loadPlayground() {
-        this.playgroundLoaded = true;
+
+        this.playgroundService.loadPlayground(this.company.ticker, this.strategy.strategyId, 130)
+                .then(data => {
+                    if (data && data.company) {
+                        this.playgroundModel = data;
+                        this.playgroundLoaded = true;
+
+                    } else {
+                        toastr.error(`Failed to load playground for company ${this.company.name}`, 'Load Playground Failed');
+                    }
+                });
+
     }
 }

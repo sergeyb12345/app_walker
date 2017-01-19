@@ -4,56 +4,32 @@ using System.Web.Http;
 using dream.walker.cache;
 using dream.walker.data.Requests;
 using dream.walker.playground;
+using System;
+using System.Web.Http.Description;
+using dream.walker.playground.Models;
 
 namespace dream.walker.space.Controllers
 {
     [RoutePrefix("api/playground")]
     public class PlaygroundApiController : ApiController
     {
-        private IStrategyService _strategyService;
         private readonly IPlaygroundService _playgroundService;
+        private PlaygroundProcessor _playground;
 
-        private IDataCache _cache;
-        public readonly PlaygroundProcessor _playgroundProcessor;
-        private readonly ICompanyService _companyService;
-
-
-        public PlaygroundApiController(IStrategyService strategyService, 
-            IPlaygroundService playgroundService, IDataCache cache,
-            PlaygroundProcessor playgroundProcessor,
-            ICompanyService companyService)
+        public PlaygroundApiController(IPlaygroundService playgroundService)
         {
-            _strategyService = strategyService;
             _playgroundService = playgroundService;
-            _cache = cache;
-            _playgroundProcessor = playgroundProcessor;
-            _companyService = companyService;
         }
 
-
         [HttpGet]
-        [Route("{ticker}/{strategyId:int:min(1)}")]
-        public async Task<IHttpActionResult> LoadPlayground(string ticker, int strategyId)
+        [ResponseType(typeof(PlaygroundChartModel))]
+        [Route("{ticker}/{strategyId:int:min(1)}/{bars:int}")]
+        public async Task<IHttpActionResult> LoadPlayground(string ticker, int strategyId, int bars)
         {
-           
-            var historicalData = _cache.Get(ticker,
-                () => _companyService.GetQuotes(ticker));
+            _playground = await _playgroundService.LoadPlaygroundAsync(ticker, strategyId, false);
+            var response = _playground.Initialize(Math.Max(50, bars), DateTime.MinValue);
 
-            if (historicalData.Count < 500)
-            {
-                historicalData = await _playgroundService.LoadHistoryAsync(ticker);
-                _companyService.UpdateQuotes(new UpdateQuotesRequest(ticker, historicalData));
-
-                _cache.Set(ticker, historicalData);
-            }
-
-            var indicators = await _cache.Get($"indicators-{strategyId}",
-                () => _playgroundService.LoadIndicatorsAsync(strategyId));
-
-            var company = await _companyService.GetAsync(ticker);
-
-
-            return Ok();
+            return Ok(response);
         }
 
 

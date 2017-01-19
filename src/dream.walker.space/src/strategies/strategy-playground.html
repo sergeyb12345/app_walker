@@ -78,15 +78,19 @@
                     </div>
                 </div>
 
-                <div if.bind="playgroundLoaded">
-                    <div class="o_chart">
-                        <stock-chart></stock-chart>
-                        <!--<any-chart container.bind="chartWeeklyContainer"></any-chart>-->
-                    </div>
-                </div>
+
             </div>
             <div class="col-md-4 col-xs-12">
                 <side-navigation strategyurl.bind="strategyUrl"></side-navigation>
+            </div>
+        </div>
+
+        <div class="row o_chart-content">
+            <div if.bind="playgroundLoaded">
+                <div class="o_chart">
+                    <stock-chart model.bind="playgroundModel"></stock-chart>
+                    <!--<any-chart container.bind="chartWeeklyContainer"></any-chart>-->
+                </div>
             </div>
         </div>
     </div>
