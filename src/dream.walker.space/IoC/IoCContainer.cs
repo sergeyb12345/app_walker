@@ -75,6 +75,7 @@ namespace dream.walker.space.IoC
             builder.RegisterType<RuleSetDetailsRepository>().As<IRuleSetDetailsRepository>().InstancePerDependency();
             builder.RegisterType<VRuleSetRepository>().As<IVRuleSetRepository>().InstancePerDependency();
             builder.RegisterType<VStrategyRuleSetRepository>().As<IVStrategyRuleSetRepository>().InstancePerDependency();
+            builder.RegisterType<VStrategyRuleRepository>().As<IVStrategyRuleRepository>().InstancePerDependency();
 
             builder.RegisterType<DreamDbContext>().InstancePerDependency();
 

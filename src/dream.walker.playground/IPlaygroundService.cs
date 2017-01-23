@@ -5,6 +5,7 @@ using Autofac;
 using dream.walker.cache;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Entities.Indicators;
+using dream.walker.data.Entities.Strategies;
 using dream.walker.data.Repositories;
 using dream.walker.data.Requests;
 using dream.walker.data.Services;
@@ -20,6 +21,7 @@ namespace dream.walker.playground
         Task<List<QuotesModel>> LoadHistoryAsync(string ticker);
         Task<List<Indicator>> LoadIndicatorsAsync(int strategyId);
         Task<PlaygroundProcessor> LoadPlaygroundAsync(string ticker, int strategyId, bool refreshCache);
+        Task<List<vStrategyRule>> LoadStrategyRulesAsync(int strategyId);
     }
 
     public class PlaygroundService : IPlaygroundService
@@ -66,6 +68,16 @@ namespace dream.walker.playground
             }
         }
 
+        public async Task<List<vStrategyRule>> LoadStrategyRulesAsync(int strategyId)
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var repository = scope.Resolve<IVStrategyRuleRepository>();
+                var records = await repository.GetRulesAsync(strategyId);
+                return records;
+            }
+        }
+
         public async Task<PlaygroundProcessor> LoadPlaygroundAsync(string ticker, int strategyId, bool refreshCache)
         {
             var key = $"LoadPlaygroundAsync-{ticker}-{strategyId}";
@@ -101,13 +113,13 @@ namespace dream.walker.playground
             using (var scope = _container.BeginLifetimeScope())
             {
                 var indicatorProcessorFactory = scope.Resolve<IndicatorProcessorFactory>();
+                var strategyRules = scope.Resolve<IVStrategyRuleRepository>();
                 var companyRepository = scope.Resolve<ICompanyRepository>();
-                var strategyService = scope.Resolve<IStrategyService>();
 
-                var ruleSets = await strategyService.GetStrategyAsync(strategyId);
+                var rules = await strategyRules.GetRulesAsync(strategyId);
                 var company = companyRepository.Get(ticker);
 
-                return new PlaygroundProcessor(company, indicators, indicatorProcessorFactory);
+                return new PlaygroundProcessor(company, indicators, indicatorProcessorFactory, rules);
             }
         }
 

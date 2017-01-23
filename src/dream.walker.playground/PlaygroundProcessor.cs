@@ -4,6 +4,7 @@ using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Entities.Indicators;
 using dream.walker.playground.Models;
 using dream.walker.data.Entities.Companies;
+using dream.walker.data.Entities.Strategies;
 
 namespace dream.walker.playground
 {
@@ -13,12 +14,10 @@ namespace dream.walker.playground
         private readonly PlaygroundModel _playgroundModel;
 
 
-        public PlaygroundProcessor(Company company, List<Indicator> indicators, 
-            IndicatorProcessorFactory indicatorProcessorFactory
-            )
+        public PlaygroundProcessor(Company company, List<Indicator> indicators, IndicatorProcessorFactory indicatorProcessorFactory, List<vStrategyRule> rules)
         {
             _indicators = indicators;
-            _playgroundModel = new PlaygroundModel(company, indicatorProcessorFactory);
+            _playgroundModel = new PlaygroundModel(company, indicatorProcessorFactory, rules);
             HistoryDays = company.HistoryQuotes.Count;
         }
 

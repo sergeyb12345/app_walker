@@ -4,6 +4,7 @@ using System.Linq;
 using dream.walker.calculators.IndicatorProcessor;
 using dream.walker.data.Entities.Companies;
 using dream.walker.data.Entities.Indicators;
+using dream.walker.data.Entities.Strategies;
 using dream.walker.data.Enums;
 using dream.walker.data.Extensions;
 using dream.walker.reader.Models;
@@ -16,16 +17,18 @@ namespace dream.walker.playground.Models
         private readonly List<QuotesModel> _quotes;
         private readonly Company _company;
         private readonly IndicatorProcessorFactory _indicatorProcessor;
+        private readonly List<vStrategyRule> _rules;
         private bool _initialized = false;
 
         private Dictionary<QuotePeriod, ChartModel> Charts { get; set; }
 
 
-        public PlaygroundModel(Company company, IndicatorProcessorFactory indicatorProcessor)
+        public PlaygroundModel(Company company, IndicatorProcessorFactory indicatorProcessor, List<vStrategyRule> rules)
         {
             _quotes = company.HistoryQuotes;
             _company = company;
             _indicatorProcessor = indicatorProcessor;
+            _rules = rules;
 
             Charts = new Dictionary<QuotePeriod, ChartModel>();
         }
@@ -142,9 +145,9 @@ namespace dream.walker.playground.Models
                 {
                     Name = $"{_company.Ticker} - {_company.Name}"
                 },
-                Periods = charts
+                Periods = charts,
+                RulesCalculator = new StrategyRulesCalculator(_rules, Charts).Calculate()
             };
         }
     }
-
 }

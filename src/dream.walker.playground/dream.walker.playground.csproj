@@ -46,7 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPlaygroundService.cs" />
+    <Compile Include="Models\ChartUpdateMode.cs" />
     <Compile Include="Models\PlaygroundChartModel.cs" />
+    <Compile Include="Models\StrategyRulesCalculator.cs" />
+    <Compile Include="Models\StrategyRuleSetResult.cs" />
     <Compile Include="PlaygroundProcessor.cs" />
     <Compile Include="Models\ChartModel.cs" />
     <Compile Include="Models\CommpanyChartData.cs" />

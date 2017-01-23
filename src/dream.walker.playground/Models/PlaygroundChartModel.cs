@@ -4,7 +4,6 @@ using System.Linq;
 using dream.walker.data.Enums;
 using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
-using dream.walker.data.Models;
 
 namespace dream.walker.playground.Models
 {
@@ -59,6 +58,7 @@ namespace dream.walker.playground.Models
 
         public CompanyInfo Company { get; set; }
         public List<ChartInfo> Periods { get; set; }
+        public StrategyRulesCalculator RulesCalculator { get; set; }
 
         public class ChartInfo
         {
@@ -147,36 +147,4 @@ namespace dream.walker.playground.Models
             public List<IndicatorModel> Values { get; set; }
         }
     }
-
-    public class StrategyRuleSetResult
-    {
-        public string Name { get; set; }
-        public bool Valid { get; set; }
-    }
-
-    public class ChartUpdateMode
-    {
-        public enum UpdateMode
-        {
-            Reset,
-            Insert,
-            Append
-        }
-
-        public ChartUpdateMode(UpdateMode mode, List<QuotesModel> quotes)
-        {
-            Mode = mode.ToString().ToLower();
-            ModeType = mode;
-            Bars = (quotes ?? new List<QuotesModel>()).Count;
-            Quotes = quotes;
-        }
-
-        public List<QuotesModel> Quotes { get; set; }
-
-        public UpdateMode ModeType { get; set; }
-
-        public string Mode { get; set; }
-        public int Bars { get; set; }
-    }
-
 }

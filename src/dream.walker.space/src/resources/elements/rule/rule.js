@@ -44,7 +44,8 @@ export class Rule {
             {id: 0, name: 'Close'},
             {id: 1, name: 'Open'},
             {id: 2, name: 'High'},
-            {id: 3, name: 'Low'}
+            {id: 3, name: 'Low'},
+            {id: 4, name: 'Volume'}
         ];
 
         this.transformFunctions = [

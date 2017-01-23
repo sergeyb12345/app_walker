@@ -112,7 +112,7 @@
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Entities\Indicators\Indicator.cs" />
     <Compile Include="Entities\Strategies\Rule.cs" />
-    <Compile Include="Enums\ValueLocationType.cs" />
+    <Compile Include="Enums\HistoricalDataSeriesType.cs" />
     <Compile Include="Extensions\QuotesModelExtensions.cs" />
     <Compile Include="Helpers\Slug.cs" />
     <Compile Include="Migrations\201605151153585_CreateTableIndicatorRule.cs" />
@@ -265,7 +265,6 @@
     <Compile Include="Models\RuleSetModel.cs" />
     <Compile Include="Models\StrategyRuleSetModel.cs" />
     <Compile Include="Models\StrategySummary.cs" />
-    <Compile Include="Models\ValueLocation.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.cs" />
     <Compile Include="Migrations\201605151044366_CreateTableCompanyIndicator.Designer.cs">
       <DependentUpon>201605151044366_CreateTableCompanyIndicator.cs</DependentUpon>
