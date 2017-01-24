@@ -122,14 +122,25 @@
 
                             <h4>Runner Progress</h4>
 
-                            <div class="form-group" repeat.for="ruleSet of playgroundModel.ruleSets">
-                                <label>${ruleSet.name}</label>
-                                
-                                <div class="btn-group" role="group" aria-label="Default button group" repeat.for="rule of ruleSet.rules">
-                                    <button type="button" class="btn ${ rule.valid ? 'btn-success' : 'btn-default'}">VALID</button>
-                                    <button type="button" class="btn ${ rule.valid ? 'btn-default' : 'btn-danger'}">INVALID</button>
+                            <div repeat.for="ruleSet of playgroundModel.ruleSets">
+                                <div class="form-group">
+                                    <label>${ruleSet.name}</label>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="${ruleSet.progress}" aria-valuemin="0" aria-valuemax="100" style="width: ${ruleSet.progress}%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <div class="col-sm-12" repeat.for="rule of ruleSet.rules">
+                                    <div class="btn-group" role="group" aria-label="Default button group">
+                                        <button type="button" class="btn ${ rule.valid ? 'btn-success' : 'btn-default'}">VALID</button>
+                                        <button type="button" class="btn ${ rule.valid ? 'btn-default' : 'btn-danger'}">INVALID</button>
+                                    </div>
+                                </div>
+
                             </div>
+
                         </fieldset>
                     </form>
                 </div>
