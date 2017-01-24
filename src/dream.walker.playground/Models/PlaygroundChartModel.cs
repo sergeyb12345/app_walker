@@ -51,14 +51,12 @@ namespace dream.walker.playground.Models
         {
             Company = new CompanyInfo();
             Periods = new List<ChartInfo>();
-            RuleSets = new List<StrategyRuleResult>();
+            RuleSets = new List<StrategyRuleSetResult>();
         }
-
-        public List<StrategyRuleResult> RuleSets { get; set; }
 
         public CompanyInfo Company { get; set; }
         public List<ChartInfo> Periods { get; set; }
-        public List<StrategyRuleResult> Rules { get; set; }
+        public List<StrategyRuleSetResult> RuleSets { get; set; }
 
         public class ChartInfo
         {

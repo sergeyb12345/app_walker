@@ -122,12 +122,12 @@
 
                             <h4>Runner Progress</h4>
 
-                            <div class="form-group" repeat.for="ruleset of playgroundModel.ruleSets">
-                                <label>${ruleset.name}</label>
+                            <div class="form-group" repeat.for="ruleSet of playgroundModel.ruleSets">
+                                <label>${ruleSet.name}</label>
                                 
-                                <div class="btn-group" role="group" aria-label="Default button group">
-                                    <button type="button" class="btn ${ruleset.valid ? 'btn-success' : 'btn-default'}">VALID</button>
-                                    <button type="button" class="btn ${ruleset.valid ? 'btn-default' : 'btn-danger'}">INVALID</button>
+                                <div class="btn-group" role="group" aria-label="Default button group" repeat.for="rule of ruleSet.rules">
+                                    <button type="button" class="btn ${ rule.valid ? 'btn-success' : 'btn-default'}">VALID</button>
+                                    <button type="button" class="btn ${ rule.valid ? 'btn-default' : 'btn-danger'}">INVALID</button>
                                 </div>
                             </div>
                         </fieldset>

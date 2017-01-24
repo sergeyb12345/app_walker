@@ -20,9 +20,9 @@ namespace dream.walker.playground.Models
         }
 
 
-        public List<StrategyRuleResult> Calculate()
+        public List<StrategyRuleSetResult> Calculate()
         {
-            var result = new List<StrategyRuleResult>();
+            var result = new List<StrategyRuleSetResult>();
             foreach (var rule in _rules)
             {
                 var firstValue = GetFirstValue(rule);
@@ -31,7 +31,15 @@ namespace dream.walker.playground.Models
                 var ruleResult = new StrategyRuleResult(rule);
                 ruleResult.Compare(firstValue, secondValue);
 
-                result.Add(ruleResult);
+                var ruleSet = result.FirstOrDefault(r => r.RuleSetId == ruleResult.RuleSetId);
+                if (ruleSet == null)
+                {
+                    result.Add(new StrategyRuleSetResult(ruleResult));
+                }
+                else
+                {
+                    ruleSet.Add(ruleResult);
+                }
             }
             return result;
         }
