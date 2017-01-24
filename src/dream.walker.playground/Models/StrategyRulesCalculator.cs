@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using dream.walker.data.Entities.Strategies;
 using dream.walker.data.Enums;
+using dream.walker.indicators.Models;
 using dream.walker.reader.Models;
 
 namespace dream.walker.playground.Models
@@ -19,14 +20,20 @@ namespace dream.walker.playground.Models
         }
 
 
-        public StrategyRulesCalculator Calculate()
+        public List<StrategyRuleResult> Calculate()
         {
+            var result = new List<StrategyRuleResult>();
             foreach (var rule in _rules)
             {
                 var firstValue = GetFirstValue(rule);
                 var secondValue = GetSecondValue(rule);
+
+                var ruleResult = new StrategyRuleResult(rule);
+                ruleResult.Compare(firstValue, secondValue);
+
+                result.Add(ruleResult);
             }
-            return null;
+            return result;
         }
 
 
@@ -46,7 +53,7 @@ namespace dream.walker.playground.Models
         }
         private decimal GetSecondValue(vStrategyRule rule)
         {
-            switch (rule.DataSourceV1)
+            switch (rule.DataSourceV2)
             {
                 case DataSourceType.Indicator:
                     return GetValueFromIndicator(rule, false);
@@ -103,6 +110,9 @@ namespace dream.walker.playground.Models
                 case TransformFunction.Max:
                     return values.Max(v => v);
 
+                case TransformFunction.Min:
+                    return values.Min(v => v);
+
                 case TransformFunction.Sum:
                     return values.Sum(v => v);
 
@@ -116,7 +126,42 @@ namespace dream.walker.playground.Models
 
         private decimal GetValueFromIndicator(vStrategyRule rule, bool isFirst)
         {
-            return 0;
+            var indicator = _charts[rule.Period].Indicators
+                .Where(i => i.Key == (isFirst ? rule.DataSeriesV1 : rule.DataSeriesV2))
+                .Select(i => i.Value)
+                .FirstOrDefault();
+
+            if (indicator != null)
+            {
+                var values = indicator.Values
+                    .Skip(isFirst ? rule.SkipItemsV1 : rule.SkipItemsV2)
+                    .Take(isFirst ? rule.TakeItemsV1 : rule.TakeItemsV2)
+                    .ToList();
+
+                return GetValueFromIndicator(rule, values, isFirst);
+            } 
+
+            return decimal.MinValue;
+        }
+
+        private decimal GetValueFromIndicator(vStrategyRule rule, List<IndicatorModel> values, bool isFirst)
+        {
+            var transform = isFirst ? rule.TransformItemsV1 : rule.TransformItemsV2;
+            switch (transform)
+            {
+                case TransformFunction.First:
+                    return values.Select(i => i.Value).First();
+                case TransformFunction.Max:
+                    return values.Max(i => i.Value);
+                case TransformFunction.Sum:
+                    return values.Sum(i => i.Value);
+                case TransformFunction.Avg:
+                    return values.Average(i => i.Value);
+                case TransformFunction.Min:
+                    return values.Min(i => i.Value);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

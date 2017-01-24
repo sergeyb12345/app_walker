@@ -146,7 +146,7 @@ namespace dream.walker.playground.Models
                     Name = $"{_company.Ticker} - {_company.Name}"
                 },
                 Periods = charts,
-                RulesCalculator = new StrategyRulesCalculator(_rules, Charts).Calculate()
+                Rules = new StrategyRulesCalculator(_rules, Charts).Calculate()
             };
         }
     }
