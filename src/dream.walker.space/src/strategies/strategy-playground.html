@@ -133,10 +133,8 @@
                                 </div>
 
                                 <div class="col-sm-12" repeat.for="rule of ruleSet.rules">
-                                    <div class="btn-group" role="group" aria-label="Default button group">
-                                        <button type="button" class="btn ${ rule.valid ? 'btn-success' : 'btn-default'}">VALID</button>
-                                        <button type="button" class="btn ${ rule.valid ? 'btn-default' : 'btn-danger'}">INVALID</button>
-                                    </div>
+                                    <span class="glyphicon ${rule.valid ? 'glyphicon-ok' : 'glyphicon-time'}" aria-hidden="true"></span>
+                                    <span>${rule.ruleName}</span>
                                 </div>
 
                             </div>

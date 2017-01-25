@@ -369,6 +369,12 @@ main-nav nav.navbar ul.navbar-nav {
   font-size: 12px;
   margin-top: 0px;
 }
+.glyphicon-ok {
+  color: #5cb85c;
+}
+.glyphicon-time {
+  color: #f0ad4e;
+}
 .form-control {
   font-size: 14px;
   border-radius: 0;
