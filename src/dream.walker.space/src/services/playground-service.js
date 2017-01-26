@@ -10,7 +10,7 @@ export class PlaygroundService {
         http.configure(config => {
             config
                 .useStandardConfiguration()
-                .withBaseUrl('api/');
+                .withBaseUrl('api/playground/');
 
         });
 
@@ -21,7 +21,7 @@ export class PlaygroundService {
     
     loadPlayground(ticker, strategyId, bars) {
 
-        return this.http.fetch('playground/'+ticker+'/'+strategyId + '/' + bars, {
+        return this.http.fetch(ticker+'/'+strategyId + '/' + bars, {
             method: 'get'
             })
         .then(response => response.json())
@@ -30,6 +30,27 @@ export class PlaygroundService {
         });
     }
 
+    loadNext(ticker, strategyId, bars, step) {
+
+        return this.http.fetch(ticker+'/'+strategyId + '/' + bars + '/next/' + step, {
+            method: 'get'
+        })
+        .then(response => response.json())
+        .catch(error => {
+            return this.handleError(error, "loadNext");
+        });
+    }
+
+    loadPrev(ticker, strategyId, bars, step) {
+
+        return this.http.fetch(ticker+'/'+strategyId + '/' + bars + '/prev/' + step, {
+            method: 'get'
+        })
+        .then(response => response.json())
+        .catch(error => {
+            return this.handleError(error, "loadPrev");
+        });
+    }
 
     handleError(error,  source) {
         let exception = {

@@ -6,12 +6,13 @@ import {StrategyService} from '../services/strategy-service';
 import {CompanyService} from '../services/company-service';
 import {StockService} from '../services/stock-service';
 import {PlaygroundService} from '../services/playground-service';
+import {EventAggregator} from 'aurelia-event-aggregator';
 
-@inject(Navigation, StrategyService, CompanyService, StockService, PlaygroundService, "Settings")
+@inject(Navigation, StrategyService, CompanyService, StockService, PlaygroundService, "Settings", EventAggregator)
 export class StrategyPlayground {
     
-    constructor (strategyNavigation, strategyService, companyService, stockService, playgroundService, settings) {
-
+    constructor (strategyNavigation, strategyService, companyService, stockService, playgroundService, settings, eventAggregator) {
+        this.eventAggregator = eventAggregator;
         this.playgroundService = playgroundService;
         this.strategyNavigation = strategyNavigation;
         this.strategyService = strategyService;
@@ -87,6 +88,31 @@ export class StrategyPlayground {
             });
     }
 
+    streamData() {
+        let self = this;
+
+        loadNext().then(data => {
+            let flag = data;
+
+            setTimeout(function() {
+                if (self.streaming && flag) {
+                    self.streamData();
+                }
+            }, 500); 
+            
+        });
+
+    }
+
+    startStreaming() {
+        this.streaming = true;
+        this.streamData();
+    }
+
+    stopStreaming() {
+        this.streaming = false;
+    }
+
     loadPlayground() {
 
         this.playgroundService.loadPlayground(this.company.ticker, this.strategy.strategyId, 100)
@@ -101,4 +127,36 @@ export class StrategyPlayground {
                 });
 
     }
+
+    loadNext() {
+        return this.playgroundService.loadNext(this.company.ticker, this.strategy.strategyId, 100, 1)
+            .then(data => {
+                if (data && data.company) {
+                    //this.playgroundModel = data;
+                    //Send data
+                    return true;
+                } else {
+                    toastr.error(`Failed to load next playground data for company ${this.company.name}`, 'Load Next Data Failed');
+                    return false;
+                }
+            })
+        .catch(error => {
+                return false;
+            });
+       
+    }
+
+    loadPrev() {
+        this.playgroundService.loadPrev(this.company.ticker, this.strategy.strategyId, 100, 1)
+                .then(data => {
+                    if (data && data.company) {
+                        //this.playgroundModel = data;
+                        //Send data
+                    } else {
+                        toastr.error(`Failed to load previous playground data for company ${this.company.name}`, 'Load Previous Data Failed');
+                    }
+                });
+        
+    }
+
 }

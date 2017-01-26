@@ -1,8 +1,5 @@
-﻿using dream.walker.data.Services;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
-using dream.walker.cache;
-using dream.walker.data.Requests;
 using dream.walker.playground;
 using System;
 using System.Web.Http.Description;
@@ -33,14 +30,34 @@ namespace dream.walker.space.Controllers
         }
 
 
-        public void Reset(int bars, int date)
+        [HttpGet]
+        [ResponseType(typeof(PlaygroundChartModel))]
+        [Route("{ticker}/{strategyId:int:min(1)}/{bars:int}/next/{step:int:min(1)}")]
+        public async Task<IHttpActionResult> Next(string ticker, int strategyId, int bars, int step)
         {
+            if (_playground == null)
+            {
+                _playground = await _playgroundService.LoadPlaygroundAsync(ticker, strategyId, false);
+                _playground.Initialize(Math.Max(50, bars), DateTime.MinValue);
+            }
+            var response = _playground.Next(step);
+
+            return Ok(response);
         }
 
-
-        public void Next()
+        [HttpGet]
+        [ResponseType(typeof(PlaygroundChartModel))]
+        [Route("{ticker}/{strategyId:int:min(1)}/{bars:int}/prev/{step:int:min(1)}")]
+        public async Task<IHttpActionResult> Prev(string ticker, int strategyId, int bars, int step)
         {
+            if (_playground == null)
+            {
+                _playground = await _playgroundService.LoadPlaygroundAsync(ticker, strategyId, false);
+                _playground.Initialize(Math.Max(50, bars), DateTime.MinValue);
+            }
+            var response = _playground.Prev(step);
 
+            return Ok(response);
         }
 
     }

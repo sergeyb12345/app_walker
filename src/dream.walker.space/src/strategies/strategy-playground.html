@@ -101,10 +101,11 @@
 
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button class="btn btn-danger" type="button">Start</button>
-                            <button class="btn btn-default" type="button">Prev</button>
-                            <button class="btn btn-default" type="button">Next</button>
-                            <button class="btn btn-danger" type="button">Reset</button>
+                            <button class="btn btn-danger" if.bind="streaming" click.delegate="startStreaming()" type="button">Start</button>
+                            <button class="btn btn-danger" if.bind="!streaming" click.delegate="stopStreaming()" type="button">Start</button>
+                            <button class="btn btn-default" click.delegate="loadPrev()" type="button">Prev</button>
+                            <button class="btn btn-default" click.delegate="loadNext()" type="button">Next</button>
+                            <button class="btn btn-danger" click.delegate="loadPlayground()" type="button">Reset</button>
                         </span>
                     </div>
 
