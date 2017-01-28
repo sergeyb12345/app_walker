@@ -10,7 +10,7 @@ export class PlaygroundService {
         http.configure(config => {
             config
                 .useStandardConfiguration()
-                .withBaseUrl('api/playground/');
+                .withBaseUrl('api/');
 
         });
 
@@ -21,7 +21,7 @@ export class PlaygroundService {
     
     loadPlayground(ticker, strategyId, bars) {
 
-        return this.http.fetch(ticker+'/'+strategyId + '/' + bars, {
+        return this.http.fetch('playground/' + ticker+'/'+strategyId + '/' + bars, {
             method: 'get'
             })
         .then(response => response.json())
@@ -32,7 +32,7 @@ export class PlaygroundService {
 
     loadNext(ticker, strategyId, bars, step) {
 
-        return this.http.fetch(ticker+'/'+strategyId + '/' + bars + '/next/' + step, {
+        return this.http.fetch('playground/' + ticker+'/'+strategyId + '/' + bars + '/next/' + step, {
             method: 'get'
         })
         .then(response => response.json())
@@ -43,7 +43,7 @@ export class PlaygroundService {
 
     loadPrev(ticker, strategyId, bars, step) {
 
-        return this.http.fetch(ticker+'/'+strategyId + '/' + bars + '/prev/' + step, {
+        return this.http.fetch('playground/' + ticker+'/'+strategyId + '/' + bars + '/prev/' + step, {
             method: 'get'
         })
         .then(response => response.json())

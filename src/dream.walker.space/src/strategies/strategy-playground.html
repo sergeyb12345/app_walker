@@ -88,60 +88,77 @@
         <div class="row o_chart-content" if.bind="playgroundLoaded">
             <div class="col-md-8 col-xs-12 c_playground">
                 <header>
-                    <h3>Technical Analisys</h3>
+                    <h3>Charts</h3>
                 </header>
                 <div class="o_chart">
                     <stock-chart model.bind="playgroundModel"></stock-chart>
                 </div>
             </div>
 
-            <div class="col-md-4 col-xs-12">
+            <div class="col-md-4 col-xs-12 c_strategy-runner">
                 <div class="side-navigation">
                     <h3>Strategy Runner</h3>
 
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <button class="btn btn-danger" if.bind="streaming" click.delegate="startStreaming()" type="button">Start</button>
-                            <button class="btn btn-danger" if.bind="!streaming" click.delegate="stopStreaming()" type="button">Start</button>
-                            <button class="btn btn-default" click.delegate="loadPrev()" type="button">Prev</button>
-                            <button class="btn btn-default" click.delegate="loadNext()" type="button">Next</button>
-                            <button class="btn btn-danger" click.delegate="loadPlayground()" type="button">Reset</button>
-                        </span>
-                    </div>
-
                     <form>
                         <fieldset>
-                            <h4>Runner Options</h4>
-
-                            <div class="form-group">
-                                <label>Stop when rules met</label>
-                                <div class="btn-group" role="group" aria-label="Default button group">
-                                    <button type="button" class="btn btn-success">ON</button>
-                                    <button type="button" class="btn btn-default">OFF</button>
-                                </div>
-                            </div>
-
-                            <h4>Runner Progress</h4>
-
-                            <div repeat.for="ruleSet of playgroundModel.ruleSets">
-                                <div class="form-group">
-                                    <label>${ruleSet.name}</label>
+                            <div class="c_strategy-runner--progress">
+                                <div class="form-group" repeat.for="ruleSet of playgroundModel.ruleSets">
+                                    <span>${ruleSet.name}</span>
                                     <div class="progress">
-                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="${ruleSet.progress}" aria-valuemin="0" aria-valuemax="100" style="width: ${ruleSet.progress}%">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="${ruleSet.progress}" aria-valuemin="0" aria-valuemax="100" style="width: ${ruleSet.progress}% ">
                                             <span class="sr-only">40% Complete (success)</span>
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-12" repeat.for="rule of ruleSet.rules">
+                                        <span class="glyphicon ${rule.valid ? 'glyphicon-ok' : 'glyphicon-time'}" aria-hidden="true"></span>
+                                        <label>${rule.ruleName}</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="c_strategy-runner--options">
+                                <header>Runner</header>
+
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                             <input type="checkbox"> Stop when rules met
+                                        </label>
+                                    </div>
                                 </div>
 
-                                <div class="col-sm-12" repeat.for="rule of ruleSet.rules">
-                                    <span class="glyphicon ${rule.valid ? 'glyphicon-ok' : 'glyphicon-time'}" aria-hidden="true"></span>
-                                    <span>${rule.ruleName}</span>
-                                </div>
+                                <div class="form-group">
+                                    <span class="btn-group btn-group-sm">
+                                        <button class="btn btn-default" if.bind="streaming" click.delegate="stopStreaming()" type="button">
+                                            <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>                                        
+                                        </button>
 
+                                        <button class="btn btn-default" if.bind="!streaming" click.delegate="startStreaming()" type="button">
+                                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                        </button>
+
+                                        <button class="btn btn-default" click.delegate="loadPlayground()" type="button">
+                                            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                                        </button>
+
+                                        <button class="btn btn-default" click.delegate="loadPrev()" type="button">
+                                            <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+                                        </button>
+
+                                        <button class="btn btn-default" click.delegate="loadNext()" type="button">
+                                            <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                                        </button>
+
+                                    </span>
+                                </div>
                             </div>
 
                         </fieldset>
                     </form>
+
+
                 </div>
             </div>
         </div>

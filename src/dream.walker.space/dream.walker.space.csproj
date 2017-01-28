@@ -442,6 +442,8 @@
     <Content Include="jspm_packages\npm\npm-anystock%407.12.0\README.md" />
     <Content Include="Content\Site\objects\_chart.less" />
     <Content Include="Content\Site\elements\_glyphicon.less" />
+    <Content Include="Content\Site\objects\_progress-bar.less" />
+    <Content Include="Content\Site\components\_strategy-runner.less" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\dreamwalker - Web Deploy.pubxml" />
     <Content Include="Scripts\AnyChart\css\anychart-ui.css.gz" />

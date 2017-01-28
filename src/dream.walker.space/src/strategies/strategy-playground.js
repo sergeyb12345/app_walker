@@ -32,13 +32,6 @@ export class StrategyPlayground {
         this.router = navigationInstruction.router;
         this.playgroundLoaded = false;
 
-        if (params.ticker) {
-            this.companyService.getCompany(params.ticker)
-                .then(company => {
-                    this.company = company;
-                });
-        }
-
         if (params.strategyUrl) {
 
             this.strategyService.getSummaryByUrl(params.strategyUrl)
@@ -47,6 +40,17 @@ export class StrategyPlayground {
                         this.strategy = data;
                         this.strategyUrl = params.strategyUrl;
                         this.strategyNavigation.configureNavigation(this.strategyUrl);
+
+                        if (params.ticker) {
+                            this.companyService.getCompany(params.ticker)
+                                .then(company => {
+                                    this.company = company;
+
+                                    if (company && company.ticker) {
+                                        this.loadPlayground();
+                                    }
+                                });
+                        }
 
                     } else {
                         toastr.error(`Failed to load summary for url ${params.strategyUrl}`, 'Load Summary Failed');
