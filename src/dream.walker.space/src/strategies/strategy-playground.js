@@ -136,8 +136,8 @@ export class StrategyPlayground {
         return this.playgroundService.loadNext(this.company.ticker, this.strategy.strategyId, 100, 1)
             .then(data => {
                 if (data && data.company) {
-                    //this.playgroundModel = data;
-                    //Send data
+                    this.eventAggregator.publish('StrategyPlayground.loadNext', data);
+
                     return true;
                 } else {
                     toastr.error(`Failed to load next playground data for company ${this.company.name}`, 'Load Next Data Failed');
@@ -154,8 +154,7 @@ export class StrategyPlayground {
         this.playgroundService.loadPrev(this.company.ticker, this.strategy.strategyId, 100, 1)
                 .then(data => {
                     if (data && data.company) {
-                        //this.playgroundModel = data;
-                        //Send data
+                        this.eventAggregator.publish('StrategyPlayground.loadPrev', data);
                     } else {
                         toastr.error(`Failed to load previous playground data for company ${this.company.name}`, 'Load Previous Data Failed');
                     }

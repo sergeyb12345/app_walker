@@ -1,52 +1,49 @@
 ﻿import 'npm-anystock';
-import {bindable} from 'aurelia-framework';
+import {inject, bindable} from 'aurelia-framework';
+import {EventAggregator} from 'aurelia-event-aggregator';
 
+@inject(EventAggregator)
 export class StockChart {
     @bindable model;
+
+    constructor (eventAggregator) {
+        this.eventAggregator = eventAggregator;
+        this.eventSubscriptions = [];
+    }
 
     modelChanged(newValue) {
         
     }
 
     attached() {
+        this.eventSubscriptions.push(
+            this.eventAggregator.subscribe('StrategyPlayground.loadPrev', data => this.loadPrev(data)));
+
+        this.eventSubscriptions.push(
+            this.eventAggregator.subscribe('StrategyPlayground.loadNext', data => this.loadNext(data)));
+
         if(this.model && this.model.company) {
             this.drawChart();
         }
     }
 
-    constructor () {
-        this.data2 = {
-            company: {
-                name: 'A - ACMA'
-            },
-            periods: [
-                {
-                    id: 1,
-                    name: 'weekly',
-                    quotes: [],
-                    indicators: [
-                        {
-                            name: 'EMA(13)',
-                            values: []
-                        }
-                    ],
-                    update: {
-                        mode: 'reset',
-                        bars: 0
-                    }
-                },
-                {
-                    id: 0,
-                    name: 'daily',
-                    quotes: [],
-                    indicators: [],
-                    update: {
-                        mode: 'insert | append',
-                        bars: 2
-                    }
-                }
-            ]
-        };
+    detached() {
+        if (this.eventSubscriptions.length > 0) {
+            this.eventSubscriptions.forEach(function(subscription) {
+                subscription.dispose();
+            });
+        }        
+    }
+
+    loadPrev(data) {
+        
+    }
+
+    loadNext(data) {
+        //data.periods.forEach(function(period) {
+        //    table.addData(period.quotes);
+        //    table.remove();
+        //});
     }
 
 
@@ -61,7 +58,12 @@ export class StockChart {
 
             let mapping = table.mapAs({'open':"open", 'high': "high", 'low': "low", 'close': "close"});
             let series = chart.plot(plotNumber).ohlc(mapping);
-            series.name(self.model.company.name + ' (' + period.name + ')');
+            let seriesName = self.model.company.name + ' (' + period.name + ')';
+            series.name(seriesName);
+            series.id(period.name);
+
+            let legend = series.legendItem();
+            legend.text(seriesName);
 
             chart.plot(plotNumber).grid(0).enabled(true);
             chart.plot(plotNumber).grid(0).stroke("#EEE");
@@ -75,21 +77,13 @@ export class StockChart {
                 indicatorSeries.name(indicator.name);
             });
 
-            ////let emaData = anychart.data.table("Date");
-            ////emaData.addData(this.data.indicators[0].values);
-
-            ////let emaPlot = chart.plot(0);
-            ////let emaMapping = emaData.mapAs({"value": "Value"});
-            ////var emaSeries = emaPlot.line(emaMapping);
-            ////emaSeries.name(this.data.indicators[0].name);
-
-
             let volumePlot = chart.plot(1+plotNumber);
             let volumeMapping = table.mapAs({"value":"volume"});
 
             volumePlot.column(volumeMapping).name("Volume");
             volumePlot.height('30%');
 
+            chart.title(seriesName);
             chart.container('container-'+ period.name);
             chart.draw();
         });
